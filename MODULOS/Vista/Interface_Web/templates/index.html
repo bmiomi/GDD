@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet"   href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
+  <link rel="stylesheet"   href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css">
+  <title>GDD_Pronaca</title>
+</head>
+
+<body>
+
+  <div class="container-sm">
+
+    <div class=" animate__animated  animate__fadeInDown alert alert-success" role="alert">
+      <h4 class="alert-heading">WEB GDD MADRUGADAS (beta)</h4>
+      <p>Este proyecto es de uso exclusivo para revisión de descuentos en las guardias de las madrugadas</p>
+      <hr>
+      <p class="mb-0"></p>
+    </div>
+
+    <div class=' animate__animated  animate__fadeInDown'   id="accordion">
+      
+      {% for i in valor %}
+      <div class="card">
+
+        <div class="card-header" id={{"headingOne"~loop.index}}>
+          <h3 class="mb-0">
+            <button class="btn  btn-block btn-outline-primary" data-toggle="collapse" data-target={{"#collapseOne"~loop.index}} aria-expanded="true"
+              aria-controls="collapseOne">
+              {{i.N}}
+            </button>
+          </h3>
+        </div>
+        <div id= {{"collapseOne"~loop.index}}  class="collapse" aria-labelledby={{"headingOne"~loop.index}} data-parent="#accordion">
+          <div class="card-body">
+            
+            {%for x in i.ListaDz%}
+            <div class="btn-group">
+              <button type="button" class="btn btn-info">{{x}}</button>
+              <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="sr-only">Toggle Dropright</span>
+              </button>
+    
+
+              <div class="dropdown-menu">
+                <a id={{x}} class="dropdown-item" onclick="beta(this)">TODAS LAS RUTAS</a>
+                <a class="dropdown-item" href="#">Varias RUTAS</a>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+      </div>
+      {% endfor %}
+
+    </div> <!--end de acordion-->
+</div><!--end de container-->
+
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js"
+    integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U"
+    crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js"
+    integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+  <script src="../static/js/modal.js"></script>
+</body>
+
+</html>
