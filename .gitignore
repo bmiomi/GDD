@@ -1,6 +1,6 @@
 .vscode
 .gitignore
-.entorno
+entorno
 setup.py
 vos.py
 config.ini
