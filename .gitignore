@@ -1,5 +1,8 @@
 #folders
 REPORTES
 test
+__pycache__
+
 #file
 .gitignore
+plugins/xsales/*.yaml
