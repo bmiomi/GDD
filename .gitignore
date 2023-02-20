@@ -1,6 +1,5 @@
-.vscode
+#folders
+REPORTES
+test
+#file
 .gitignore
-entorno
-setup.py
-vos.py
-config.ini
