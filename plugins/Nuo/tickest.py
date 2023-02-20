@@ -5,8 +5,10 @@ from questionary import prompt
 from bs4 import BeautifulSoup
 import yaml
 
+
 file = path.join(f'plugins{sep}NUO{sep}config.yaml')
 Url2=yaml.load(open(file, 'r'), Loader=yaml.FullLoader)
+
 question=[
   {
 
@@ -70,7 +72,7 @@ def main(curdir:str):
     # se estable una session
     session=requests.session()
     #se obtiene un response de la paguina a la cual se envio la peticion.
-    r =session.get(f"{Url}")
+    r =session.get(f"{Url2}")
 
     # se obtiene la cabecera de la session
     # header_=requests.head(Url)
@@ -79,11 +81,11 @@ def main(curdir:str):
     cookie=session.cookies.get_dict()
 
     # se estable una conexion post donde se envia los datos para logearse a la paguina
-    post_login( session, Url, headers, cookie, credenciales)
+    post_login( session, Url2, headers, cookie, credenciales)
     # se  tiene  la  pantalla principal del sistema.
-    menu_ticket( session, Url, headers, cookie)
+    menu_ticket( session, Url2, headers, cookie)
     # se envia la data 
-    enviartickets(Url, headers, cookie,  tickets)
+    enviartickets(Url2, headers, cookie,  tickets)
 
 if __name__=='__main__':
     
