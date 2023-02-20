@@ -1,10 +1,12 @@
+from os import path,sep
 import pandas as pd
 import requests
 from questionary import prompt
 from bs4 import BeautifulSoup
+import yaml
 
-Url="http://200.7.215.198:9090/ticketpronaca/"
-
+file = path.join(f'plugins{sep}NUO{sep}config.yaml')
+Url2=yaml.load(open(file, 'r'), Loader=yaml.FullLoader)
 question=[
   {
 
@@ -18,11 +20,11 @@ headers = {
         'Connection': 'keep-alive',
         'Cache-Control': 'max-age=0',
         'Upgrade-Insecure-Requests': '1',
-        'Origin': Url,
+        'Origin': Url2,
         'Content-Type': 'application/x-www-form-urlencoded',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36 Edg/85.0.564.44',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,/;q=0.8,application/signed-exchange;v=b3;q=0.9',
-        'Referer': 'http://200.7.215.198:9090/ticketpronaca/inicio',
+        'Referer': f'{Url2}/inicio',
         'Accept-Language': 'es,es-ES;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6',
     }
 
