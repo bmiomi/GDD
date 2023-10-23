@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from typing import Dict
 from .FTP import FtpXsales
 from .Status import Status 
 from .Server import Page
@@ -6,10 +7,13 @@ from .Server import Page
 class XsalesFactory:
     
     @classmethod
-    def getModulo (cls,value:str=None) -> object:
-        if value == 'Server':
+    def getModulo (cls,value:Dict=None) -> object:
+        
+        modulo=value.get('Modulo')
+        
+        if modulo == 'Server':
             return Page
-        if value == 'FTP':
+        if modulo == 'FTP':
             return FtpXsales
-        if  value== 'Status':
+        if  modulo== 'Status':
             return Status

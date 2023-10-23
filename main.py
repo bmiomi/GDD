@@ -1,46 +1,17 @@
 import importlib
 import os
-from types import ModuleType
-from typing import Dict, List, Protocol
 
+from types import ModuleType
 import questionary
 from rich.console import Console
 
+from core.Interfaces.Iplugins import IPluging
 
 def loadplugin(plugin: str) -> ModuleType:
     plugin_module_path = f'plugins.{plugin.lower()}.{plugin.title()}'
+    print(plugin_module_path)
     modulo = importlib.import_module(plugin_module_path)
     return modulo
-
-
-class IPluging(Protocol):
-
-    question: List[Dict] = None
-
-    @property
-    def nombre(self):
-        raise NotImplementedError
-
-    def execute(self, *args, **kargs):
-        raise NotImplementedError
-
-
-class Plugin:
-
-    question: List[Dict] = None
-
-    @property
-    def nombre(self):
-        return 'Default'
-
-    def execute(self):
-
-        print("Hola...")
-        print("yo me ejecuto por defecto.")
-
-    def questi_on(self):
-        return[{'name': 'name'}]
-
 
 class MyApplication:
 
@@ -59,6 +30,7 @@ class MyApplication:
             self.__plugin = loadplugin(nmodele)
         else:
             self.__plugin = [importlib.import_module('mai')][0]
+
 
     def getmodulo(self) -> IPluging:
         return self.__plugin.Plugin()
