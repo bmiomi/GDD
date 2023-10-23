@@ -1,4 +1,5 @@
 from plugins.xsales.config import Config
+from plugins.xsales.util import createfolder
 
 class ConfigFtp(Config):
 

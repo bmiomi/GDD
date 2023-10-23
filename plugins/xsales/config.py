@@ -3,6 +3,7 @@ from io import StringIO
 from typing import Dict, List
 import pandas as pd
 import yaml
+
 from .util import  path, remove, listdir,sep,createfolder
 
 
@@ -40,26 +41,24 @@ class Config:
     def Revisiones(self,value) -> List:
         self.__tiporevision=self.config['Revisiones'][value.get('Modulo')]
 
-
     def nuevacarpeta(self, *path):
         return createfolder(*path)
 
     def Dz(self, ldz: dict = {"Opcion": "TODOS"}) -> list[str]:
-
         returndz = {
             "TODOS": self.config["FTP"]["Repositorio"]["credenciales"].keys(),
-            "Grupos": self.config["Grupos"]
+            "Grupos": [self.config["Grupos"]]
         }
 
         if ldz.get("Opcion") in ("REVICION_MADRUGADA", "Validar DESC"):
-            return [
+            v= [
                 i
                 for i in map(
-                    lambda y: y.get(ldz["Turno"]),
-                    map(lambda x: x, returndz.get("Grupos")),
+                    lambda y: y.get(ldz["Turno"]), map(lambda x: x, returndz.get("Grupos")),
                 )
                 if i
             ][0]
+            return v
 
         if ldz.get("Opcion") == "Total_Pedidos":
             return returndz.get("TODOS")

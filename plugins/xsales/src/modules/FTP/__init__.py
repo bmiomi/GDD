@@ -79,7 +79,6 @@ class SFTP_(Transport):
                 self.files.append({'file':i,'fecha':last_modified_ts.strftime("%Y-%m-%d %H:%M:%S")})
                
 
-
 class ImplicitFTPTLS(FTP_TLS):
 
     """FTP_TLS subclass that automatically wraps sockets in SSL to support implicit FTPS."""

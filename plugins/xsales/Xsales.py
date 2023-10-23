@@ -9,9 +9,6 @@ from .src.modules.config import ConfigFactory
 from .src import XsalesFactory
 from .util import scandir
 
-class Turnos(Enum):
-    pass
-
 @dataclass
 class Data:
 
@@ -27,9 +24,10 @@ def preguntass(nombremodulo:str,questionari: questionary,config:ConfigFactory) -
 
    uno=questionari.rawselect('selecciona el turno que te toca',choices=config.Turnos).ask()
 
+
    dos=questionari.rawselect('Selecione el proceso a realizar',choices=config.Revisiones).ask()
 
-   tres=questionari.checkbox('Seleccione Server',choices=config.Dz()).ask()
+   tres=questionari.checkbox('Seleccione Server',choices=config.Dz({'Opcion':dos,'Turno':uno})).ask()
 
    return {'Turno':uno,'Opcion':dos,'ContenedorDZ':tres}
 
