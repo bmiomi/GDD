@@ -7,7 +7,7 @@ import questionary
 from core.Interfaces.Iplugins import IPluging
 from .src.modules.config import ConfigFactory
 from .src import XsalesFactory
-from .util import scandir
+from .util import scandir,sep
 
 @dataclass
 class Data:
@@ -60,7 +60,7 @@ class Plugin(IPluging):
             'type': 'rawlist',
             'name': 'Modulo',
             'message': "Que Sub Modulo de Xsales desea ? ",
-            'choices': [i.name for i in scandir ('.\\plugins\\xsales\\src\\modules') if i.is_dir() and i.name!='__pycache__']
+            'choices': [i.name for i in scandir (f'.{sep}plugins{sep}xsales{sep}src{sep}modules') if i.is_dir() and i.name!='__pycache__']
         }
     
     @property
