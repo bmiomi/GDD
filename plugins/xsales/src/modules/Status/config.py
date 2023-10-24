@@ -1,7 +1,6 @@
 
-from plugins.xsales.config import Config
-
-from plugins.xsales.util import createfolder
+from ...config import Config
+from ...util import createfolder
 
 class ConfigStatus(Config):
 
