@@ -10,8 +10,8 @@ class Default(IPluging):
     def nombre(self):
         return 'Default'
 
-    def execute(self):
-        questionary.print('Hello World 🦄"')
-
+    def execute(self,questionary):
+        questionary.print('Hello World 🦄, este es un programa para realizar distinto tipos de preguntas\n \
+                          que tipo de preguntas quieres realizar"')
     def questi_on(self):
         return[{'name': 'name'}]

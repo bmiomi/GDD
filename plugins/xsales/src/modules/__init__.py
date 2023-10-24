@@ -6,14 +6,8 @@ from .Server import Page
 
 class XsalesFactory:
     
+    __factory={"Server":Page,'FTP':FtpXsales,"Status":Status}
+    
     @classmethod
     def getModulo (cls,value:Dict=None) -> object:
-        
-        modulo=value.get('Modulo')
-        
-        if modulo == 'Server':
-            return Page
-        if modulo == 'FTP':
-            return FtpXsales
-        if  modulo== 'Status':
-            return Status
+        return XsalesFactory.__factory.get(value.get('Modulo'))        

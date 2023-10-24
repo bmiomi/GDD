@@ -6,6 +6,7 @@ import questionary
 from rich.console import Console
 
 from core.Interfaces.Iplugins import IPluging
+from default.defult import Default
 
 def loadplugin(plugin: str) -> ModuleType:
 
@@ -24,10 +25,9 @@ class MyApplication:
     def question(self):
         return self.__question
 
-    def search_module(self, nmodele):
-        self.name = nmodele
-        if nmodele:
-            self.__plugin = loadplugin(nmodele)
+    def search_module(self):
+        if self.name:
+            self.__plugin = loadplugin(self.name)
         else:
             self.__plugin = [importlib.import_module('mai')][0]
 
@@ -35,31 +35,18 @@ class MyApplication:
     def getmodulo(self) -> IPluging:
         return self.__plugin.Plugin()
 
-    def questions(self, question) -> None:
-        modulo = question.get('Modulo', 0)
-        if modulo == 0:
-            exit()
-        self.search_module(modulo)
 
     def run(self) -> None:
 
-        while True:
+        Default().execute(questionary)
 
+        # while True:
 
-            pregunta = self.question.prompt(
-                [
-                    {
-                        'name': 'Modulo',
-                        'type': 'rawlist',
-                        'message': 'SELECCIONE EL MODULO A USAR: ',
-                        'choices': sorted(os.listdir('plugins'), reverse=True)
-                    }
-                ]
-            )
-            self.questions(pregunta)
-            plugin = self.getmodulo()
+        #     self.name = self.question.rawselect('SELECCIONE EL MODULO A USAR:',choices=sorted(os.listdir('plugins'), reverse=True)).ask()
+        #     self.search_module()
+        #     plugin = self.getmodulo()
 
-            plugin.execute(self.question, self._Console)
+        #     plugin.execute(self.question, self._Console)
 
     def update(self):
         import requests
@@ -75,4 +62,4 @@ if __name__ == "__main__":
     except ModuleNotFoundError as e:
         print(f'hay un error faltan dependecias por instalar {e}')
     except BaseException as e :
-        print(f'Se encontro un error GRAVE QUE IMPIDE LA EJECUCION DEL PROGRAMA REPORTAR AL ADMINISTRADOR: {e.__ne__}')
+        print(f'Se encontro un error GRAVE QUE IMPIDE LA EJECUCION DEL PROGRAMA REPORTAR AL ADMINISTRADOR: {e}')
