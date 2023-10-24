@@ -6,7 +6,7 @@ from paramiko import Transport,SFTP
 from sqlite3 import  connect
 from typing import List, Protocol
 
-from plugins.xsales.util import descomprimir,sep
+from ...util import descomprimir,sep
 
 
 linea = '-' * 60
@@ -78,7 +78,6 @@ class SFTP_(Transport):
             if last_modified_date != day and last_modified_time>=datetime.strptime("22:30:00","%H:%M:%S").time()  :
                 self.files.append({'file':i,'fecha':last_modified_ts.strftime("%Y-%m-%d %H:%M:%S")})
                
-
 
 class ImplicitFTPTLS(FTP_TLS):
 

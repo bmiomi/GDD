@@ -2,8 +2,11 @@ from datetime import date, timedelta, datetime
 from enum import Enum
 
 class HorasenvioStock(Enum):
+
     horaDiurnodz='11:59:00 AM'
+
     horaNocturnodz='11:59:00 PM'
+
 
 class ValidatorSql:
 
@@ -77,7 +80,7 @@ class ValidatorSql:
 
         if clave_hora != 'HoraECUInicioStock' and (hoy != ayer and datetime.strptime('10:00:00 PM', '%I:%M:%S %p').time() <= fhora):
             raise Warning(
-                f"[ERROR-DIRECTA] stock fuera de horario  para {classmethod} "
+                f"[ERROR-DIRECTA] stock fuera de horario  para {valor_Hora_stock} "
             )
 
     def validartotalpedidos(self):

@@ -167,7 +167,7 @@ FTP:
 
   xmlfile:
 
-    - ' Carteras.xml'
+    - 'Carteras.xml'
     - 'Clientes.xml'
     - 'ClientesAP.xml'
     - 'ProductosB2B.xml'
@@ -184,8 +184,8 @@ FTP:
 Server:
   credenciales:
     - default:
-        USER: soporte.nuo
-        PASSWORD: Nuo2023*
+        USER: SoporteBz
+        PASSWORD: BZs2023*
 
   # - PROORIENTE:
   #     USER: soporte.nuo
@@ -209,5 +209,73 @@ Consultas:
   Base:
 
     descuentos: "select * from discountdetailup"
+
+Turnos:
+
+    - TECNICO 3-AM
+    - TECNICO(1) 4-AM
+    - TECNICO(2) 4-AM
+
+Revisiones:
+
+  Server:
+
+    - REVICION_MADRUGADA
+    - DESC.DIURNOS
+    - DESC.NOCTURNOS
+    - VALIDAR_ClIENTE
+    - Total_Pedidos
+
+  FTP:
+
+    - Validar DESC 
+    - Validar Maestros 
+    - Descargar Base
+
+  Status:
+
+    - Todas las rutas
+    - Una ruta especifica
+
+Grupos: 
+  
+  TECNICO 3-AM: 
+
+    - PRONACA
+    - CENACOP
+    - DISPROLOP
+    - DISPROALZA
+    - MADELI
+    - PAUL_FLORENCIA
+    - POSSO_CUEVA
+    - DISPROVALLES
+  
+  TECNICO(1) 4-AM:
+    
+    - JUDISPRO
+    - ALMABI
+    - DISMAG
+    - GRAMPIR
+    - GARVELPRODUCT
+    - DISANAHISA
+    - ALSODI
+    - PROORIENTE
+  
+  TECNICO(2) 4-AM:
+
+    - DIMMIA
+    - SKANDINAR
+    - PRONACNOR
+    - APRONAM
+    - DISCARNICOS
+    - ECOAL
+    - H_M
+    - PATRICIO_CEVALLOS
+
+
+
+
+
+
 
 

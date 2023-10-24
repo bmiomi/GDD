@@ -1,2 +1,5 @@
+ 
 
-from plugins.xsales.src.modules import  XsalesFactory
+from .modules import XsalesFactory
+
+

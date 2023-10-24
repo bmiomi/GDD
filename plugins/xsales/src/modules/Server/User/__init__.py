@@ -1,2 +1,2 @@
-from plugins.xsales.src.modules.Server.User.Consultas import consultas
-from plugins.xsales.src.modules.Server.User.validador import ValidatorSql
+from .Consultas import consultas
+from .validador import ValidatorSql
