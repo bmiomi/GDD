@@ -78,7 +78,7 @@ class ValidatorSql:
             raise Warning(
                 f"[ERROR-DZ] stock fuera de horario {valor_Hora_stock}  ")
 
-        if clave_hora != 'HoraECUInicioStock' and (hoy != ayer and datetime.strptime('10:00:00 PM', '%I:%M:%S %p').time() <= fhora):
+        if clave_hora == 'HoraECUInicioStock' and (hoy != ayer and datetime.strptime('10:00:00 PM', '%I:%M:%S %p').time() <= fhora):
             raise Warning(
                 f"[ERROR-DIRECTA] stock fuera de horario  para {valor_Hora_stock} "
             )

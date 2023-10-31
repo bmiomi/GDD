@@ -78,7 +78,6 @@ class SFTP_(Transport):
             if last_modified_date != day and last_modified_time>=datetime.strptime("22:30:00","%H:%M:%S").time()  :
                 self.files.append({'file':i,'fecha':last_modified_ts.strftime("%Y-%m-%d %H:%M:%S")})
                
-
 class ImplicitFTPTLS(FTP_TLS):
 
     """FTP_TLS subclass that automatically wraps sockets in SSL to support implicit FTPS."""
@@ -129,6 +128,8 @@ class FtpXsales:
         Conexion con el Ftp de Xsales
 
     """
+    status=''
+    title=''
 
     def __init__(self,dato,ConfigFtp) -> None:
         self.dato=dato
@@ -177,6 +178,7 @@ class FtpXsales:
     def maestrosftp(self):
         self.__ftp_client.mostrarar_achivos(excluide=self.config.xmlfile)
 
+
     def mostrar_info(self):
 
         for dz  in self.dato.ContenedorDZ:
@@ -190,11 +192,11 @@ class FtpXsales:
 
             if self.dato.Opcion=='Validar Maestros':
                 self.maestrosftp()
-                self.dato.console.log(self.__ftp_client.files)
+                return self.__ftp_client.files
             else:
                 _rutas = self.listbases()
                 try:
-                    self.dato.console.print(f'Para {dz} se descargara {len(_rutas)} rutas')
+                    self.title=f'Para {dz} se descargara {len(_rutas)} rutas'#TODO #aun no se usa esta variable
                     if len(_rutas)>=1:
                         for i in _rutas:
                             path=self.config.nuevacarpeta(self.config.pathdistribudor,self.config.user,self.config.fecha,i)
@@ -202,11 +204,12 @@ class FtpXsales:
                             descomprimir(path)
                             currentpath=path.join([path])
                             self.procesarInfo(currentpath)
-                        self.dato.console.log(f' proceso exitoso,validar archivo: {path[:-3]}{sep}log',style='green')
+                        self.status='green'
+                        return f' proceso exitoso,validar archivo: {path[:-3]}{sep}log'
                     # else:
                     #     console.print(" [ERROR: ][bold red]]'NO se TIENE BASES:")
                 except ValueError as e:
-                    self.dato.console.print(" [ERROR: ][bold red] No se tiene Habilitado Modulo de GDD [\]", e)
+                        raise f" [ERROR: ][bold red] No se tiene Habilitado Modulo de GDD [\] {e}"
 
 
     #2022 09 15 03 45 02
@@ -239,7 +242,6 @@ class FtpXsales:
             print(latest_name,latest_time)
 
     def ds(self):
-        print()
 
         self.config.user=self.dato.ContenedorDZ[0]
         self.__ftp_client:IFtp =  ImplicitFTPTLS() if self.config.protocol== 'FTPS' else  SFTP_()

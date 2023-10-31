@@ -7,10 +7,12 @@ class  Page(Xsales):
     
     
     def __init__(self,dato,Config) :
+
         """
             nombre: Nmbre del Dz que se toma para ingresar a la paguina solicitada 
 
         """
+        self.message=[]
         self.dato=dato 
         self.Config=Config
         self.validadorsql=None
@@ -75,11 +77,14 @@ class  Page(Xsales):
             super().__init__(nombredz,self.Config)
             try:
                 self.consulta_Basedatos()
-                self.dato.console.log(f'Revisión completada para {nombredz}' )
+                self.status='green'
+                self.message.append(f'Revisión completada para {nombredz}')
             except Warning as e:
-                self.dato.console.log(f"{str(e)} DZ/Regional {nombredz}")
+                self.status='yellow'
+                self.message=f"{str(e)} DZ/Regional {nombredz}"
             except ValueError as e:
-                self.dato.console.log(f"{str(e)} DZ/Regional {nombredz}")
+                self.status='red'
+                self.message=f"{str(e)} DZ/Regional {nombredz}"
         
         if self.dato.Opcion=='DESC.DIURNOS' and len(self.dato.ContenedorDZ)==24:
           self._config.excelfile().consolidararchivo()

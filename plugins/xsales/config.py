@@ -6,8 +6,6 @@ import yaml
 
 from .util import  path, remove, listdir,sep,createfolder
 
-
-
 class Config:
 
     __tiporevision:List=[]
@@ -66,8 +64,7 @@ class Config:
         if ldz.get("Opcion") != "REVICION_MADRUGADA":
             return returndz.get("TODOS")
 
-    def config_revision(self):
-        pass
+
 
     
 
