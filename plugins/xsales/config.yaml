@@ -192,11 +192,11 @@ Server:
   #     PASSWORD: Nuo2021*
 
 PathFolder:
-  Distribuidores:    'REPORTES\FTP\Distribuidores\'
-  folder_file_excel: 'REPORTES\SERVER\Descargas\'
-  folderMadrugada:   'REPORTES\SERVER\Madrugada\'
-  folderNocturnos:   'REPORTES\SERVER\Nocturnos\'
-  folderStatus:      'REPORTES\STATUS\'
+  Distribuidores:    'REPORTES/FTP/Distribuidores'
+  folder_file_excel: 'REPORTES/SERVER/Descargas'
+  folderMadrugada:   'REPORTES/SERVER/Madrugada'
+  folderNocturnos:   'REPORTES/SERVER/Nocturnos'
+  folderStatus:      'REPORTES/STATUS'
 
 Consultas:
 

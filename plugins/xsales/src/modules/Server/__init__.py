@@ -3,18 +3,19 @@ from .Pagedriver.xsalesbeta import  Xsales
 from .User.validador import ValidatorSql
 from .User.Consultas import consultas
 
+
 class  Page(Xsales):
-    
-    
-    def __init__(self,dato,Config) :
-        """
-            nombre: Nmbre del Dz que se toma para ingresar a la paguina solicitada 
+        
+    def __init__(self):
 
         """
-        self.dato=dato 
-        self.Config=Config
+            nombre: Nmbre del Dz que se toma para ingresar a la paguina solicitada defecto Pronaca 
+        """
+
+        super().__init__(name='Pronaca')
+        # self.dato=dato 
+
         self.validadorsql=None
-
 
     def consulta_Basedatos(self )-> None:
 
@@ -69,18 +70,16 @@ class  Page(Xsales):
             archivo=''.join([self._config.folderMadrugada(),'REVICION_MADRUGADA'])
             ExcelFile.filetxt( namearchivo= archivo,data=data[0]) 
 
-    def mostrar_info(self):
+    def mostrar_info(self,nombredz):
 
-        for nombredz in self.dato.ContenedorDZ:
-            super().__init__(nombredz,self.Config)
-            try:
-                self.consulta_Basedatos()
-                self.dato.console.log(f'Revisión completada para {nombredz}' )
-            except Warning as e:
-                self.dato.console.log(f"{str(e)} DZ/Regional {nombredz}")
-            except ValueError as e:
-                self.dato.console.log(f"{str(e)} DZ/Regional {nombredz}")
+        try:
+            self.consulta_Basedatos()
+            return f'Revisión completada para {nombredz}' 
+        except Warning as e:
+            return f"{str(e)} DZ/Regional {nombredz}"
+        except ValueError as e:
+            return f"{str(e)} DZ/Regional {nombredz}"
         
-        if self.dato.Opcion=='DESC.DIURNOS' and len(self.dato.ContenedorDZ)==24:
-          self._config.excelfile().consolidararchivo()
-          print('\n se consolidara el archivo')
+        # if self.dato.Opcion=='DESC.DIURNOS' and len(self.dato.ContenedorDZ)==24:
+        #     self._config.excelfile().consolidararchivo()
+        #     print('\n se consolidara el archivo')

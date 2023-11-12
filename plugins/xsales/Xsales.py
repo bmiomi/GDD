@@ -1,11 +1,9 @@
 from dataclasses import dataclass
-from enum import Enum
 from typing import Callable, Dict, List, Optional
-
 import questionary
 
 from core.Interfaces.Iplugins import IPluging
-from .src.modules.config import ConfigFactory
+from .config import Config
 from .src import XsalesFactory
 from .util import scandir,sep
 
@@ -17,42 +15,15 @@ class Data:
     ContenedorDZ:Optional[List]=None
     dato:Optional[str]=None 
     questionary:Callable=None
-    console:Callable=None
+    consola:Callable=None
 
 
-def preguntass(nombremodulo:str,questionari: questionary,config:ConfigFactory) -> List[Dict]:    
+def preguntass(config:Config) ->Dict:    
 
-   uno=questionari.rawselect('selecciona el turno que te toca',choices=config.Turnos).ask()
-
-
-   dos=questionari.rawselect('Selecione el proceso a realizar',choices=config.Revisiones).ask()
-
-   tres=questionari.checkbox('Seleccione Server',choices=config.Dz({'Opcion':dos,'Turno':uno})).ask()
-
+   uno=questionary.rawselect('selecciona el turno que te toca',choices=config.Turnos).ask()
+   dos=questionary.rawselect('Selecione el proceso a realizar',choices=config.Revisiones).ask()
+   tres=questionary.checkbox('Seleccione Server',choices=config.Dz({'Opcion':dos,'Turno':uno})).ask()
    return {'Turno':uno,'Opcion':dos,'ContenedorDZ':tres}
-
-
-
-
-def main(nombremodulo: dict,*args) ->None:
-    
-    questionari,console = args
-
-    modulo =XsalesFactory.getModulo(nombremodulo)
-
-    config=ConfigFactory.getModulo(nombremodulo)
-    config.Revisiones=nombremodulo
-
-    resp=preguntass(nombremodulo,questionari,config)
-
-    resp['console']=console
-    
-    data=Data(**resp)
-
-    with console.status('Procesando..',spinner=config.spinner):
-        xsales=modulo(data,config)
-        xsales.mostrar_info()
-
 
 class Plugin(IPluging):
 
@@ -69,4 +40,18 @@ class Plugin(IPluging):
 
     def execute(self,question,consola):
         SModulo=question.prompt(self.__modulos)
-        main(SModulo,question,consola)
+
+        #objeto a retornar
+        modulo =XsalesFactory.getModulo(value=SModulo) 
+
+        #asignamos el nombre del modulo a la configuracion
+        modulo.config.Revisiones=SModulo 
+
+        #realizamos las preguntas
+        resp=preguntass(modulo.config)
+        data=Data(**resp)
+        modulo.dato=data
+        with consola.status('Procesando..',spinner=modulo.config.spinner):
+            for namedz in data.ContenedorDZ:
+                consola.log(modulo.mostrar_info(namedz))
+                

@@ -7,13 +7,13 @@ from .Server import Page
 class XsalesFactory:
     
     @classmethod
-    def getModulo (cls,value:Dict=None) -> object:
+    def getModulo (cls,value:Dict=None)-> object:
         
         modulo=value.get('Modulo')
         
         if modulo == 'Server':
-            return Page
+            return Page()
         if modulo == 'FTP':
-            return FtpXsales
+            return FtpXsales()
         if  modulo== 'Status':
-            return Status
+            return Status()

@@ -85,7 +85,7 @@ class ConfigFtp(Config):
     @property
     def pathdistribudor(self):
         createfolder (self.config.get('PathFolder').get('Distribuidores'),
-                      self.config.user,
-                      self.config.fecha,)
+                      self.user,
+                      self.fecha,)
         return self.config.get('PathFolder').get('Distribuidores')
 

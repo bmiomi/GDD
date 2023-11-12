@@ -6,8 +6,6 @@ import yaml
 
 from .util import  path, remove, listdir,sep,createfolder
 
-
-
 class Config:
 
     __tiporevision:List=[]
