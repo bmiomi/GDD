@@ -17,36 +17,34 @@ def loadplugin(plugin: str) -> ModuleType:
 class MyApplication:
 
     __VERSION = '0.1'
-    __plugin = None
-    __question = questionary
+    __plugin = [importlib.import_module('default.defult')]
     _Console = Console()
 
     @property
     def question(self):
-        return self.__question
+        return questionary
 
-    def search_module(self):
+    def search_module(self,name):
+        self.name=name
         if self.name:
             self.__plugin = loadplugin(self.name)
-        else:
-            self.__plugin = [importlib.import_module('mai')][0]
-
 
     def getmodulo(self) -> IPluging:
         return self.__plugin.Plugin()
-
-
+# lorena segura
+    @staticmethod
     def run(self) -> None:
 
-        Default().execute(questionary)
+        while True:
+            
+            myapp=self.__plugin[0]
+            # myapp.Default().execute(questionary)
+            # if not myapp.Default().estado:
+            #     break
+            self.search_module('Xsales')
+            plugin = self.getmodulo()
+            plugin.execute(self.question, self._Console)
 
-        # while True:
-
-        #     self.name = self.question.rawselect('SELECCIONE EL MODULO A USAR:',choices=sorted(os.listdir('plugins'), reverse=True)).ask()
-        #     self.search_module()
-        #     plugin = self.getmodulo()
-
-        #     plugin.execute(self.question, self._Console)
 
     def update(self):
         import requests
@@ -58,8 +56,8 @@ class MyApplication:
 if __name__ == "__main__":
 
     try:
-        MyApplication().run()
+        MyApplication.run(MyApplication())
     except ModuleNotFoundError as e:
-        print(f'hay un error faltan dependecias por instalar {e}')
+        raise f'hay un error faltan dependecias por instalar {e}'
     except BaseException as e :
         print(f'Se encontro un error GRAVE QUE IMPIDE LA EJECUCION DEL PROGRAMA REPORTAR AL ADMINISTRADOR: {e}')

@@ -6,7 +6,7 @@ from .Server import Page
 
 class XsalesFactory:
     
-    __factory={"Server":Page,'FTP':FtpXsales,"Status":Status}
+    __factory={"Server":Page(),'FTP':FtpXsales(),"Status":Status()}
     
     @classmethod
     def getModulo (cls,value:Dict=None) -> object:

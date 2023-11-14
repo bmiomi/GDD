@@ -6,11 +6,6 @@ from .util import  path,sep,createfolder
 class Config:
 
     __tiporevision:List=[]
-    __contador=0
-
-    def __call__(self, *args: Any, **kwds: Any) -> Any:
-        Config.__contador+=1
-        print(f'He sido llamado {self.__contador}')
 
     @property
     def config(self) -> Dict:

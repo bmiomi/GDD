@@ -3,14 +3,15 @@ from unicodedata import name
 from rich.table import Table
 from rich.live import Live
 
+from plugins.xsales.src.modules.Status.config import ConfigStatus
 class Status:
 
     contador=0
   
-    def __init__(self,dato,config):
+    def __init__(self):
 
-        self.config=config
-        self.dato=dato
+        self.config=ConfigStatus()
+        # self.dato=dato
         self.dz:List=list(self.config.Dz()) #decremental 
         self.dzincompletos:List[Dict]=[] #incremental
         self.dzcompletos:list=[]

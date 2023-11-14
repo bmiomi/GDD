@@ -12,9 +12,9 @@ class ConfigServer(Config):
         for opcion in credenciales:
             if opcion.get(credencial):
                 return opcion[credencial]['USER'], opcion[credencial]['PASSWORD']
+    
     @property
     def folderexcel(self) -> str:
-
         currpath = path.join(
             self.config.get('PathFolder').get('folder_file_excel'),
             self.fecha

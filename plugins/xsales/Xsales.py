@@ -4,7 +4,7 @@ from dataclasses import dataclass
 import questionary
 
 from core.Interfaces.Iplugins import IPluging
-from .src.modules.config import ConfigFactory
+from plugins.xsales.src.config import Config
 from .src import XsalesFactory
 from .src.util import scandir,sep
 
@@ -33,20 +33,19 @@ class Plugin(IPluging):
         return 'Xsales'
 
     def execute(self,question,consola):
-        SModulo=question.prompt(self.__modulos)
+        SModulo=questionary.prompt(self.__modulos)
         main(SModulo,question,consola)
 
 
 
+def preguntass(config:Config) -> List[Dict]:    
 
 
-def preguntass(nombremodulo:str,questionari: questionary,config:ConfigFactory) -> List[Dict]:    
+   uno=questionary.rawselect('selecciona el turno que te toca',choices=config.Turnos).ask()
 
-   uno=questionari.rawselect('selecciona el turno que te toca',choices=config.Turnos).ask()
+   dos=questionary.rawselect('Selecione el proceso a realizar',choices=config.Revisiones).ask()
 
-   dos=questionari.rawselect('Selecione el proceso a realizar',choices=config.Revisiones).ask()
-
-   tres=questionari.checkbox('Seleccione Server',choices=config.Dz({'Opcion':dos,'Turno':uno})).ask()
+   tres=questionary.checkbox('Seleccione Server',choices=config.Dz({'Opcion':dos,'Turno':uno})).ask()
 
    return {'Turno':uno,'Opcion':dos,'ContenedorDZ':tres}
 
@@ -55,18 +54,13 @@ def main(nombremodulo: dict,*args) ->None:
     
     questionari,console = args
 
-    modulo =XsalesFactory.getModulo(nombremodulo)
-
-    config=ConfigFactory.getModulo(nombremodulo)
-    config.Revisiones=nombremodulo
-
-    resp=preguntass(nombremodulo,questionari,config)
-
-    resp['console']=console
-    
+    modulo =XsalesFactory.getModulo(nombremodulo) #una clase del modulo
+    modulo.config.Revisiones=nombremodulo
+    resp=preguntass(modulo.config)        
     data=Data(**resp)
-
-    with console.status('Procesando..',spinner=config.spinner):
-        xsales=modulo(data,config)
-        xsales.mostrar_info()
+    modulo.dato=data
+    with console.status('Procesando..'):
+     
+        for nombredz in data.ContenedorDZ:
+            console.log(modulo.mostrar_info(nombredz))
 
