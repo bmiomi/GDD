@@ -3,7 +3,7 @@ import os
 from types import ModuleType
 import questionary
 from rich.console import Console
-
+"alan me cae mal"
 from core.Interfaces.Iplugins import IPluging
 from default.defult import Default
 
@@ -20,6 +20,8 @@ class MyApplication:
     _Console = Console()
 
     @property
+
+
     def question(self):
         return self._question
 
