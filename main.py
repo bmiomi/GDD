@@ -21,6 +21,8 @@ class MyApplication:
     _Console = Console()
 
     @property
+
+    
     def question(self):
         return self._question
 
