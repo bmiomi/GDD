@@ -1,12 +1,14 @@
 import json
 from requests_html import HTMLSession
 
+from plugins.xsales.src.modules.Server.config import ConfigServer
+
 class Xsales:
   
   _config=None
   
-  def __init__(self,name:str,config) -> None:
-    self._config=config
+  def __init__(self,name:str) -> None:
+    self._config=ConfigServer()
     self.session=HTMLSession()
     self.xsalesresponse=None 
     self.evento=None
@@ -14,6 +16,11 @@ class Xsales:
     self.name=name.upper()
     self.cookies_ = { 'ASP.NET_SessionId': self.__sesssionxsales() }  
     self.__logerarseesion()
+
+
+  @property
+  def config(self):
+     return self._config
 
   @property
   def get_tamanio_paguinacion(self):
@@ -52,7 +59,7 @@ class Xsales:
     return fragmentlist.attrs.get('value')
 
   def __logerarseesion(self):
-    
+    print(f'se imprime name: {self.name}')    
     head = {
           'Connection': 'keep-alive',
           'Cache-Control': 'max-age=0',
@@ -77,7 +84,8 @@ class Xsales:
     headers=head, 
     cookies=self.cookies_, 
     data=data)
-  
+    print(response.content,file=open("ad.txt",'w'))
+
     resultado=json.loads(response.content.decode('UTF-8'))
 
     if resultado['Message'] !='Authenticated':

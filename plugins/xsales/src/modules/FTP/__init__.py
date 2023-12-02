@@ -1,10 +1,10 @@
 from datetime import date, datetime, timedelta
 from ftplib import FTP_TLS
 import ssl
-from string import printable
 from paramiko import Transport,SFTP
 from sqlite3 import  connect
 from typing import List, Protocol
+from plugins.xsales.src.modules.FTP.config import ConfigFtp
 
 from plugins.xsales.util import descomprimir,sep
 
@@ -131,10 +131,11 @@ class FtpXsales:
     status=''
     title=''
 
-    def __init__(self,dato,ConfigFtp) -> None:
-        self.dato=dato
-        self.config=ConfigFtp
-        self.config.operacion=self.dato.Opcion
+    def __init__(self) -> None:
+        self.dato=None
+
+        self.config=ConfigFtp()
+        # self.config.operacion=self.dato.Opcion
         self.rutascero = []
 
     def listbases(self) -> List[str]:
@@ -148,17 +149,17 @@ class FtpXsales:
 
     def DESCARGA(self,origenpath,destinopath)->None:
         self.__ftp_client.change_dir(origenpath)
-        with open(destinopath+'\\Main.zip', 'wb') as file:
+        with open(f"{destinopath}{sep}Main.zip", 'wb') as file:
             self.__ftp_client.retrbinary('RETR '+'Main.zip', file.write)
         self.__ftp_client.change_dir('..')
 
     def procesarInfo(self,destinopath:str)->None:
 
-        origenpath= ''.join([i for i in destinopath.rsplit('\\')[-1] ])
-        database = destinopath+"\\Main.sqlite"
+        origenpath= ''.join([i for i in destinopath.rsplit(sep)[-1] ])
+        database = destinopath+sep+"Main.sqlite"
         tablas=['DISCOUNTDETAIL','DISCOUNTROUTE']
 
-        with  open(f"{destinopath[:-len(origenpath)]}\\logo", 'a') as archivo, DataConn(database) as conn:
+        with  open(f"{destinopath[:-len(origenpath)]}{sep}logo", 'a') as archivo, DataConn(database) as conn:
             archivo.write(linea+'\n')
             archivo.write("Ruta: "+origenpath+'\n')
 
@@ -178,18 +179,23 @@ class FtpXsales:
     def maestrosftp(self):
         self.__ftp_client.mostrarar_achivos(excluide=self.config.xmlfile)
 
+<<<<<<< HEAD
 
     def mostrar_info(self):
+=======
+    def mostrar_info(self,dz):
+>>>>>>> 663323a57372b0065308c500c3a866bbc290b1f5
 
-        for dz  in self.dato.ContenedorDZ:
+        self.config.operacion=self.dato.Opcion
 
-            self.config.user=dz
-            self.__ftp_client:IFtp =  ImplicitFTPTLS() if self.config.protocol== 'FTPS' else  SFTP_()
-            self.__ftp_client.acceso(
-                self.config.host,
-                *self.config.CredencialesFtp
-                )
+        self.config.user=dz
+        self.__ftp_client:IFtp =  ImplicitFTPTLS() if self.config.protocol== 'FTPS' else  SFTP_()
+        self.__ftp_client.acceso(
+            self.config.host,
+            *self.config.CredencialesFtp
+            )
 
+<<<<<<< HEAD
             if self.dato.Opcion=='Validar Maestros':
                 self.maestrosftp()
                 return self.__ftp_client.files
@@ -210,6 +216,27 @@ class FtpXsales:
                     #     console.print(" [ERROR: ][bold red]]'NO se TIENE BASES:")
                 except ValueError as e:
                         raise f" [ERROR: ][bold red] No se tiene Habilitado Modulo de GDD [\] {e}"
+=======
+        if self.dato.Opcion=='Validar Maestros':
+            self.maestrosftp()
+            self.dato.console.log(self.__ftp_client.files)
+        else:
+            _rutas = self.listbases()
+            try:
+                # self.dato.console.print(f'Para {dz} se descargara {len(_rutas)} rutas')
+                if len(_rutas)>=1:
+                    for i in _rutas:
+                        path=self.config.nuevacarpeta(self.config.pathdistribudor,self.config.user,self.config.fecha,i)
+                        self.DESCARGA(i,path)
+                        descomprimir(path)
+                        currentpath=path.join([path])
+                        self.procesarInfo(currentpath)
+                    return f' proceso exitoso,validar archivo: {path[:-3]}{sep}log'
+                # else:
+                #     console.print(" [ERROR: ][bold red]]'NO se TIENE BASES:")
+            except ValueError as e:
+                self.dato.console.print(" [ERROR: ][bold red] No se tiene Habilitado Modulo de GDD [\]", e)
+>>>>>>> 663323a57372b0065308c500c3a866bbc290b1f5
 
 
     #2022 09 15 03 45 02

@@ -30,7 +30,7 @@ class MyApplication:
         else:
             self.__plugin = [importlib.import_module('default.defult')][0]
 
-    def getmodulo(self) -> IPluging:
+    def cgetmodulo(self) -> IPluging:
         # if isinstan
         # e(self.__plugin.Default(),Default):
         #     return self.__plugin.Default()
@@ -46,17 +46,26 @@ class MyApplication:
 
         while True:
 
-            pregunta:str=questionary.rawselect('SELECCIONE EL MODULO A USAR:',choices=sorted(os.listdir('plugins'), reverse=True)).ask()
+            pregunta = self.question.prompt(
+                [
+                    {
+                        'name': 'Modulo',
+                        'type': 'rawlist',
+                        'message': 'SELECCIONE EL MODULO A USAR: ',
+                        'choices': sorted(os.listdir('plugins'), reverse=True)
+                    }
+                ]
+            )
             self.questions(pregunta)
-            # obtenemos una instancia del modulo a usar
-            plugin = self.getmodulo()    
-            # realizamos las preguntantas asociadas a ese modulo.
-            Smodulo=questionary.prompt(plugin.question)
-            #seteamos el submodulo0
-            plugin.getsubmodule=Smodulo                     
-            
-            plugin.execute(self.question,self._Console)
+            plugin = self.getmodulo()
 
+            plugin.execute(self.question, self._Console)
+
+    def update(self):
+        import requests
+        version = requests.get('')
+        if self.__VERSION != version:
+            pass
 
 
 if __name__ == "__main__":
@@ -67,5 +76,6 @@ if __name__ == "__main__":
 
     except ModuleNotFoundError as e:
         print(f'hay un error faltan dependecias por instalar {e}')
+
     # except BaseException as e :
     #     print(f'Se encontro un error GRAVE QUE IMPIDE LA EJECUCION DEL PROGRAMA REPORTAR AL ADMINISTRADOR: {e}')
