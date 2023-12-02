@@ -4,7 +4,7 @@ import os
 from types import ModuleType
 import questionary
 from rich.console import Console
-
+"alan me cae mal"
 from core.Interfaces.Iplugins import IPluging
 
 def loadplugin(plugin: str) -> ModuleType:
@@ -22,7 +22,7 @@ class MyApplication:
 
     @property
 
-    
+
     def question(self):
         return self._question
 
