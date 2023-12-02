@@ -17,7 +17,6 @@ def preguntass(nombremodulo:str,questionari: questionary,config:ConfigFactory) -
 
    uno=questionari.rawselect('selecciona el turno que te toca',choices=config.Turnos).ask()
 
-
    dos=questionari.rawselect('Selecione el proceso a realizar',choices=config.Revisiones).ask()
 
    tres=questionari.checkbox('Seleccione Server',choices=config.Dz({'Opcion':dos,'Turno':uno})).ask()
@@ -54,7 +53,7 @@ class Plugin(IPluging):
         self.__config=ConfigFactory.getModulo(value)
         self.__config.Revisiones=value
 
-    def execute(self,question):
+    def execute(self,question,console):
 
         config,modulo,=self.getsubmodule
 
@@ -62,4 +61,8 @@ class Plugin(IPluging):
 
         data=Data(**resp)
 
-        return data
+        with console.status(f'Procesando....',spinner=self.getsubmodule[0].spinner
+                                    ):            
+            s=self.getsubmodule[1](data,self.getsubmodule[0])
+            s.mostrar_info( console)
+

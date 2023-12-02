@@ -31,7 +31,8 @@ class MyApplication:
             self.__plugin = [importlib.import_module('default.defult')][0]
 
     def getmodulo(self) -> IPluging:
-        # if isinstance(self.__plugin.Default(),Default):
+        # if isinstan
+        # e(self.__plugin.Default(),Default):
         #     return self.__plugin.Default()
         return self.__plugin.Plugin()
 
@@ -43,24 +44,18 @@ class MyApplication:
 
     def run(self) -> None:
 
-        pregunta:str=questionary.rawselect('SELECCIONE EL MODULO A USAR:',choices=sorted(os.listdir('plugins'), reverse=True)).ask()
-        self.questions(pregunta)
-        # obtenemos una instancia del modulo a usar
-        plugin = self.getmodulo()    
-        # realizamos las preguntantas asociadas a ese modulo.
-        Smodulo=questionary.prompt(plugin.question)
-        #seteamos el submodulo0
-        plugin.getsubmodule=Smodulo                     
-        respuesta=plugin.execute(self.question)
-        # while True:
-        with self._Console.status(f'Procesando....',
-                                    spinner=plugin.getsubmodule[0].spinner
-                                    ):
-            
-            s=plugin.getsubmodule[1](respuesta,plugin.getsubmodule[0])
-            s.mostrar_info()
-            self._Console.log(*s.message,style=s.status,sep='\n')
+        while True:
 
+            pregunta:str=questionary.rawselect('SELECCIONE EL MODULO A USAR:',choices=sorted(os.listdir('plugins'), reverse=True)).ask()
+            self.questions(pregunta)
+            # obtenemos una instancia del modulo a usar
+            plugin = self.getmodulo()    
+            # realizamos las preguntantas asociadas a ese modulo.
+            Smodulo=questionary.prompt(plugin.question)
+            #seteamos el submodulo0
+            plugin.getsubmodule=Smodulo                     
+            
+            plugin.execute(self.question,self._Console)
 
 
 

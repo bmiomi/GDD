@@ -71,20 +71,17 @@ class  Page(Xsales):
             archivo=''.join([self._config.folderMadrugada(),'REVICION_MADRUGADA'])
             ExcelFile.filetxt( namearchivo= archivo,data=data[0]) 
 
-    def mostrar_info(self):
+    def mostrar_info(self,console):
 
         for nombredz in self.dato.ContenedorDZ:
             super().__init__(nombredz,self.Config)
             try:
                 self.consulta_Basedatos()
-                self.status='green'
-                self.message.append(f'Revisión completada para {nombredz}')
+                console.log(f'Revisión completada para {nombredz}' )
             except Warning as e:
-                self.status='yellow'
-                self.message=f"{str(e)} DZ/Regional {nombredz}"
+                console.log(f"{str(e)} DZ/Regional {nombredz}")
             except ValueError as e:
-                self.status='red'
-                self.message=f"{str(e)} DZ/Regional {nombredz}"
+                console.log(f"{str(e)} DZ/Regional {nombredz}")
         
         if self.dato.Opcion=='DESC.DIURNOS' and len(self.dato.ContenedorDZ)==24:
           self._config.excelfile().consolidararchivo()
