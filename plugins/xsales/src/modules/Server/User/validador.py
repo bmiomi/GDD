@@ -84,12 +84,10 @@ class ValidatorSql:
             )
 
     def validartotalpedidos(self):
-        print(self.__dataset[0])
-
+        # print(self.__dataset[0])
         for i in self.__dataset:
             # if i['DMD_PROCESADOS'] == i['ERP_EXITO'] == i['DMD_TOTAL']:
-            #     self.mensa_je=f"[successful] informacion esta cuadrada DMD_TOTAL: {i['DMD_TOTAL']} "
-
+                #     self.mensa_je=f"[successful] informacion esta cuadrada DMD_TOTAL: {i['DMD_TOTAL']} "
             if i['DMD_EXTENDIDAS'] != 0 and i['DMD_TRANSITO'] != 0 and i['DMD_NOPROCESADOS'] != 0:
                 raise Warning( f"[Warrning] se tiene informacion por procesar: ") 
             if i['DMD_ERROR'] != 0 or i['DMD_ERRSOAP'] != 0:

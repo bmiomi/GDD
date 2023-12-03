@@ -1,5 +1,4 @@
-from plugins.xsales.config import Config
-from plugins.xsales.util import createfolder
+from plugins.xsales.confi import Config
 
 class ConfigFtp(Config):
 
@@ -84,7 +83,7 @@ class ConfigFtp(Config):
 
     @property
     def pathdistribudor(self):
-        createfolder (self.config.get('PathFolder').get('Distribuidores'),
+        self.nuevacarpeta(self.config.get('PathFolder').get('Distribuidores'),
                       self.user,
                       self.fecha,)
         return self.config.get('PathFolder').get('Distribuidores')

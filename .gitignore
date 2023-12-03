@@ -1,6 +1,6 @@
 #folders
 REPORTES
-test
+tests
 __pycache__
 .env
 .vscode

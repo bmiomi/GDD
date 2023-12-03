@@ -215,6 +215,7 @@ Turnos:
     - TECNICO 3-AM
     - TECNICO(1) 4-AM
     - TECNICO(2) 4-AM
+    - TECNICO 1 PM
 
 Revisiones:
 
@@ -222,7 +223,7 @@ Revisiones:
 
     - REVICION_MADRUGADA
     - DESC.DIURNOS
-    - DESC.NOCTURNOS
+    - DESC. 
     - VALIDAR_ClIENTE
     - Total_Pedidos
 

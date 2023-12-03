@@ -1,29 +1,9 @@
-from dataclasses import dataclass
-from typing import Callable, Dict, List, Optional
-import questionary
+from typing import Dict, List
 
 from core.Interfaces.Iplugins import IPluging
-from .config import Config
+from plugins.xsales.inputquestion import Data, preguntass
 from .src import XsalesFactory
 from .util import scandir,sep
-
-@dataclass
-class Data:
-
-    Turno:str=None
-    Opcion:Optional[str]=None
-    ContenedorDZ:Optional[List]=None
-    dato:Optional[str]=None 
-    questionary:Callable=None
-    consola:Callable=None
-
-
-def preguntass(config:Config) ->Dict:    
-
-   uno=questionary.rawselect('selecciona el turno que te toca',choices=config.Turnos).ask()
-   dos=questionary.rawselect('Selecione el proceso a realizar',choices=config.Revisiones).ask()
-   tres=questionary.checkbox('Seleccione Server',choices=config.Dz({'Opcion':dos,'Turno':uno})).ask()
-   return {'Turno':uno,'Opcion':dos,'ContenedorDZ':tres}
 
 class Plugin(IPluging):
 

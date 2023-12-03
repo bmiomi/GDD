@@ -1,9 +1,10 @@
-from os import path,makedirs,sep,scandir,listdir,remove
 
-def createfolder(*paths):
+from os import makedirs,sep,scandir,listdir,remove
+
+def createfolder(path_,*paths):
     "Crea un directorio en caso de no existir, retorna un path"
-    mipath=path.join(*paths)
-    if not path.isdir(mipath):
+    mipath=path_.join(*paths)
+    if not path_.isdir(mipath):
         makedirs(mipath)
     return mipath
 
