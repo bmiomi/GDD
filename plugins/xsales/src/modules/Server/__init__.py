@@ -25,7 +25,7 @@ class  Page(Xsales):
         if self.get_tamanio_paguinacion == 0 and self.status_table() == True:
 
             self.validadorsql:ValidatorSql=ValidatorSql(self.dato.Opcion,self.extraerhtml(self._config.excelfile())) 
-
+            print(self.extraerhtml(self._config.excelfile()))
             self.generararchivo(self.dato.Opcion,self.validadorsql.validador,self._config.excelfile())
             
         elif self.get_tamanio_paguinacion >=1:
@@ -54,6 +54,7 @@ class  Page(Xsales):
             if self.dato.dato!=None and self.name!=None:
                  return dic_consultas.get(opcion)(self.dato.dato)
             return dic_consultas.get(opcion)(self.name)
+
 
     def generararchivo(self,nombre:str,data:list[dict],ExcelFile):
 

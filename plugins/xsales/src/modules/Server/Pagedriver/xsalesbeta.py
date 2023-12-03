@@ -59,7 +59,7 @@ class Xsales:
     return fragmentlist.attrs.get('value')
 
   def __logerarseesion(self):
-    print(f'se imprime name: {self.name}')    
+ 
     head = {
           'Connection': 'keep-alive',
           'Cache-Control': 'max-age=0',

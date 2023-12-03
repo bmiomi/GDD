@@ -40,6 +40,8 @@ class ValidatorSql:
 
         waringistemporales = []
 
+        print(f'se imprime dataset: {self.__dataset}')
+
         for i in self.__dataset:
             for x in i:
                 
