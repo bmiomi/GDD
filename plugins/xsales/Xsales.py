@@ -67,5 +67,5 @@ class Plugin(IPluging):
         return 'Xsales'
 
     def execute(self,question,consola):
-        SModulo=question.prompt(self.__modulos)
+        SModulo=question.prompt(self.__submodulo)
         main(SModulo,question,consola)

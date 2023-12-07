@@ -8,6 +8,7 @@ from core.Interfaces.Iplugins import IPluging
 from default.defult import Default
 
 def loadplugin(plugin: str) -> ModuleType:
+    plugin=plugin['Modulo']
     plugin_module_path = f'plugins.{plugin.lower()}.{plugin.title()}'
     modulo = importlib.import_module(plugin_module_path)
     return modulo
@@ -32,7 +33,7 @@ class MyApplication:
         else:
             self.__plugin = [importlib.import_module('default.defult')][0]
 
-    def cgetmodulo(self) -> IPluging:
+    def getmodulo(self) -> IPluging:
         # if isinstan
         # e(self.__plugin.Default(),Default):
         #     return self.__plugin.Default()

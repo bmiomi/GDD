@@ -5,19 +5,6 @@ from .User.Consultas import consultas
 
 
 class  Page(Xsales):
-<<<<<<< HEAD
-    
-    
-    def __init__(self,dato,Config) :
-
-        """
-            nombre: Nmbre del Dz que se toma para ingresar a la paguina solicitada 
-
-        """
-        self.message=[]
-        self.dato=dato 
-        self.Config=Config
-=======
         
     def __init__(self):
 
@@ -28,7 +15,6 @@ class  Page(Xsales):
         super().__init__(name='Pronaca')
         # self.dato=dato 
 
->>>>>>> 663323a57372b0065308c500c3a866bbc290b1f5
         self.validadorsql=None
 
     def consulta_Basedatos(self )-> None:
@@ -84,19 +70,6 @@ class  Page(Xsales):
             archivo=''.join([self._config.folderMadrugada(),'REVICION_MADRUGADA'])
             ExcelFile.filetxt( namearchivo= archivo,data=data[0]) 
 
-<<<<<<< HEAD
-    def mostrar_info(self,console):
-
-        for nombredz in self.dato.ContenedorDZ:
-            super().__init__(nombredz,self.Config)
-            try:
-                self.consulta_Basedatos()
-                console.log(f'Revisión completada para {nombredz}' )
-            except Warning as e:
-                console.log(f"{str(e)} DZ/Regional {nombredz}")
-            except ValueError as e:
-                console.log(f"{str(e)} DZ/Regional {nombredz}")
-=======
     def mostrar_info(self,nombredz):
 
         try:
@@ -106,7 +79,6 @@ class  Page(Xsales):
             return f"{str(e)} DZ/Regional {nombredz}"
         except ValueError as e:
             return f"{str(e)} DZ/Regional {nombredz}"
->>>>>>> 663323a57372b0065308c500c3a866bbc290b1f5
         
         # if self.dato.Opcion=='DESC.DIURNOS' and len(self.dato.ContenedorDZ)==24:
         #     self._config.excelfile().consolidararchivo()

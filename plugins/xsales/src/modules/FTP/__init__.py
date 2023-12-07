@@ -179,12 +179,7 @@ class FtpXsales:
     def maestrosftp(self):
         self.__ftp_client.mostrarar_achivos(excluide=self.config.xmlfile)
 
-<<<<<<< HEAD
-
-    def mostrar_info(self):
-=======
     def mostrar_info(self,dz):
->>>>>>> 663323a57372b0065308c500c3a866bbc290b1f5
 
         self.config.operacion=self.dato.Opcion
 
@@ -195,28 +190,6 @@ class FtpXsales:
             *self.config.CredencialesFtp
             )
 
-<<<<<<< HEAD
-            if self.dato.Opcion=='Validar Maestros':
-                self.maestrosftp()
-                return self.__ftp_client.files
-            else:
-                _rutas = self.listbases()
-                try:
-                    self.title=f'Para {dz} se descargara {len(_rutas)} rutas'#TODO #aun no se usa esta variable
-                    if len(_rutas)>=1:
-                        for i in _rutas:
-                            path=self.config.nuevacarpeta(self.config.pathdistribudor,self.config.user,self.config.fecha,i)
-                            self.DESCARGA(i,path)
-                            descomprimir(path)
-                            currentpath=path.join([path])
-                            self.procesarInfo(currentpath)
-                        self.status='green'
-                        return f' proceso exitoso,validar archivo: {path[:-3]}{sep}log'
-                    # else:
-                    #     console.print(" [ERROR: ][bold red]]'NO se TIENE BASES:")
-                except ValueError as e:
-                        raise f" [ERROR: ][bold red] No se tiene Habilitado Modulo de GDD [\] {e}"
-=======
         if self.dato.Opcion=='Validar Maestros':
             self.maestrosftp()
             self.dato.console.log(self.__ftp_client.files)
@@ -236,7 +209,6 @@ class FtpXsales:
                 #     console.print(" [ERROR: ][bold red]]'NO se TIENE BASES:")
             except ValueError as e:
                 self.dato.console.print(" [ERROR: ][bold red] No se tiene Habilitado Modulo de GDD [\]", e)
->>>>>>> 663323a57372b0065308c500c3a866bbc290b1f5
 
 
     #2022 09 15 03 45 02
