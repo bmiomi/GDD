@@ -65,5 +65,7 @@ class Config:
         if ldz.get("Opcion") == "REVICION_MADRUGADA":
             return returndz.get("TODOS")
 
+        if ldz.get("Opcion") == "Validar Maestros":
+            return returndz.get("Maestros")
 
     

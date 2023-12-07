@@ -6,6 +6,9 @@ class ImplicitFTPTLS(FTP_TLS):
 
     """FTP_TLS subclass that automatically wraps sockets in SSL to support implicit FTPS."""
 
+    files=[]
+
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._sock = None

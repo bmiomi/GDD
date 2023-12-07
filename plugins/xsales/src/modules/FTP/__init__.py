@@ -78,7 +78,7 @@ class FtpXsales:
 
         if self.dato.Opcion=='Validar Maestros':
             self.maestrosftp()
-            self.dato.console.log(self.__ftp_client.files)
+            print(self.__ftp_client.files)
         else:
             _rutas = self.listbases()
             try:
