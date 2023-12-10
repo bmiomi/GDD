@@ -1,7 +1,7 @@
 
-from ...config import Config 
-from ...Services.excel_services import ExcelFile
-from ...util import  path, sep,createfolder
+from plugins.xsales.src.service.excelservice.service_excel import ExcelFile
+from plugins.xsales.confi import Config
+from plugins.xsales.util import sep
 
 class ConfigServer(Config):
 
@@ -12,22 +12,22 @@ class ConfigServer(Config):
         for opcion in credenciales:
             if opcion.get(credencial):
                 return opcion[credencial]['USER'], opcion[credencial]['PASSWORD']
-    @property
+
     def folderexcel(self) -> str:
 
-        currpath = path.join(
+        currpath = self.path.join(
             self.config.get('PathFolder').get('folder_file_excel'),
             self.fecha
         )
 
-        if not path.isdir(currpath):
-            createfolder(currpath)
+        if not self.path.isdir(currpath):
+            self.nuevacarpeta(currpath)
         return currpath+sep
 
     def folderMadrugada(self) -> str:
         foldermadrugada = self.config.get('PathFolder').get('folderMadrugada')
-        if not path.isdir(foldermadrugada):
-            createfolder(foldermadrugada)
+        if not self.path.isdir(foldermadrugada):
+            self.nuevacarpeta(foldermadrugada)
         return foldermadrugada
 
     def excelfile(self):

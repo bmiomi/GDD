@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from typing import  Dict
+from typing import Dict
 from .FTP import FtpXsales
 from .Status import Status 
 from .Server import Page

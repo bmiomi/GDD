@@ -4,22 +4,14 @@ from core.Interfaces.Iplugins import IPluging
 
 class Default(IPluging):
 
-    question: Dict= {
-        'type':'rawlist',
-        'name':'ms',
-        'message':'este es me modulo principal',
-        'choices':["1","2","3","4","5"]
-    }
-
-    getsubmodule=None
+    question: List[Dict] = None
 
     @property
     def nombre(self):
         return 'Default'
 
-    def execute(self,questionary):
+    def execute(self):
         questionary.print('Hello World 🦄"')
 
-    def questions(self):
+    def questi_on(self):
         return[{'name': 'name'}]
-    

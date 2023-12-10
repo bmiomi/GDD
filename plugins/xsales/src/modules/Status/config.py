@@ -1,6 +1,5 @@
 
-from ...config import Config
-from ...util import createfolder
+from plugins.xsales.confi import Config
 
 class ConfigStatus(Config):
 
@@ -9,6 +8,5 @@ class ConfigStatus(Config):
     @property
     def filestatus(self):
         folder = self.config.get('PathFolder').get('folderStatus')
-        path = createfolder(folder)
-        return path
+        return self.nuevacarpeta(folder)
 

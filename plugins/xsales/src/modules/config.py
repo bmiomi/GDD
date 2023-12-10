@@ -10,7 +10,7 @@ class ConfigFactory:
     def getModulo(cls, value: Dict = None) -> object:
 
         config=value.get('Modulo')
-        
+
         if config == "Server":
             return ConfigServer()
         if config == "FTP":
