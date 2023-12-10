@@ -1,6 +1,7 @@
 
-from plugins.xsales.config import Config ,ExcelFile
-from plugins.xsales.util import  path, sep,createfolder
+from ...config import Config 
+from ...Services.excel_services import ExcelFile
+from ...util import  path, sep,createfolder
 
 class ConfigServer(Config):
 
@@ -11,7 +12,7 @@ class ConfigServer(Config):
         for opcion in credenciales:
             if opcion.get(credencial):
                 return opcion[credencial]['USER'], opcion[credencial]['PASSWORD']
-
+    @property
     def folderexcel(self) -> str:
 
         currpath = path.join(

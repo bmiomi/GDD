@@ -8,7 +8,11 @@ from core.Interfaces.Iplugins import IPluging
 from default.defult import Default
 
 def loadplugin(plugin: str) -> ModuleType:
+<<<<<<< HEAD
     plugin=plugin['Modulo']
+=======
+
+>>>>>>> 032df41845b8e8a9de39f97ab6d64a0114e459b2
     plugin_module_path = f'plugins.{plugin.lower()}.{plugin.title()}'
     modulo = importlib.import_module(plugin_module_path)
     return modulo
@@ -17,14 +21,14 @@ class MyApplication:
 
     __VERSION = '0.1'
     __plugin = None
-    _question = questionary
+    __question = questionary
     _Console = Console()
 
     @property
 
 
     def question(self):
-        return self._question
+        return self.__question
 
     def search_module(self, nmodele):
         self.name = nmodele
@@ -48,6 +52,7 @@ class MyApplication:
     def run(self) -> None:
 
         while True:
+
 
             pregunta = self.question.prompt(
                 [
@@ -74,6 +79,7 @@ class MyApplication:
 if __name__ == "__main__":
 
     try:
+<<<<<<< HEAD
         app = MyApplication()
         app.run()
 
@@ -82,3 +88,10 @@ if __name__ == "__main__":
 
     # except BaseException as e :
     #     print(f'Se encontro un error GRAVE QUE IMPIDE LA EJECUCION DEL PROGRAMA REPORTAR AL ADMINISTRADOR: {e}')
+=======
+        MyApplication().run()
+    except ModuleNotFoundError as e:
+        print(f'hay un error faltan dependecias por instalar {e}')
+    except BaseException as e :
+        print(f'Se encontro un error GRAVE QUE IMPIDE LA EJECUCION DEL PROGRAMA REPORTAR AL ADMINISTRADOR: {e.__ne__}')
+>>>>>>> 032df41845b8e8a9de39f97ab6d64a0114e459b2

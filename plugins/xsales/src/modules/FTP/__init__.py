@@ -6,7 +6,7 @@ from sqlite3 import  connect
 from typing import List, Protocol
 from plugins.xsales.src.modules.FTP.config import ConfigFtp
 
-from plugins.xsales.util import descomprimir,sep
+from ...util import descomprimir,sep
 
 
 linea = '-' * 60
