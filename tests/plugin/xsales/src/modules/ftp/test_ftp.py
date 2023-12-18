@@ -2,7 +2,7 @@ from questionary import prompt
 from rich.console import Console
 
 from plugins.xsales.src.modules.FTP import FtpXsales
-from plugins.xsales.config import ConfigFactory
+from plugins.xsales.confi import ConfigFactory
 from plugins.xsales.Xsales import Data
 
 

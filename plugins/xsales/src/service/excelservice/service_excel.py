@@ -1,9 +1,9 @@
 import datetime
 import pandas as pd
 from io import StringIO
+from plugins.xsales.confi import Config
+from ....util import  remove, listdir
 
-from plugins.xsales.src.config import Config
-from ..util import  path, remove, listdir
 
 class ExcelFile:
 
@@ -13,6 +13,9 @@ class ExcelFile:
     """
 
     _nombrearchivo = f"reporte{ Config().fecha}.xlsx"
+
+    config:Config
+
 
     @classmethod
     def excelfile(cls):
@@ -24,7 +27,7 @@ class ExcelFile:
         """
 
         d = datetime.today().date().strftime("%d/%m/%Y")
-        c = datetime.fromtimestamp(path.getmtime(cls._nombrearchivo)).strftime(
+        c = datetime.fromtimestamp(cls.config.path.getmtime(cls._nombrearchivo)).strftime(
             "%d/%m/%Y"
         )
 
@@ -54,6 +57,7 @@ class ExcelFile:
     def consolidararchivo(cls):
         pathexcel = path.join(ConfigServer().folderexcel())
         r = listdir(pathexcel)
+        
         t = path.abspath(pathexcel)
         for i in range(len(r)):
             directorio = t + "\\" + r[i]

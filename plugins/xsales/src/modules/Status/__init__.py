@@ -2,8 +2,8 @@ from typing import List,Tuple,Dict
 from unicodedata import name
 from rich.table import Table
 from rich.live import Live
+from .config import ConfigStatus
 
-from plugins.xsales.src.modules.Status.config import ConfigStatus
 class Status:
 
     contador=0
@@ -11,7 +11,7 @@ class Status:
     def __init__(self):
 
         self.config=ConfigStatus()
-        # self.dato=dato
+        self.dato=None
         self.dz:List=list(self.config.Dz()) #decremental 
         self.dzincompletos:List[Dict]=[] #incremental
         self.dzcompletos:list=[]
@@ -43,6 +43,7 @@ class Status:
         return [i for i in self.dz if i not in self.dzcompletos]
 
     def statusrutas(self,DZ:str)->Tuple:
+        print(f" sad: {DZ}")
         import base64
         import json
         import xmltodict
@@ -94,14 +95,13 @@ class Status:
 
             self.dzincompletos.append(statusDz)
 
-    def mostrar_info(self):
+    def mostrar_info(self,namedz):
 
         try:
 
-            DzFaltantes=self.retornardz(self.dato.Opcion)
-
-            for name in DzFaltantes:
-                self.validardz(name)
+            DzFaltantes=self.retornardz(namedz)
+            print(f"DZ FALTANTE {DzFaltantes}")
+            self.validardz(DzFaltantes[0])
 
             with Live (self.generar_table(),refresh_per_second=4) as live:
                 for _ in self.dzincompletos:
@@ -111,6 +111,7 @@ class Status:
             print( f'FINALIZDO: {e}' )
         except KeyboardInterrupt:
             print('se cerrarron las solicitudes.')
+
 
     def generar_table(self):
         numero=1

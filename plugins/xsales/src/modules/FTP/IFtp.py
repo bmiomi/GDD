@@ -1,5 +1,4 @@
-from typing import Protocol
-
+from typing import List, Protocol
 
 class IFtp(Protocol):
 

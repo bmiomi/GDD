@@ -4,44 +4,62 @@ import os
 from types import ModuleType
 import questionary
 from rich.console import Console
+"alan me cae mal"
 
 from core.Interfaces.Iplugins import IPluging
-from default.defult import Default
 
 def loadplugin(plugin: str) -> ModuleType:
-
     plugin_module_path = f'plugins.{plugin.lower()}.{plugin.title()}'
+    print(plugin_module_path)
     modulo = importlib.import_module(plugin_module_path)
     return modulo
 
 class MyApplication:
 
     __VERSION = '0.1'
-    __plugin = [importlib.import_module('default.defult')]
+    __plugin = None
+    _question = questionary
     _Console = Console()
 
     @property
-    def question(self):
-        return questionary
 
-    def search_module(self,name):
-        self.name=name
-        if self.name:
-            self.__plugin = loadplugin(self.name)
+
+    def question(self):
+        return self._question
+
+    def search_module(self, nmodele):
+        self.name = nmodele
+        if nmodele:
+            self.__plugin = loadplugin(nmodele)
+        else:
+            self.__plugin = [importlib.import_module('mai')][0]
+
 
     def getmodulo(self) -> IPluging:
         return self.__plugin.Plugin()
-# lorena segura
-    @staticmethod
+
+    def questions(self, question) -> None:
+        modulo = question.get('Modulo', 0)
+        if modulo == 0:
+            exit()
+        self.search_module(modulo)
+
     def run(self) -> None:
 
         while True:
-            
-            myapp=self.__plugin[0]
-            # myapp.Default().execute(questionary)
-            # if not myapp.Default().estado:
-            #     break
-            self.search_module('Xsales')
+
+            pregunta = self.question.prompt(
+                [
+                    {
+                        'name': 'Modulo',
+                        'type': 'rawlist',
+                        'message': 'SELECCIONE EL MODULO A USAR: ',
+                        'choices': sorted(os.listdir('plugins'), reverse=True)
+                    }
+                ]
+            )
+
+            self.questions(pregunta)
             plugin = self.getmodulo()
             plugin.execute(self.question, self._Console)
 
@@ -56,8 +74,12 @@ class MyApplication:
 if __name__ == "__main__":
 
     try:
-        MyApplication.run(MyApplication())
+        app = MyApplication()
+        app.run()
+
+
     except ModuleNotFoundError as e:
-        raise f'hay un error faltan dependecias por instalar {e}'
-    except BaseException as e :
-        print(f'Se encontro un error GRAVE QUE IMPIDE LA EJECUCION DEL PROGRAMA REPORTAR AL ADMINISTRADOR: {e}')
+        print(f'hay un error faltan dependecias por instalar {e}')
+
+    # except BaseException as e :
+    #     print(f'Se encontro un error GRAVE QUE IMPIDE LA EJECUCION DEL PROGRAMA REPORTAR AL ADMINISTRADOR: {e}')

@@ -1,23 +1,9 @@
-from typing import Callable, Dict, List, Optional
-from dataclasses import dataclass
-
-import questionary
+from typing import Dict, List
 
 from core.Interfaces.Iplugins import IPluging
-from plugins.xsales.src.config import Config
+from plugins.xsales.inputquestion import Data, preguntass
 from .src import XsalesFactory
-from .src.util import scandir,sep
-
-@dataclass
-class Data:
-
-    Turno:str=None
-    Opcion:Optional[str]=None
-    ContenedorDZ:Optional[List]=None
-    dato:Optional[str]=None 
-    questionary:Callable=None
-    console:Callable=None
-
+from .util import scandir,sep
 
 class Plugin(IPluging):
 
@@ -33,34 +19,19 @@ class Plugin(IPluging):
         return 'Xsales'
 
     def execute(self,question,consola):
-        SModulo=questionary.prompt(self.__modulos)
-        main(SModulo,question,consola)
+        SModulo=question.prompt(self.__modulos)
 
+        #objeto a retornar
+        modulo =XsalesFactory.getModulo(value=SModulo) 
 
+        #asignamos el nombre del modulo a la configuracion
+        modulo.config.Revisiones=SModulo 
 
-def preguntass(config:Config) -> List[Dict]:    
-
-
-   uno=questionary.rawselect('selecciona el turno que te toca',choices=config.Turnos).ask()
-
-   dos=questionary.rawselect('Selecione el proceso a realizar',choices=config.Revisiones).ask()
-
-   tres=questionary.checkbox('Seleccione Server',choices=config.Dz({'Opcion':dos,'Turno':uno})).ask()
-
-   return {'Turno':uno,'Opcion':dos,'ContenedorDZ':tres}
-
-
-def main(nombremodulo: dict,*args) ->None:
-    
-    questionari,console = args
-
-    modulo =XsalesFactory.getModulo(nombremodulo) #una clase del modulo
-    modulo.config.Revisiones=nombremodulo
-    resp=preguntass(modulo.config)        
-    data=Data(**resp)
-    modulo.dato=data
-    with console.status('Procesando..'):
-     
-        for nombredz in data.ContenedorDZ:
-            console.log(modulo.mostrar_info(nombredz))
-
+        #realizamos las preguntas
+        resp=preguntass(modulo.config)
+        data=Data(**resp)
+        modulo.dato=data
+        with consola.status('Procesando..',spinner=modulo.config.spinner):
+            for namedz in data.ContenedorDZ:
+                consola.log(modulo.mostrar_info(namedz))
+                
