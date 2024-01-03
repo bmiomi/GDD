@@ -64,6 +64,9 @@ class Config:
 
         if ldz.get("Opcion") == "REVICION_MADRUGADA":
             return returndz.get("TODOS")
+ 
+        if ldz.get("Opcion") == "Todas las rutas":
+           return returndz.get("TODOS")
 
 
     

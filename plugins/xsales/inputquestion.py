@@ -14,7 +14,6 @@ class Data:
 def preguntass(config:Config) ->Dict:    
 
    uno=questionary.rawselect('selecciona el turno que te toca',choices=config.Turnos,).ask()
-   questionary.Separator('esto es un separetor')
    dos=questionary.rawselect('Selecione el proceso a realizar',choices=config.Revisiones).ask()
    tres=questionary.checkbox('Seleccione Server',choices=config.Dz({'Opcion':dos,'Turno':uno})).ask()
 

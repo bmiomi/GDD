@@ -1,4 +1,8 @@
 from typing import Dict, List
+
+from plugins.xsales.src.service.excelservice.service_excel import ExcelFile
+from plugins.xsales.src.service.fileservice.fileservice import FileService
+
 from .Pagedriver.xsalesbeta import  Xsales
 from .User.validador import ValidatorSql
 from .User.Consultas import consultas
@@ -7,29 +11,14 @@ from .User.Consultas import consultas
 class  Page(Xsales):
         
     def __init__(self):
-
         """
             nombre: Nmbre del Dz que se toma para ingresar a la paguina solicitada defecto Pronaca 
+
         """
 
         # self.dato=dato 
 
         self.validadorsql=None
-
-    def consulta_Basedatos(self )-> None:
-
-        sql=self.__get_consulta(self.dato.Opcion)
-        self.consultar(sql)
-
-        if self.get_tamanio_paguinacion == 0 and self.status_table() == True:
-
-            self.validadorsql:ValidatorSql=ValidatorSql(self.dato.Opcion,self.extraerhtml(self._config.excelfile())) 
-            print(self.extraerhtml(self._config.excelfile()))
-            self.generararchivo(self.dato.Opcion,self.validadorsql.validador,self._config.excelfile())
-            
-        elif self.get_tamanio_paguinacion >=1:
-
-            self.Descargar_excel(sql)
 
     def __get_consulta( self,opcion):
 
@@ -54,26 +43,38 @@ class  Page(Xsales):
                  return dic_consultas.get(opcion)(self.dato.dato)
             return dic_consultas.get(opcion)(self.name)
 
+    def consulta_Basedatos(self )-> None:
 
-    def generararchivo(self,nombre:str,data:list[dict],ExcelFile):
+        sql=self.__get_consulta(self.dato.Opcion)
+        self.consultar(sql)
 
-        namefile={'Total_Pedidos':'Dz-ReportPedidos.xlsx','DESC.DIURNOS':'NegoGdd.xlsx'}
+        if self.get_tamanio_paguinacion == 0 and self.status_table == True:
 
-        namefile=namefile.get(nombre,'indefinido')
+            self.validadorsql:ValidatorSql=ValidatorSql(self.dato.Opcion,self.extraerhtml) 
+
+            self.generararchivo(self.dato.Opcion,self.validadorsql.validador)
+            
+        elif self.get_tamanio_paguinacion >=1:
+
+            self.Descargar_excel(sql)
+
+    def generararchivo(self,nombre:str,data:list[dict]):
+
+        archivo=self.config.path.join(self._config.folderMadrugada,f'{nombre}.txt')
+
+        self.config.excelfile.append_df_to_excel(nombre,data,self.config)
+
+
+        # print(ExcelFile.Cdf)
+        # if nombre == 'REVICION_MADRUGADA':
+            
+            # print(archivo)
+            # FileService.filetxt(namearchivo=archivo, data=data[0], config=self.config) 
         
-        if namefile != 'indefinido':
-
-           # ExcelFile._nombrearchivo=namefile
-            ExcelFile.append_df_to_excel(data)
-        
-        if nombre == 'REVICION_MADRUGADA':
-            archivo=''.join([self._config.folderMadrugada(),'REVICION_MADRUGADA'])
-            ExcelFile.filetxt( namearchivo= archivo,data=data[0]) 
-
     def mostrar_info(self,nombredz):
 
         try:
-            super().__init__(name='Pronaca')
+            super().__init__(name=nombredz)
             self.consulta_Basedatos()
             return f'Revisión completada para {nombredz}' 
         except Warning as e:

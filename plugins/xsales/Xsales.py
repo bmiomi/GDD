@@ -19,18 +19,20 @@ class Plugin(IPluging):
         return 'Xsales'
 
     def execute(self,question,consola):
+       
         SModulo=question.prompt(self.__modulos)
 
         #objeto a retornar
         modulo =XsalesFactory.getModulo(value=SModulo) 
-
         #asignamos el nombre del modulo a la configuracion
         modulo.config.Revisiones=SModulo 
-
         #realizamos las preguntas
         resp=preguntass(modulo.config)
+        
         data=Data(**resp)
+        
         modulo.dato=data
+
         with consola.status('Procesando..',spinner=modulo.config.spinner):
             for namedz in data.ContenedorDZ:
                 consola.log(modulo.mostrar_info(namedz))

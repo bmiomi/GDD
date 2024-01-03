@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from typing import Dict
 from .FTP import FtpXsales
-from .Status import Status 
+from .Status.Status import Status 
 from .Server import Page
 
 class XsalesFactory:

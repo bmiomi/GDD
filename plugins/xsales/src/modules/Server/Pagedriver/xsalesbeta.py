@@ -5,18 +5,16 @@ from plugins.xsales.src.modules.Server.config import ConfigServer
 
 class Xsales:
   
-  _config=None
+  _config=ConfigServer()
   
   def __init__(self,name:str) -> None:
-    self._config=ConfigServer()
     self.session=HTMLSession()
     self.xsalesresponse=None 
     self.evento=None
-    self.usuari,self.credencial=self._config.CredencialesServer()
     self.name=name.upper()
+    self._config.CredencialesServer='default'
     self.cookies_ = { 'ASP.NET_SessionId': self.__sesssionxsales() }  
     self.__logerarseesion()
-
 
   @property
   def config(self):
@@ -26,6 +24,16 @@ class Xsales:
   def get_tamanio_paguinacion(self):
     "retorna 1 si se tiene paguinacion caso contario retorna 0"
     return int(self.respuestasXsales()/30)
+
+  @property
+  def extraerhtml(self,) -> list[dict]:
+    # -  (fila) # |  (columna)
+      return self.config.excelfile.recorrer_tabla(self.xsalesresponse.html.xpath('//*[@id="GrwDatatable"]')[0].html)
+
+  @property
+  def status_table(self) -> bool :
+    ' retorna true si al verificar posee registros la tabla,limite de registros en  Tabla a mostrar 30'
+    return True if self.respuestasXsales() >=1 else False
 
   def __sesssionxsales(self):
     "obtine la session de xsales y se retorna el valor."
@@ -78,44 +86,28 @@ class Xsales:
           'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       }
     
-    data = { 'connectionName': self.name+'_XSS_441_PRD','username': self.usuari ,'password': self.credencial}
-
-    response=self.session.request('post','https://prd1.xsalesmobile.net/'+self.name+'/xsm/Login/userLogonServer',
-    headers=head, 
-    cookies=self.cookies_, 
-    data=data)
-    print(response.content,file=open("ad.txt",'w'))
-
-    resultado=json.loads(response.content.decode('UTF-8'))
-
-    if resultado['Message'] !='Authenticated':
-
-      print('\n Contraseña con clave defaul Errada..')
-      print(f'Intentando con con clave {self.name}')
-      credencial=self._config.CredencialesServer(self.name)
-      data['username']=credencial[0]
-      data['password']=credencial[1]
-
-      self.session.request('post',
-      f'https://prd1.xsalesmobile.net/{self.name}/xsm/Login/userLogonServer',
+    data = { 'connectionName': self.name+'_XSS_441_PRD','username': self.config.CredencialesServer[0] ,'password': self.config.CredencialesServer[1]}
+    try:
+      response=self.session.request('post','https://prd1.xsalesmobile.net/'+self.name+'/xsm/Login/userLogonServer',
       headers=head, 
       cookies=self.cookies_, 
       data=data)
+      resultado=json.loads(response.content.decode('UTF-8'))
+      if resultado['Message'] !='Authenticated':
+        print('\n Contraseña con clave defaul Errada..')
+        print(f'Intentando con con clave {self.name}')
+    except:
+        self._config.CredencialesServer= self.name
+        data['username']=self._config.CredencialesServer[1]
+        data['password']=self._config.CredencialesServer[0]
+        self.session.request('post',f'https://prd1.xsalesmobile.net/{self.name}/xsm/Login/userLogonServer',headers=head, cookies=self.cookies_, data=data)
  
-  def extraerhtml(self, excelfile) -> list[dict]:
-    # -  (fila) # |  (columna)
-        return excelfile.recorrer_tabla(self.xsalesresponse.html.xpath('//*[@id="GrwDatatable"]')[0].html)
-
   def respuestasXsales(self)-> str:
     respuesta=self.xsalesresponse.html.xpath('//*[@id="lblMensajeResultado"]')[0]
 
     mensaje=respuesta.text
     if "Comando Ejecutado Exitosamente" in  mensaje:
         return int(''.join([m for m in mensaje if m.isdigit()]))
-
-  def status_table(self) -> bool :
-    ' retorna true si al verificar posee registros la tabla,limite de registros en  Tabla a mostrar 30'
-    return True if self.respuestasXsales() >=1 else False
 
   def consultar(self,sql):
     
