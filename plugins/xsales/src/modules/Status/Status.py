@@ -1,52 +1,27 @@
-from plugins.xsales.src.modules.Status.config import ConfigStatus
-
-
-import xmltodict
+import time
+import base64
+from typing import Dict, List, Tuple
 from rich.live import Live
 from rich.table import Table
+from rich import box
 
 
-import base64
-import json
-from typing import Dict, List, Tuple
+from plugins.xsales.src.modules.Status.config import ConfigStatus
 
 
 class Status:
 
-    contador=0
     config=ConfigStatus()
 
     def __init__(self):
 
-        self.dato=None
-        self.dz:List=list(Status.config.config['FTP']['Repositorio']['credenciales'].keys()) #decremental 
-        self.dzincompletos:List[Dict]=self.dz[:23] #incremental
+        self.dzincompletos:List[Dict]=[] #incremental
         self.dzcompletos:list=[]
 
-    # def leer_archivo(self) -> List:
-
-    #     "Crea un archivo de texto en caso de no exitir y retorna los dz que han culminado \
-    #      su sincronizacion total en una lista"        
-
-    #     diractual=f'{self.config.filestatus}dzTotal-{self.config.fecha}'
-
-    #     if self.config.path.isfile(diractual):
-    #         self.dzcompletos=[i.replace('\n','') for i in  open(diractual,'r+').readlines()]
-
-    # def agregar_archivo(self,name:dict):
-    #     with open(f'{self.config.filestatus}dzTotal-{self.config.fecha}','a') as dz: 
-    #         dz.writelines( f"{name}\n" )
-
-    def retornardz(self,nombre)-> str:
-
-        # self.leer_archivo()
-        print(len(self.dzincompletos))
-        
-        if len(self.dzcompletos)==23:
-            raise ValueError('No existen DZ que validar')
-
-        return [i for i in self.dz if i not in self.dzcompletos]
-
+    @property
+    def estado(self):
+        return True if len(self.dzincompletos)==23 else False
+    
     def obtener_peticion(self,DZ):
         from requests_html import HTMLSession
 
@@ -61,8 +36,6 @@ class Status:
         raise BaseException('Direccion no valida')
 
     def statusrutas(self,DZ:str)->Tuple:
-
-        import base64
         import json
         import xmltodict
 
@@ -71,7 +44,6 @@ class Status:
             parcial=[]
             dies=[]
             total=[]
-
             req=self.obtener_peticion(DZ)
             respo=xmltodict.parse(req.content,encoding='utf-8')
             respon=json.loads(json.dumps(respo))
@@ -88,66 +60,57 @@ class Status:
         except BaseException as e:
             raise BaseException(f'{e}')
 
-    def buscardz(self,name)-> bool:
+    def validardz(self,listadodz):
+        print('entre: ')
 
-        return any( filter(lambda dz:  dz['name']== name,self.dzincompletos  )  )
+        for i in listadodz:
+            
+            bajada,parcial,dies,Total=self.statusrutas(i)
 
-    def validardz(self,nameDz):
-
-        if not self.buscardz(nameDz) and nameDz != 'PRONACA': # dz no existe
-            bajada,parcial,dies,Total=self.statusrutas(nameDz)
             statusDz={
 
-                'name':nameDz,
+                'name':i,
                 'status':
                     { 'bajada':bajada,
-                      'parcial':parcial,
-                      'dies':dies,
-                      'Total':Total
+                        'parcial':parcial,
+                        'dies':dies,
+                        'Total':Total
                     }
             }
 
-            if len(statusDz['status']['bajada'])==0:#estado total
-                self.agregar_archivo(statusDz['name'])
+            if len(statusDz['status']['bajada'])!=0: #estado total
+                self.dzincompletos.append(statusDz)
 
-            self.dzincompletos.append(statusDz)
-
-    def mostrar_info(self,namedz):
-
-        try:
-
-            DzFaltantes=self.retornardz(namedz)
-            print(f"DZ FALTANTE {DzFaltantes}")
-            self.validardz(DzFaltantes[0])
-
-            with Live (self.generar_table(),refresh_per_second=4) as live:
-                for _ in self.dzincompletos:
-                    live.update(self.generar_table(),refresh=True)
-
-        except ValueError as e:
-            print( f'FINALIZDO: {e}' )
-        except KeyboardInterrupt:
-            print('se cerrarron las solicitudes.')
-
-    def generar_table(self):
+    def generar_table(self ):
+       
         numero=1
-        self.table=Table(title='STATUS RUTAS DZ ')
-        self.table.add_column('NOMBRE')
+        self.table=Table(box=box.ROUNDED)
+        self.table.add_column('Nombre')
         self.table.add_column('bajada')
         self.table.add_column('Parcial')
         self.table.add_column('dies')
         self.table.add_column('Total')
 
         for i in self.dzincompletos:
-
-            nombre=i['name']
             estado=i['status']
-            bajada=estado['bajada']
-            parcial=estado['parcial']
-            dies=estado['dies']
-            total=estado['Total']
-
-            self.table.add_row(nombre,str(bajada),str(parcial),str(dies),str(total),style=f"color({numero})")
+            self.table.add_row(i['name'],str(estado['bajada']),str(estado['parcial']),str(estado['dies']),str(estado['Total']),style=f"color({numero})")
             numero+=1
-
         return self.table
+   
+    def mostrar_info(self,namedz,):
+        try:
+
+            self.validardz(namedz)
+
+            with Live (self.generar_table()) as live:
+                while self.estado:
+                    time.sleep(5)
+                    print('reiniciar tabla')
+                    self.dzincompletos=[]
+                    self.validardz(namedz)
+                    live.update(self.generar_table())
+
+        except ValueError as e:
+            print( f'FINALIZDO: {e}' )
+        except KeyboardInterrupt:
+            print('se cerrarron las solicitudes.')

@@ -20,15 +20,22 @@ class Test_Status(TestCase):
     def test_dzcompletar(self):
         self.assertEqual(len(self.teststatus.dzincompletos),23)
 
-    def test_statusrutas(self):
+    def test_statusrutas_error(self):
 
         with self.assertRaises(BaseException) as cm:
             self.teststatus.statusrutas('as')
         self.assertEqual(str(cm.exception), "Direccion no valida")
 
-            
+    def test_statusrutas_ok(self):
+        r=self.teststatus.statusrutas('Disanahisa')
+        self.assertEqual(type(r),tuple)
+
+
+
 if __name__=='__main__':
     main()
 
 
 
+dz=22
+dzcompletos=1
