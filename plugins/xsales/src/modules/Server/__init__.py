@@ -71,17 +71,18 @@ class  Page(Xsales):
             # print(archivo)
             # FileService.filetxt(namearchivo=archivo, data=data[0], config=self.config) 
         
-    def mostrar_info(self,nombredz):
-
-        try:
-            super().__init__(name=nombredz)
-            self.consulta_Basedatos()
-            return f'Revisión completada para {nombredz}' 
-        except Warning as e:
-            return f"{str(e)} DZ/Regional {nombredz}"
-        except ValueError as e:
-            return f"{str(e)} DZ/Regional {nombredz}"
-        
+    def mostrar_info(self,nombresdz,console):
+        with console.status('Procesando..',spinner=self.config.spinner):
+            for nombredz in nombresdz:
+                try:
+                    super().__init__(name=nombredz)
+                    self.consulta_Basedatos()                  
+                    console.log( f'Revisión completada para {nombredz}')
+                except Warning as e:
+                    console.log( f"{str(e)} DZ/Regional {nombredz}")
+                except ValueError as e:
+                    console.log( f"{str(e)} DZ/Regional {nombredz}")
+            
         # if self.dato.Opcion=='DESC.DIURNOS' and len(self.dato.ContenedorDZ)==24:
         #     self._config.excelfile().consolidararchivo()
         #     print('\n se consolidara el archivo')

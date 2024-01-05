@@ -17,10 +17,10 @@ class FtpXsales:
         Conexion con el Ftp de Xsales
 
     """
+    config=ConfigFtp()
 
     def __init__(self) -> None:
         self.dato=None
-        self.config=ConfigFtp()
         # self.config.operacion=self.dato.Opcion
         self.rutascero = []
 
@@ -65,36 +65,37 @@ class FtpXsales:
     def maestrosftp(self):
         self.__ftp_client.mostrarar_achivos(excluide=self.config.xmlfile)
 
-    def mostrar_info(self,dz):
+    def mostrar_info(self,dz,console):
+       
+       with  console.status('Procesando',spinner=self.config.spinner):
+            self.config.operacion=self.dato.Opcion
 
-        self.config.operacion=self.dato.Opcion
+            self.config.user=dz[0]
+            self.__ftp_client:IFtp =  ImplicitFTPTLS() if self.config.protocol== 'FTPS' else  SFTP_()
+            self.__ftp_client.acceso(
+                self.config.host,
+                *self.config.CredencialesFtp
+                )
 
-        self.config.user=dz
-        self.__ftp_client:IFtp =  ImplicitFTPTLS() if self.config.protocol== 'FTPS' else  SFTP_()
-        self.__ftp_client.acceso(
-            self.config.host,
-            *self.config.CredencialesFtp
-            )
-
-        if self.dato.Opcion=='Validar Maestros':
-            self.maestrosftp()
-            self.dato.console.log(self.__ftp_client.files)
-        else:
-            _rutas = self.listbases()
-            try:
-                # self.dato.console.print(f'Para {dz} se descargara {len(_rutas)} rutas')
-                if len(_rutas)>=1:
-                    for i in _rutas:
-                        path=self.config.nuevacarpeta(self.config.pathdistribudor,self.config.user,self.config.fecha,i)
-                        self.DESCARGA(i,path)
-                        descomprimir(path)
-                        currentpath=path.join([path])
-                        self.procesarInfo(currentpath)
-                    return f' proceso exitoso,validar archivo: {path[:-3]}{sep}log'
-                # else:
-                #     console.print(" [ERROR: ][bold red]]'NO se TIENE BASES:")
-            except ValueError as e:
-                self.dato.console.print(" [ERROR: ][bold red] No se tiene Habilitado Modulo de GDD [\]", e)
+            if self.dato.Opcion=='Validar Maestros':
+                self.maestrosftp()
+                console.log(self.__ftp_client.file)
+            else:
+                _rutas = self.listbases()
+                try:
+                    # self.dato.console.print(f'Para {dz} se descargara {len(_rutas)} rutas')
+                    if len(_rutas)>=1:
+                        for i in _rutas:
+                            path=self.config.nuevacarpeta(self.config.pathdistribudor,self.config.user,self.config.fecha,i)
+                            self.DESCARGA(i,path)
+                            descomprimir(path)
+                            currentpath=path.join([path])
+                            self.procesarInfo(currentpath)
+                        console.log(f' proceso exitoso,validar archivo: {path[:-3]}{sep}log')
+                    # else:
+                    #     console.print(" [ERROR: ][bold red]]'NO se TIENE BASES:")
+                except ValueError as e:
+                    console.print(" [ERROR: ][bold red] No se tiene Habilitado Modulo de GDD [\]", e)
 
 
     #2022 09 15 03 45 02
