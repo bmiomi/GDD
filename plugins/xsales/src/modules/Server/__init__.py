@@ -9,28 +9,17 @@ from .User.Consultas import consultas
 
 
 class  Page(Xsales):
-<<<<<<< HEAD
     
     
     def __init__(self,dato,Config) :
 
-=======
-        
-    def __init__(self):
->>>>>>> 6809dd0e76ee732e8887cd9e0e71a1ea12626e95
         """
             nombre: Nmbre del Dz que se toma para ingresar a la paguina solicitada defecto Pronaca 
 
         """
-<<<<<<< HEAD
         self.message=[]
         self.dato=dato 
         self.Config=Config
-=======
-
-        # self.dato=dato 
-
->>>>>>> 6809dd0e76ee732e8887cd9e0e71a1ea12626e95
         self.validadorsql=None
 
     def __get_consulta( self,opcion):
@@ -99,4 +88,3 @@ class  Page(Xsales):
         # if self.dato.Opcion=='DESC.DIURNOS' and len(self.dato.ContenedorDZ)==24:
         #     self._config.excelfile().consolidararchivo()
         #     print('\n se consolidara el archivo')
->>>>>>> 6809dd0e76ee732e8887cd9e0e71a1ea12626e95

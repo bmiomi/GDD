@@ -37,5 +37,5 @@ class Plugin(IPluging):
 
         # with consola.status('Procesando..',spinner=modulo.config.spinner):
             # for namedz in data.ContenedorDZ:
-            modulo.mostrar_info(data.ContenedorDZ)
+        modulo.mostrar_info(data.ContenedorDZ)
             
