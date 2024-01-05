@@ -7,13 +7,15 @@ from .util import scandir,sep
 
 class Plugin(IPluging):
 
-    __modulos:List[Dict] = {
+    __submodulo=None
+    __config=None
+    __question:Dict= {
             'type': 'rawlist',
             'name': 'Modulo',
             'message': "Que Sub Modulo de Xsales desea ? ",
             'choices': [i.name for i in scandir (f'.{sep}plugins{sep}xsales{sep}src{sep}modules') if i.is_dir() and i.name!='__pycache__']
         }
-    
+
     @property
     def nombre(self) -> str:
         return 'Xsales'
@@ -35,5 +37,5 @@ class Plugin(IPluging):
 
         # with consola.status('Procesando..',spinner=modulo.config.spinner):
             # for namedz in data.ContenedorDZ:
-        # print(data.ContenedorDZ)
-        modulo.mostrar_info(data.ContenedorDZ,consola)
+            modulo.mostrar_info(data.ContenedorDZ)
+            

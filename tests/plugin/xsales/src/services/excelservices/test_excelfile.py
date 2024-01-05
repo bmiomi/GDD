@@ -1,3 +1,23 @@
+<<<<<<< HEAD
+from plugins.xsales.confi import ExcelFile
+import pandas as pd
+
+from unittest import TestCase
+
+
+
+def test_excelfile():
+
+    ExcelFile()
+
+    namefile=ExcelFile._nombrearchivo    
+
+    excel=pd.read_excel(namefile)
+
+    df=pd.DataFrame(excel)
+    
+    df.to_csv(f"{namefile[:-4]}csv")
+=======
 
 from plugins.xsales.src.modules.Server.config import ConfigServer
 from plugins.xsales.src.service.excelservice.service_excel import ExcelFile
@@ -24,3 +44,4 @@ class Test_Excelfile(TestCase):
 
 if __name__=="__main__":
     main()
+>>>>>>> 6809dd0e76ee732e8887cd9e0e71a1ea12626e95

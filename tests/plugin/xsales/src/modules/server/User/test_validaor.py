@@ -80,10 +80,13 @@ class Test_Validator(TestCase):
   def setUp(self) -> None:
     self.validacion=ValidatorSql('REVICION_MADRUGADA' ,revisionMDZ)
 
+<<<<<<< HEAD
+=======
 
   def test_validar_matutina(self):
     self.validacion.vmatutina()
 
+>>>>>>> 6809dd0e76ee732e8887cd9e0e71a1ea12626e95
   def test_stock(self,validador):
     assert len(self.validacion.validador)!=0
 
