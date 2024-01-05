@@ -13,7 +13,7 @@ class Tests_Config(TestCase):
 
 
     def test_foldermadrugada(self):
-        print(self.testconfig.folderMadrugada)
+        self.testconfig.Revisiones
         self.assertEqual(type(self.testconfig.folderMadrugada),str)
 
 if __name__=="__main__":

@@ -11,15 +11,12 @@ from .User.Consultas import consultas
 class  Page(Xsales):
     
     
-    def __init__(self,dato,Config) :
+    def __init__(self) :
 
         """
             nombre: Nmbre del Dz que se toma para ingresar a la paguina solicitada defecto Pronaca 
 
         """
-        self.message=[]
-        self.dato=dato 
-        self.Config=Config
         self.validadorsql=None
 
     def __get_consulta( self,opcion):
@@ -67,11 +64,6 @@ class  Page(Xsales):
         self.config.excelfile.append_df_to_excel(nombre,data,self.config)
 
 
-        # print(ExcelFile.Cdf)
-        # if nombre == 'REVICION_MADRUGADA':
-            
-            # print(archivo)
-            # FileService.filetxt(namearchivo=archivo, data=data[0], config=self.config) 
         
     def mostrar_info(self,nombresdz,console):
         with console.status('Procesando..',spinner=self.config.spinner):
@@ -85,6 +77,3 @@ class  Page(Xsales):
                 except ValueError as e:
                     console.log( f"{str(e)} DZ/Regional {nombredz}")
             
-        # if self.dato.Opcion=='DESC.DIURNOS' and len(self.dato.ContenedorDZ)==24:
-        #     self._config.excelfile().consolidararchivo()
-        #     print('\n se consolidara el archivo')
