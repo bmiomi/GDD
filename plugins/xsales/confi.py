@@ -1,7 +1,9 @@
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Dict, List
+from os import path
 import yaml
-from .util import  path,sep,createfolder
+
+from .util import sep,createfolder
 
 class Config:
 
@@ -12,9 +14,8 @@ class Config:
         file = path.join(f"plugins{sep}xsales{sep}config.yaml")
         try:
             return yaml.load(open(file, "r"), Loader=yaml.FullLoader)
-        except FileNotFoundError:
-            print("No se tiene archivo de configuracion.")
-            exit()
+        except FileNotFoundError :
+           raise FileExistsError("No se tiene archivo de configuracion.")
 
     @property
     def fecha(self):
@@ -23,7 +24,7 @@ class Config:
     @property
     def path(self):
         return path
-
+    
     @property
     def Turnos(self)-> List:
         return self.config['Turnos']
@@ -36,13 +37,16 @@ class Config:
     def Revisiones(self,value) -> List:
         self.__tiporevision=self.config['Revisiones'][value.get('Modulo')]
 
-    def nuevacarpeta(self, *path):
-        return createfolder(*path)
+    def nuevacarpeta(self,*path):
+        return createfolder(self.path,*path)
 
     def Dz(self, ldz: dict = {"Opcion": "TODOS"}) -> list[str]:
+
         returndz = {
+
             "TODOS": self.config["FTP"]["Repositorio"]["credenciales"].keys(),
-            "Grupos": [self.config["Grupos"]]
+            "Grupos": [self.config["Grupos"]],
+            "Maestros":self.config['FTP']['Maestros'].keys()
         }
 
         if ldz.get("Opcion") in ("REVICION_MADRUGADA", "Validar DESC"):
@@ -58,7 +62,11 @@ class Config:
         if ldz.get("Opcion") == "Total_Pedidos":
             return returndz.get("TODOS")
 
-        if ldz.get("Opcion") != "REVICION_MADRUGADA":
+        if ldz.get("Opcion") == "REVICION_MADRUGADA":
             return returndz.get("TODOS")
-
  
+        if ldz.get("Opcion") == "Todas las rutas":
+           return returndz.get("TODOS")
+
+
+    

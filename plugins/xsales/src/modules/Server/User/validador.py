@@ -1,4 +1,5 @@
 from datetime import date, timedelta, datetime
+
 from enum import Enum
 
 class HorasenvioStock(Enum):
@@ -13,7 +14,6 @@ class ValidatorSql:
     def __init__(self, tipoconsulta: str, dataset: list[dict]):
         self.__dataset = dataset
         self.validador = self.validar(tipoconsulta)
-        self.mensa_je=' '
 
     def validar(self,tipoconsulta:str):
 
@@ -26,13 +26,13 @@ class ValidatorSql:
         }
 
         funcion = contenedor.get(tipoconsulta, 0)
-
         if not callable(funcion):
             raise ValueError('No se reconoce el tipo de consulta')
         estado = funcion()
         if estado:
             return self.__dataset
         return [{}]
+    
 
     def vmatutina(self):
         
@@ -40,13 +40,13 @@ class ValidatorSql:
 
         waringistemporales = []
 
+        # print(f'se imprime dataset: {self.__dataset}')
+
         for i in self.__dataset:
             for x in i:
-                
                 if x.startswith('preventa') and i[x] != date.today().strftime('%d/%m/%Y'):
                     raise ValueError(
                         f'[ERROR] {x} {i[x]}')
-                
                 if x.find('Inicio') != -1 or x.find('INICIO') != -1:
                     Hora_stock = i[x]  # d m a h:m:s p
                     self._calcularstock(i,Hora_stock)
@@ -78,23 +78,20 @@ class ValidatorSql:
             raise Warning(
                 f"[ERROR-DZ] stock fuera de horario {valor_Hora_stock}  ")
 
-        if clave_hora != 'HoraECUInicioStock' and (hoy != ayer and datetime.strptime('10:00:00 PM', '%I:%M:%S %p').time() <= fhora):
+        if clave_hora == 'HoraECUInicioStock' and (hoy != ayer and datetime.strptime('10:00:00 PM', '%I:%M:%S %p').time() <= fhora):
             raise Warning(
                 f"[ERROR-DIRECTA] stock fuera de horario  para {valor_Hora_stock} "
             )
 
     def validartotalpedidos(self):
-        print(self.__dataset[0])
 
         for i in self.__dataset:
-            # if i['DMD_PROCESADOS'] == i['ERP_EXITO'] == i['DMD_TOTAL']:
-            #     self.mensa_je=f"[successful] informacion esta cuadrada DMD_TOTAL: {i['DMD_TOTAL']} "
-
+            if i['DMD_PROCESADOS'] == i['ERP_EXITO'] == i['DMD_TOTAL']:
+                return f"[successful] informacion esta cuadrada DMD_TOTAL: {i['DMD_TOTAL']} "
             if i['DMD_EXTENDIDAS'] != 0 and i['DMD_TRANSITO'] != 0 and i['DMD_NOPROCESADOS'] != 0:
                 raise Warning( f"[Warrning] se tiene informacion por procesar: ") 
             if i['DMD_ERROR'] != 0 or i['DMD_ERRSOAP'] != 0:
                 raise ValueError("[ERROR] se tiene informacion en DMD_ERROR / DMD_ERRSOAP: ")
-        return True
 
     def descuentosDiurnos(self):
         return True

@@ -1,5 +1,4 @@
-from ...config import Config
-from ...util import createfolder
+from plugins.xsales.confi import Config
 
 class ConfigFtp(Config):
 
@@ -25,8 +24,9 @@ class ConfigFtp(Config):
 
     @property
     def protocol(self):
+        print(self.__user)
         if self.__operacion == "Validar Maestros":
-            return self.config.get('FTP').get('Maestros').get(self.__user).get('protocol')
+            return self.config.get('Maestros').get(self.__user).get('protocol')
         return self.config.get('FTP').get('Repositorio').get('protocol')
 
     @property
@@ -61,7 +61,6 @@ class ConfigFtp(Config):
     @property
     def CredencialesFtp(self) -> tuple:
         credenciales = None
-        print('se imprime operacion',self.__operacion)
         if 'DESC' in self.__operacion:
             credenciales = self.config.get('FTP').get(
                 'Repositorio').get('credenciales').get(self.__user)
@@ -84,8 +83,11 @@ class ConfigFtp(Config):
 
     @property
     def pathdistribudor(self):
-        print(self.fecha)
+<<<<<<< HEAD
         createfolder (self.config.get('PathFolder').get('Distribuidores'),
+=======
+        self.nuevacarpeta(self.config.get('PathFolder').get('Distribuidores'),
+>>>>>>> 6809dd0e76ee732e8887cd9e0e71a1ea12626e95
                       self.user,
                       self.fecha,)
         return self.config.get('PathFolder').get('Distribuidores')
