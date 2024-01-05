@@ -92,8 +92,7 @@ class FtpXsales:
                             currentpath=path.join([path])
                             self.procesarInfo(currentpath)
                         console.log(f' proceso exitoso,validar archivo: {path[:-3]}{sep}log')
-                    # else:
-                    #     console.print(" [ERROR: ][bold red]]'NO se TIENE BASES:")
+                     #     console.print(" [ERROR: ][bold red]]'NO se TIENE BASES:")
                 except ValueError as e:
                     console.print(" [ERROR: ][bold red] No se tiene Habilitado Modulo de GDD [\]", e)
 
