@@ -3,6 +3,7 @@ import os
 from types import ModuleType
 import questionary
 from rich.console import Console
+"alan me cae mal"
 
 from core.Interfaces.Iplugins import IPluging
 from default.defult import Default
@@ -20,6 +21,8 @@ class MyApplication:
     _Console = Console()
 
     @property
+
+
     def question(self):
         return self._question
 
@@ -61,7 +64,27 @@ class MyApplication:
             s.mostrar_info()
             self._Console.log(*s.message,style=s.status,sep='\n')
 
+            pregunta = self.question.prompt(
+                [
+                    {
+                        'name': 'Modulo',
+                        'type': 'rawlist',
+                        'message': 'SELECCIONE EL MODULO A USAR: ',
+                        'choices': sorted(os.listdir('plugins'), reverse=True)
+                    }
+                ]
+            )
 
+            self.questions(pregunta)
+            plugin = self.getmodulo()
+            plugin.execute(self.question, self._Console)
+
+
+    def update(self):
+        import requests
+        version = requests.get('')
+        if self.__VERSION != version:
+            pass
 
 
 if __name__ == "__main__":
@@ -72,5 +95,6 @@ if __name__ == "__main__":
 
     except ModuleNotFoundError as e:
         print(f'hay un error faltan dependecias por instalar {e}')
+
     # except BaseException as e :
     #     print(f'Se encontro un error GRAVE QUE IMPIDE LA EJECUCION DEL PROGRAMA REPORTAR AL ADMINISTRADOR: {e}')
