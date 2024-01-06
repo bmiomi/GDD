@@ -22,7 +22,7 @@ class Plugin(IPluging):
 
     def execute(self,question,consola):
        
-        SModulo=question.prompt(self.__modulos)
+        SModulo=question.prompt(self.__question)
 
         #objeto a retornar
         modulo =XsalesFactory.getModulo(value=SModulo) 

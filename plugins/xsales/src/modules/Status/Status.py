@@ -20,7 +20,7 @@ class Status:
 
     @property
     def estado(self):
-        return True if len(self.dzincompletos)==23 else False
+        return True if len(self.dzincompletos)<=23 else False
     
     def obtener_peticion(self,DZ):
         from requests_html import HTMLSession
