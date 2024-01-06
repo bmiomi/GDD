@@ -5,7 +5,6 @@ from rich.live import Live
 from rich.table import Table
 from rich import box
 
-
 from plugins.xsales.src.modules.Status.config import ConfigStatus
 
 
@@ -58,11 +57,9 @@ class Status:
                     dies.append(i['rotCode'])
             return (bajada,parcial,dies,total)
         except BaseException as e:
-            raise BaseException(f'{e}')
+            print (f'Se encontro un error : {e}')
 
     def validardz(self,listadodz):
-        print('entre: ')
-
         for i in listadodz:
             
             bajada,parcial,dies,Total=self.statusrutas(i)
@@ -97,20 +94,14 @@ class Status:
             numero+=1
         return self.table
    
-    def mostrar_info(self,namedz,):
-        try:
+    def mostrar_info(self,namedz,console):
 
-            self.validardz(namedz)
+        self.validardz(namedz)
 
-            with Live (self.generar_table()) as live:
-                while self.estado:
-                    time.sleep(5)
-                    print('reiniciar tabla')
-                    self.dzincompletos=[]
-                    self.validardz(namedz)
-                    live.update(self.generar_table())
+        with Live (self.generar_table(),console=console) as live:
+            while self.estado:
+                time.sleep(5)
+                self.dzincompletos=[]
+                self.validardz(namedz)
+                live.update(self.generar_table())
 
-        except ValueError as e:
-            print( f'FINALIZDO: {e}' )
-        except KeyboardInterrupt:
-            print('se cerrarron las solicitudes.')

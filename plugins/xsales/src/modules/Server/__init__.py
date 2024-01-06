@@ -9,28 +9,14 @@ from .User.Consultas import consultas
 
 
 class  Page(Xsales):
-<<<<<<< HEAD
     
     
-    def __init__(self,dato,Config) :
+    def __init__(self) :
 
-=======
-        
-    def __init__(self):
->>>>>>> 6809dd0e76ee732e8887cd9e0e71a1ea12626e95
         """
             nombre: Nmbre del Dz que se toma para ingresar a la paguina solicitada defecto Pronaca 
 
         """
-<<<<<<< HEAD
-        self.message=[]
-        self.dato=dato 
-        self.Config=Config
-=======
-
-        # self.dato=dato 
-
->>>>>>> 6809dd0e76ee732e8887cd9e0e71a1ea12626e95
         self.validadorsql=None
 
     def __get_consulta( self,opcion):
@@ -78,48 +64,16 @@ class  Page(Xsales):
         self.config.excelfile.append_df_to_excel(nombre,data,self.config)
 
 
-        # print(ExcelFile.Cdf)
-        # if nombre == 'REVICION_MADRUGADA':
+        
+    def mostrar_info(self,nombresdz,console):
+        with console.status('Procesando..',spinner=self.config.spinner):
+            for nombredz in nombresdz:
+                try:
+                    super().__init__(name=nombredz)
+                    self.consulta_Basedatos()                  
+                    console.log( f'Revisión completada para {nombredz}')
+                except Warning as e:
+                    console.log( f"{str(e)} DZ/Regional {nombredz}")
+                except ValueError as e:
+                    console.log( f"{str(e)} DZ/Regional {nombredz}")
             
-            # print(archivo)
-            # FileService.filetxt(namearchivo=archivo, data=data[0], config=self.config) 
-        
-    def mostrar_info(self,nombredz):
-
-        try:
-            super().__init__(name=nombredz)
-            self.consulta_Basedatos()
-            return f'Revisión completada para {nombredz}' 
-        except Warning as e:
-            return f"{str(e)} DZ/Regional {nombredz}"
-        except ValueError as e:
-            return f"{str(e)} DZ/Regional {nombredz}"
-        
-<<<<<<< HEAD
-        if nombre == 'REVICION_MADRUGADA':
-            archivo=''.join([self._config.folderMadrugada(),'REVICION_MADRUGADA'])
-            ExcelFile.filetxt( namearchivo= archivo,data=data[0]) 
-
-    def mostrar_info(self):
-
-        for nombredz in self.dato.ContenedorDZ:
-            super().__init__(nombredz,self.Config)
-            try:
-                self.consulta_Basedatos()
-                self.status='green'
-                self.message.append(f'Revisión completada para {nombredz}')
-            except Warning as e:
-                self.status='yellow'
-                self.message=f"{str(e)} DZ/Regional {nombredz}"
-            except ValueError as e:
-                self.status='red'
-                self.message=f"{str(e)} DZ/Regional {nombredz}"
-        
-        if self.dato.Opcion=='DESC.DIURNOS' and len(self.dato.ContenedorDZ)==24:
-          self._config.excelfile().consolidararchivo()
-          print('\n se consolidara el archivo')
-=======
-        # if self.dato.Opcion=='DESC.DIURNOS' and len(self.dato.ContenedorDZ)==24:
-        #     self._config.excelfile().consolidararchivo()
-        #     print('\n se consolidara el archivo')
->>>>>>> 6809dd0e76ee732e8887cd9e0e71a1ea12626e95

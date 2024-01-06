@@ -10,119 +10,6 @@ from .config import ConfigFtp
 
 linea = '-' * 60
 
-<<<<<<< HEAD
-class IFtp(Protocol):
-
-    def dir(self):
-        raise NotImplemented
-
-    def acceso(self, *arg):
-        raise NotImplemented
-
-    def change_dir(self, dir: str):
-        raise NotImplemented
-
-    def list_dir(self, *arg):
-        raise NotImplemented
-
-class DataConn:
-    """"""
-    def __init__(self, db_name):
-        """Constructor"""
-        self.db_name = db_name
-
-    def __enter__(self):
-        """
-        Open the database connection
-        """
-        self.conn = connect(self.db_name)
-        return self.conn
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        """
-        Close the connection
-        """
-        self.conn.close()
-        if exc_val:
-            raise
-
-class SFTP_(Transport):
-
-    sftp = None
-    files=[]
-
-    def __init__(self):
-        super().__init__(('200.31.27.104', 22))
-
-    def acceso(self, *arg):
-        self.connect(username=arg[1], password=arg[2])
-        self.sftp = SFTP.from_transport(self)
-
-    def change_dir(self, dir):
-        self.sftp.chdir(dir)
-
-    def list_dir(self,*args):
-        return self.sftp.listdir(*args)
-
-    def mostrarar_achivos(self,excluide=None):
-
-        self.change_dir('PROD')
-        
-        for i in [i for i in self.list_dir() if  i not in excluide]:
-            path=self.sftp.getcwd()
-            file_date=self.sftp.stat(path+'/'+i).st_mtime
-            last_modified_ts = datetime.fromtimestamp(file_date)
-            last_modified_date = datetime.fromtimestamp(file_date).date() 
-            last_modified_time = datetime.fromtimestamp(file_date).time()
-            day=date.today()-timedelta(days=1)
-            if last_modified_date != day and last_modified_time>=datetime.strptime("22:30:00","%H:%M:%S").time()  :
-                self.files.append({'file':i,'fecha':last_modified_ts.strftime("%Y-%m-%d %H:%M:%S")})
-               
-class ImplicitFTPTLS(FTP_TLS):
-
-    """FTP_TLS subclass that automatically wraps sockets in SSL to support implicit FTPS."""
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._sock = None
-
-    @property
-    def sock(self):
-        """Return the socket."""
-        return self._sock
-
-    @sock.setter
-    def sock(self, value):
-        """When modifying the socket, ensure that it is ssl wrapped."""
-        if value is not None and not isinstance(value, ssl.SSLSocket):
-            value = self.context.wrap_socket(value)
-        self._sock = value
-
-    def change_dir(self, dir: str):
-        return self.cwd(dir)
-
-    def list_dir(self, *args):
-        return self.dir(*args)
-
-    def acceso(self, *args):
-        self.connect(host=args[0], port=990, timeout=18000)
-        self.login(args[1], args[2])
-
-    def mostrarar_achivos(self, excluide=None):
-        from dateutil import parser,tz
-        f=[] 
-        self.change_dir('/COMUNES')
-        self.list_dir(f.append)
-        for line in f:
-            tokens = line.split(maxsplit = 9)
-            time_str = tokens[5] + " " + tokens[6] + " " + tokens[7]
-            time = parser.parse(time_str,tzinfos =tz.gettz('Quito'))
-            latest_name = tokens[8]
-            latest_time = time
-            print(f"file: {latest_name} fecha {latest_time}" )
-
-=======
->>>>>>> 6809dd0e76ee732e8887cd9e0e71a1ea12626e95
 class FtpXsales:
 
     """
@@ -130,12 +17,10 @@ class FtpXsales:
         Conexion con el Ftp de Xsales
 
     """
-    status=''
-    title=''
+    config=ConfigFtp()
 
     def __init__(self) -> None:
         self.dato=None
-        self.config=ConfigFtp()
         # self.config.operacion=self.dato.Opcion
         self.rutascero = []
 
@@ -180,30 +65,25 @@ class FtpXsales:
     def maestrosftp(self):
         self.__ftp_client.mostrarar_achivos(excluide=self.config.xmlfile)
 
-<<<<<<< HEAD
+    def mostrar_info(self,dz,console):
+       
+       with  console.status('Procesando',spinner=self.config.spinner):
+            self.config.operacion=self.dato.Opcion
 
-    def mostrar_info(self):
-=======
-    def mostrar_info(self,dz):
->>>>>>> 6809dd0e76ee732e8887cd9e0e71a1ea12626e95
+            self.config.user=dz[0]
+            self.__ftp_client:IFtp =  ImplicitFTPTLS() if self.config.protocol== 'FTPS' else  SFTP_()
+            self.__ftp_client.acceso(
+                self.config.host,
+                *self.config.CredencialesFtp
+                )
 
-        self.config.operacion=self.dato.Opcion
-
-        self.config.user=dz
-        self.__ftp_client:IFtp =  ImplicitFTPTLS() if self.config.protocol== 'FTPS' else  SFTP_()
-        self.__ftp_client.acceso(
-            self.config.host,
-            *self.config.CredencialesFtp
-            )
-
-<<<<<<< HEAD
             if self.dato.Opcion=='Validar Maestros':
                 self.maestrosftp()
-                return self.__ftp_client.files
+                console.log(self.__ftp_client.file)
             else:
                 _rutas = self.listbases()
                 try:
-                    self.title=f'Para {dz} se descargara {len(_rutas)} rutas'#TODO #aun no se usa esta variable
+                    # self.dato.console.print(f'Para {dz} se descargara {len(_rutas)} rutas')
                     if len(_rutas)>=1:
                         for i in _rutas:
                             path=self.config.nuevacarpeta(self.config.pathdistribudor,self.config.user,self.config.fecha,i)
@@ -211,33 +91,10 @@ class FtpXsales:
                             descomprimir(path)
                             currentpath=path.join([path])
                             self.procesarInfo(currentpath)
-                        self.status='green'
-                        return f' proceso exitoso,validar archivo: {path[:-3]}{sep}log'
-                    # else:
-                    #     console.print(" [ERROR: ][bold red]]'NO se TIENE BASES:")
+                        console.log(f' proceso exitoso,validar archivo: {path[:-3]}{sep}log')
+                     #     console.print(" [ERROR: ][bold red]]'NO se TIENE BASES:")
                 except ValueError as e:
-                        raise f" [ERROR: ][bold red] No se tiene Habilitado Modulo de GDD [\] {e}"
-=======
-        if self.dato.Opcion=='Validar Maestros':
-            self.maestrosftp()
-            self.dato.console.log(self.__ftp_client.files)
-        else:
-            _rutas = self.listbases()
-            try:
-                # self.dato.console.print(f'Para {dz} se descargara {len(_rutas)} rutas')
-                if len(_rutas)>=1:
-                    for i in _rutas:
-                        path=self.config.nuevacarpeta(self.config.pathdistribudor,self.config.user,self.config.fecha,i)
-                        self.DESCARGA(i,path)
-                        descomprimir(path)
-                        currentpath=path.join([path])
-                        self.procesarInfo(currentpath)
-                    return f' proceso exitoso,validar archivo: {path[:-3]}{sep}log'
-                # else:
-                #     console.print(" [ERROR: ][bold red]]'NO se TIENE BASES:")
-            except ValueError as e:
-                self.dato.console.print(" [ERROR: ][bold red] No se tiene Habilitado Modulo de GDD [\]", e)
->>>>>>> 6809dd0e76ee732e8887cd9e0e71a1ea12626e95
+                    console.print(" [ERROR: ][bold red] No se tiene Habilitado Modulo de GDD [\]", e)
 
 
     #2022 09 15 03 45 02
@@ -270,6 +127,7 @@ class FtpXsales:
             print(latest_name,latest_time)
 
     def ds(self):
+        print()
 
         self.config.user=self.dato.ContenedorDZ[0]
         self.__ftp_client:IFtp =  ImplicitFTPTLS() if self.config.protocol== 'FTPS' else  SFTP_()
