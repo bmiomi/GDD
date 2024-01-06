@@ -13,14 +13,13 @@ class ConfigServer(Config):
 
     @property
     def CredencialesServer(self):
-        return (self.__credencialpassword,self.__credencialuser)
+        return ( self.__credencialpassword,self.__credencialuser[0],)
 
     @CredencialesServer.setter
     def CredencialesServer(self,credencial) -> None:
         credenciales = self.config.get('Server').get('credenciales')
         for opcion in credenciales:
             if opcion.get(credencial):
-                print(credencial)
                 self.__credencialuser=opcion[credencial]['USER'], 
                 self.__credencialpassword=opcion[credencial]['PASSWORD']
 
@@ -39,9 +38,10 @@ class ConfigServer(Config):
     @property
     def folderMadrugada(self) -> str:
         foldermadrugada = self.config.get('PathFolder').get('folderMadrugada')
+
         if not self.path.isdir(foldermadrugada):
             self.nuevacarpeta(foldermadrugada)
-        return foldermadrugada
+        return foldermadrugada+sep
 
     @property
     def excelfile(self):

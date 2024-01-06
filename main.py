@@ -10,6 +10,7 @@ from core.Interfaces.Iplugins import IPluging
 
 def loadplugin(plugin: str) -> ModuleType:
     plugin_module_path = f'plugins.{plugin.lower()}.{plugin.title()}'
+    print(plugin_module_path)
     modulo = importlib.import_module(plugin_module_path)
     return modulo
 

@@ -86,7 +86,7 @@ class Xsales:
           'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       }
     
-    data = { 'connectionName': self.name+'_XSS_441_PRD','username': self.config.CredencialesServer[0] ,'password': self.config.CredencialesServer[1]}
+    data = { 'connectionName': self.name+'_XSS_441_PRD','username': self.config.CredencialesServer[1] ,'password': self.config.CredencialesServer[0]}
     try:
       response=self.session.request('post','https://prd1.xsalesmobile.net/'+self.name+'/xsm/Login/userLogonServer',
       headers=head, 
@@ -98,8 +98,8 @@ class Xsales:
         print(f'Intentando con con clave {self.name}')
     except:
         self._config.CredencialesServer= self.name
-        data['username']=self._config.CredencialesServer[1]
         data['password']=self._config.CredencialesServer[0]
+        data['username']=self._config.CredencialesServer[1]
         self.session.request('post',f'https://prd1.xsalesmobile.net/{self.name}/xsm/Login/userLogonServer',headers=head, cookies=self.cookies_, data=data)
  
   def respuestasXsales(self)-> str:
