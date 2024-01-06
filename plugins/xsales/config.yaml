@@ -222,16 +222,14 @@ Revisiones:
   Server:
 
     - REVICION_MADRUGADA
-    - DESC.DIURNOS
-    - DESC. 
     - VALIDAR_ClIENTE
     - Total_Pedidos
 
   FTP:
 
-    - Validar DESC 
     - Validar Maestros 
     - Descargar Base
+    - Validar DESC 
 
   Status:
 

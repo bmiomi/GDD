@@ -3,6 +3,7 @@ import ssl
 
 
 class ImplicitFTPTLS(FTP_TLS):
+    files=[]
 
     """FTP_TLS subclass that automatically wraps sockets in SSL to support implicit FTPS."""
 

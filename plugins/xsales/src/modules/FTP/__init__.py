@@ -65,38 +65,6 @@ class FtpXsales:
     def maestrosftp(self):
         self.__ftp_client.mostrarar_achivos(excluide=self.config.xmlfile)
 
-<<<<<<< HEAD
-    def mostrar_info(self,dz):
-
-        self.config.operacion=self.dato.Opcion
-
-        self.config.user=dz
-        self.__ftp_client:IFtp =  ImplicitFTPTLS() if self.config.protocol== 'FTPS' else  SFTP_()
-        self.__ftp_client.acceso(
-            self.config.host,
-            *self.config.CredencialesFtp
-            )
-
-        if self.dato.Opcion=='Validar Maestros':
-            self.maestrosftp()
-            self.dato.console.log(self.__ftp_client.files)
-        else:
-            _rutas = self.listbases()
-            try:
-                # self.dato.console.print(f'Para {dz} se descargara {len(_rutas)} rutas')
-                if len(_rutas)>=1:
-                    for i in _rutas:
-                        path=self.config.nuevacarpeta(self.config.pathdistribudor,self.config.user,self.config.fecha,i)
-                        self.DESCARGA(i,path)
-                        descomprimir(path)
-                        currentpath=path.join([path])
-                        self.procesarInfo(currentpath)
-                    return f' proceso exitoso,validar archivo: {path[:-3]}{sep}log'
-                # else:
-                #     console.print(" [ERROR: ][bold red]]'NO se TIENE BASES:")
-            except ValueError as e:
-                self.dato.console.print(" [ERROR: ][bold red] No se tiene Habilitado Modulo de GDD [\]", e)
-=======
     def mostrar_info(self,dz,console):
        
        with  console.status('Procesando',spinner=self.config.spinner):
@@ -111,7 +79,7 @@ class FtpXsales:
 
             if self.dato.Opcion=='Validar Maestros':
                 self.maestrosftp()
-                console.log(self.__ftp_client.file)
+                console.log(self.__ftp_client.files)
             else:
                 _rutas = self.listbases()
                 try:
@@ -127,7 +95,6 @@ class FtpXsales:
                      #     console.print(" [ERROR: ][bold red]]'NO se TIENE BASES:")
                 except ValueError as e:
                     console.print(" [ERROR: ][bold red] No se tiene Habilitado Modulo de GDD [\]", e)
->>>>>>> de0a5f2993584932b82597354112f11d68d3414d
 
 
     #2022 09 15 03 45 02

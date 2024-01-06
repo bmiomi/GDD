@@ -9,25 +9,14 @@ from .User.Consultas import consultas
 
 
 class  Page(Xsales):
-<<<<<<< HEAD
-        
-    def __init__(self):
-=======
     
     
     def __init__(self) :
 
->>>>>>> de0a5f2993584932b82597354112f11d68d3414d
         """
             nombre: Nmbre del Dz que se toma para ingresar a la paguina solicitada defecto Pronaca 
 
         """
-<<<<<<< HEAD
-
-        # self.dato=dato 
-
-=======
->>>>>>> de0a5f2993584932b82597354112f11d68d3414d
         self.validadorsql=None
 
     def __get_consulta( self,opcion):
@@ -88,24 +77,3 @@ class  Page(Xsales):
                 except ValueError as e:
                     console.log( f"{str(e)} DZ/Regional {nombredz}")
             
-<<<<<<< HEAD
-            # print(archivo)
-            # FileService.filetxt(namearchivo=archivo, data=data[0], config=self.config) 
-        
-    def mostrar_info(self,listadodz):
-
-        try:
-            for nombredz in listadodz:
-                super().__init__(name=nombredz)
-                self.consulta_Basedatos()
-            return f'Revisión completada para {nombredz}' 
-        except Warning as e:
-            return f"{str(e)} DZ/Regional {nombredz}"
-        except ValueError as e:
-            return f"{str(e)} DZ/Regional {nombredz}"
-        
-        # if self.dato.Opcion=='DESC.DIURNOS' and len(self.dato.ContenedorDZ)==24:
-        #     self._config.excelfile().consolidararchivo()
-        #     print('\n se consolidara el archivo')
-=======
->>>>>>> de0a5f2993584932b82597354112f11d68d3414d
