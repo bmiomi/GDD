@@ -18,6 +18,7 @@ class  Page(Xsales):
 
         """
         self.validadorsql=None
+        self.contenedor=[]
 
     def __get_consulta( self,opcion):
 
@@ -45,13 +46,17 @@ class  Page(Xsales):
     def consulta_Basedatos(self )-> None:
 
         sql=self.__get_consulta(self.dato.Opcion)
+ 
         self.consultar(sql)
 
         if self.get_tamanio_paguinacion == 0 and self.status_table == True:
 
             self.validadorsql:ValidatorSql=ValidatorSql(self.dato.Opcion,self.extraerhtml) 
 
-            self.generararchivo(self.dato.Opcion,self.validadorsql.validador)
+            self.contenedor.append(self.validadorsql.validador) 
+
+    
+            # self.generararchivo(self.dato.Opcion,self.validadorsql.validador)
             
         elif self.get_tamanio_paguinacion >=1:
 
@@ -61,8 +66,7 @@ class  Page(Xsales):
 
         archivo=self.config.path.join(self._config.folderMadrugada,f'{nombre}.txt')
 
-        self.config.excelfile.append_df_to_excel(nombre,data,self.config)
-
+        self.config.excelfile.create_file(nombre,data,self.config)
 
         
     def mostrar_info(self,nombresdz,console):
@@ -76,4 +80,5 @@ class  Page(Xsales):
                     console.log( f"{str(e)} DZ/Regional {nombredz}")
                 except ValueError as e:
                     console.log( f"{str(e)} DZ/Regional {nombredz}")
-            
+
+   

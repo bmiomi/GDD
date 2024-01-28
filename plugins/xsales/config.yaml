@@ -135,7 +135,7 @@ FTP:
         protocol: 'FTPS'
 
         USER: 'MAESTROS'
-
+        
         PASS: 'XS@L3Sm@3Str0S#2019'
 
   defaul_path: 
@@ -222,16 +222,14 @@ Revisiones:
   Server:
 
     - REVICION_MADRUGADA
-    - DESC.DIURNOS
-    - DESC. 
     - VALIDAR_ClIENTE
     - Total_Pedidos
 
   FTP:
 
-    - Validar DESC 
     - Validar Maestros 
     - Descargar Base
+    - Validar DESC 
 
   Status:
 

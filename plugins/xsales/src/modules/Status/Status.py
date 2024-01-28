@@ -1,6 +1,7 @@
 import time
 import base64
 from typing import Dict, List, Tuple
+
 from rich.live import Live
 from rich.table import Table
 from rich import box
@@ -19,16 +20,14 @@ class Status:
 
     @property
     def estado(self):
-        return True if len(self.dzincompletos)==23 else False
+        return True if len(self.dzincompletos)<=23 else False
     
     def obtener_peticion(self,DZ):
         from requests_html import HTMLSession
-
         request_=HTMLSession()
         credenciales=f"Data Source=USAWS2012404;Initial Catalog={DZ.upper()}_XSS_441_PRD;User Id={DZ.upper()};Password=XSales.{DZ.upper()}@2015;"
         base64_message=base64.b64encode(credenciales.encode('ascii')).decode('ascii')
         solicitud=f"http://prd1.xsalesmobile.net/{DZ}/xsc/rep/inner/ExportXMLRep.asmx/StatusRoute?ConnectionString={base64_message}&rotCode=&statusFilter=&partialStatusFilter="
-       
         req=request_.get(solicitud)
         if req.status_code==200:
             return req
@@ -55,17 +54,18 @@ class Status:
                     total.append(i['rotCode'])
                 if i['status']=='10' and  self.config.fecha in i['statusDate']:
                     dies.append(i['rotCode'])
+
             return (bajada,parcial,dies,total)
+
         except BaseException as e:
+
             print (f'Se encontro un error : {e}')
 
     def validardz(self,listadodz):
-        for i in listadodz:
-            
+
+        for i in listadodz:            
             bajada,parcial,dies,Total=self.statusrutas(i)
-
             statusDz={
-
                 'name':i,
                 'status':
                     { 'bajada':bajada,
@@ -81,7 +81,7 @@ class Status:
     def generar_table(self ):
        
         numero=1
-        self.table=Table(box=box.ROUNDED)
+        self.table=Table(box=box.ROUNDED,)
         self.table.add_column('Nombre')
         self.table.add_column('bajada')
         self.table.add_column('Parcial')
@@ -96,12 +96,14 @@ class Status:
    
     def mostrar_info(self,namedz,console):
 
-        self.validardz(namedz)
+        try:
+            self.validardz(namedz)
 
-        with Live (self.generar_table(),console=console) as live:
-            while self.estado:
-                time.sleep(5)
-                self.dzincompletos=[]
-                self.validardz(namedz)
-                live.update(self.generar_table())
-
+            with Live (self.generar_table(),console=console,) as live:
+                while self.estado:
+                    time.sleep(5)
+                    self.dzincompletos=[]
+                    self.validardz(namedz)
+                    live.update(self.generar_table())
+        except KeyboardInterrupt :
+            print('PROGRAMA CERRADO POR USARIO')

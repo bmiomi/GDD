@@ -59,7 +59,7 @@ class Config:
             ][0]
             return v
 
-        if ldz.get("Opcion") in ("Total_Pedidos","REVICION_MADRUGADA","Todas las rutas"):
+        if ldz.get("Opcion") in ("Total_Pedidos","REVICION_MADRUGADA","Todas las rutas","VALIDAR_ClIENTE"):
             return returndz.get("TODOS")
 
         if ldz.get("Opcion") == "Validar Maestros":

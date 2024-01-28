@@ -3,7 +3,7 @@
 class FileService:
 
     @classmethod
-    def filetxt(cls, namearchivo: str, data: dict,config):
+    def create_file(cls, namearchivo: str, data: dict,config):
         archiv = "".join([namearchivo, config.fecha])
         with open(archiv, "a") as file:
             for key, value in data.items():

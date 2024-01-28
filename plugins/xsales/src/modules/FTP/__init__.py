@@ -79,7 +79,7 @@ class FtpXsales:
 
             if self.dato.Opcion=='Validar Maestros':
                 self.maestrosftp()
-                console.log(self.__ftp_client.file)
+                console.log(self.__ftp_client.files)
             else:
                 _rutas = self.listbases()
                 try:

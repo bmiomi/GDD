@@ -40,8 +40,6 @@ class ValidatorSql:
 
         waringistemporales = []
 
-        # print(f'se imprime dataset: {self.__dataset}')
-
         for i in self.__dataset:
             for x in i:
                 if x.startswith('preventa') and i[x] != date.today().strftime('%d/%m/%Y'):
@@ -113,7 +111,6 @@ class ValidatorSql:
             'PROCESADO': 'No',
             'APVCODE': 'nan'
         }
-        print(self.__dataset[0])
 
     def general(self):
 

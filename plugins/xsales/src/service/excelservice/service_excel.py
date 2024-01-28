@@ -16,12 +16,6 @@ class ExcelFile:
 
     """
 
-    _nombrearchivo = f"reporte{ Config().fecha}.xlsx"
-
-
-    config:Config=Config()
-
-
     @classmethod
     def excelfile(cls):
         """
@@ -39,7 +33,9 @@ class ExcelFile:
             if c != d:
                 remove(cls._nombrearchivo)
                 return "\n removiendo el archivo"
+       
         except FileNotFoundError as e:
+       
                 return f'no se encontro archivo {cls._nombrearchivo} a eliminar'
 
 
@@ -56,23 +52,20 @@ class ExcelFile:
 
 
     @classmethod
-    def append_df_to_excel(cls, nombre,dfs,config):
-
+    def create_file(cls, nombre,dfs,config):
         # nombrearchivo=config.path.join(nombre,config.fecha+'.xlsm')
         temporal=pd.DataFrame(dfs)
         cls.Cdf=pd.concat([temporal,cls.Cdf])
-
-        # result.to_excel(config.folderexcel+nombrearchivo, index=False, sheet_name=nombre)
+        cls.Cdf.to_excel(str(config.folderexcel+nombre+'.xlsx'), index=False, sheet_name=nombre)
 
 
     @classmethod
     def consolidararchivo(cls, config):
         pathexcel = config.path.join(config.folderexcel) 
         r = listdir(pathexcel)
-
         t = config.path.abspath(pathexcel)
         for i in range(len(r)):
             directorio = t + "\\" + r[i]
             q = pd.read_excel(directorio, dtype="str")
-            cls.append_df_to_excel(q)
+            cls.create_file(q)
 
