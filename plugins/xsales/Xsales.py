@@ -20,18 +20,20 @@ class Plugin(IPluging):
 
     def execute(self,question,consola):
        
-        SModulo=question.prompt(self.__modulos)
+        try:
+            SModulo=question.prompt(self.__modulos)
+            #objeto a retornar
+            modulo =XsalesFactory.getModulo(value=SModulo) 
+            #asignamos el nombre del modulo a la configuracion
+            modulo.config.Revisiones=SModulo 
+            #realizamos las preguntas
+            resp=preguntass(modulo.config)
+            
+            data=Data(**resp)
+            
+            modulo.dato=data
 
-        #objeto a retornar
-        modulo =XsalesFactory.getModulo(value=SModulo) 
+            modulo.mostrar_info(data.ContenedorDZ,consola)
 
-        #asignamos el nombre del modulo a la configuracion
-        modulo.config.Revisiones=SModulo 
-        #realizamos las preguntas
-        resp=preguntass(modulo.config)
-        
-        data=Data(**resp)
-        
-        modulo.dato=data
-
-        modulo.mostrar_info(data.ContenedorDZ,consola)
+        except BaseException:
+            pass

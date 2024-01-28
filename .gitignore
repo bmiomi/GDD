@@ -7,5 +7,5 @@ __pycache__
 
 #file
 .gitignore
-
+beta.py
 plugins/xsales/*.yaml
