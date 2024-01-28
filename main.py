@@ -4,13 +4,11 @@ import os
 from types import ModuleType
 import questionary
 from rich.console import Console
-"alan me cae mal"
 
 from core.Interfaces.Iplugins import IPluging
 
 def loadplugin(plugin: str) -> ModuleType:
     plugin_module_path = f'plugins.{plugin.lower()}.{plugin.title()}'
-    print(plugin_module_path)
     modulo = importlib.import_module(plugin_module_path)
     return modulo
 
@@ -45,24 +43,26 @@ class MyApplication:
         self.search_module(modulo)
 
     def run(self) -> None:
+        try:
+            while True:
 
-        while True:
+                pregunta = self.question.prompt(
+                    [
+                        {
+                            'name': 'Modulo',
+                            'type': 'rawlist',
+                            'message': 'SELECCIONE EL MODULO A USAR: ',
+                            'choices': sorted(os.listdir('plugins'), reverse=True)
+                        }
+                    ]
+                )
 
-            pregunta = self.question.prompt(
-                [
-                    {
-                        'name': 'Modulo',
-                        'type': 'rawlist',
-                        'message': 'SELECCIONE EL MODULO A USAR: ',
-                        'choices': sorted(os.listdir('plugins'), reverse=True)
-                    }
-                ]
-            )
+                self.questions(pregunta)
+                plugin = self.getmodulo()
+                plugin.execute(self.question, self._Console)
+        except KeyboardInterrupt:
 
-            self.questions(pregunta)
-            plugin = self.getmodulo()
-            plugin.execute(self.question, self._Console)
-
+            print('Cancelled by user')
 
     def update(self):
         import requests
@@ -79,6 +79,7 @@ if __name__ == "__main__":
 
 
     except ModuleNotFoundError as e:
+
         print(f'hay un error faltan dependecias por instalar {e}')
 
     # except BaseException as e :

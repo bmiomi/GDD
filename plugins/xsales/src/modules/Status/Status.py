@@ -106,4 +106,5 @@ class Status:
                     self.validardz(namedz)
                     live.update(self.generar_table())
         except KeyboardInterrupt :
-            print('PROGRAMA CERRADO POR USARIO')
+
+            print('Cancelled by user')
