@@ -2,20 +2,28 @@ from datetime import datetime
 from typing import Dict, List
 from os import path
 import yaml
+from yamlinclude import YamlIncludeConstructor
 
 from .util import sep,createfolder
 
 class Config:
 
     __tiporevision:List=[]
+    
 
     @property
     def config(self) -> Dict:
-        file = path.join(f"plugins{sep}xsales{sep}config.yaml")
+
+        file = path.join("plugins", "xsales")
+
+        YamlIncludeConstructor.add_to_loader_class(loader_class=yaml.FullLoader, base_dir=file)
+
         try:
-            return yaml.load(open(file, "r"), Loader=yaml.FullLoader)
-        except FileNotFoundError :
-           raise FileExistsError("No se tiene archivo de configuracion.")
+            return yaml.load(open(f'{file}\config.yml'), Loader=yaml.FullLoader)
+        
+        except FileNotFoundError as e:
+            print( 'se tiene un error ',e)
+        #    raise FileExistsError("No se tiene archivo de configuracion.")
 
     @property
     def fecha(self):
@@ -35,6 +43,7 @@ class Config:
 
     @Revisiones.setter
     def Revisiones(self,value) -> List:
+
         self.__tiporevision=self.config['Revisiones'][value.get('Modulo')]
 
     def nuevacarpeta(self,*path):
@@ -44,9 +53,9 @@ class Config:
 
         returndz = {
 
-            "TODOS": self.config["FTP"]["Repositorio"]["credenciales"].keys(),
+            "TODOS": self.config['datos']["FTP"]["Repositorio"]["credenciales"].keys(),
             "Grupos": [self.config["Grupos"]],
-            "Maestros":self.config['FTP']['Maestros'].keys()
+            "Maestros":self.config['datos']['FTP']['Maestros'].keys()
         }
 
         if ldz.get("Opcion") in ("REVICION_MADRUGADA", "Validar DESC"):
@@ -59,7 +68,7 @@ class Config:
             ][0]
             return v
 
-        if ldz.get("Opcion") in ("Total_Pedidos","REVICION_MADRUGADA","Todas las rutas","VALIDAR_ClIENTE"):
+        if ldz.get("Opcion") in ("Total_Pedidos","REVICION_MADRUGADA","Todas las rutas","VALIDAR_ClIENTE","DESC.DIURNOS"):
             return returndz.get("TODOS")
 
         if ldz.get("Opcion") == "Validar Maestros":

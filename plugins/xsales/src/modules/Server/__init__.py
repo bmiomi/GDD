@@ -1,3 +1,4 @@
+import os
 from typing import Dict, List
 
 from plugins.xsales.src.service.excelservice.service_excel import ExcelFile
@@ -10,7 +11,7 @@ from .User.Consultas import consultas
 
 class  Page(Xsales):
     
-    
+
     def __init__(self) :
 
         """
@@ -19,6 +20,7 @@ class  Page(Xsales):
         """
         self.validadorsql=None
         self.contenedor=[]
+        
 
     def __get_consulta( self,opcion):
 
@@ -46,7 +48,7 @@ class  Page(Xsales):
     def consulta_Basedatos(self )-> None:
 
         sql=self.__get_consulta(self.dato.Opcion)
- 
+
         self.consultar(sql)
 
         if self.get_tamanio_paguinacion == 0 and self.status_table == True:
@@ -54,13 +56,14 @@ class  Page(Xsales):
             self.validadorsql:ValidatorSql=ValidatorSql(self.dato.Opcion,self.extraerhtml) 
 
             self.contenedor.append(self.validadorsql.validador) 
-
     
             # self.generararchivo(self.dato.Opcion,self.validadorsql.validador)
             
         elif self.get_tamanio_paguinacion >=1:
 
             self.Descargar_excel(sql)
+
+    
 
     def generararchivo(self,nombre:str,data:list[dict]):
 
@@ -80,5 +83,17 @@ class  Page(Xsales):
                     console.log( f"{str(e)} DZ/Regional {nombredz}")
                 except ValueError as e:
                     console.log( f"{str(e)} DZ/Regional {nombredz}")
+        
+        if  len(self.dato.ContenedorDZ) == self.contador:
+            
+            print(self.contenedor,file=open('fas'))
+            print()
+            for namefile in os.listdir(self.config.path.join( self.config.folderexcel)):
+                pass
+                # self.config.excelfile.
+
+            # if self.config.path.exists( self.config.path.join( self.config.folderexcel,self.config.fecha) ):
+            #     for i in os.listdir:
+            #         self.generararchivo(self.nombre,i)
 
    

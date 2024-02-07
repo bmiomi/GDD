@@ -12,12 +12,17 @@ class ConfigServer(Config):
     __credencialpassword:str=''
 
     @property
+    def configserver(self):
+        return self.config.get('datod').get('Server')
+
+
+    @property
     def CredencialesServer(self):
         return ( self.__credencialpassword,self.__credencialuser[0],)
 
     @CredencialesServer.setter
     def CredencialesServer(self,credencial) -> None:
-        credenciales = self.config.get('Server').get('credenciales')
+        credenciales = self.configserver.get('credenciales')
         for opcion in credenciales:
             if opcion.get(credencial):
                 self.__credencialuser=opcion[credencial]['USER'], 

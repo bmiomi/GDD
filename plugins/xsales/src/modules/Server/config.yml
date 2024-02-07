@@ -1,0 +1,9 @@
+Server:
+  credenciales:
+    - default:
+        USER: SoporteBz
+        PASSWORD: BZs2023*
+
+    - PROORIENTE:
+        USER: soporte.nuo
+        PASSWORD: Nuo2021*

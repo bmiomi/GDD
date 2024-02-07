@@ -1,5 +1,4 @@
 from datetime import date, timedelta, datetime
-
 from enum import Enum
 
 class HorasenvioStock(Enum):
@@ -11,9 +10,11 @@ class HorasenvioStock(Enum):
 
 class ValidatorSql:
 
+
     def __init__(self, tipoconsulta: str, dataset: list[dict]):
         self.__dataset = dataset
         self.validador = self.validar(tipoconsulta)
+
 
     def validar(self,tipoconsulta:str):
 
@@ -33,7 +34,6 @@ class ValidatorSql:
             return self.__dataset
         return [{}]
     
-
     def vmatutina(self):
         
         "valida informacion de revisiones matutinas"

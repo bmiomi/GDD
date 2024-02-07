@@ -1,4 +1,5 @@
 import importlib
+import questionary
 from rich.console import Console
 from core.Interfaces.Iplugins import IPluging
 from typing import Self
@@ -32,16 +33,16 @@ class MyApplication:
     def search_module(self,name): 
         try:
             for i in self.__plugin:
-                self._currentModule=i[name]
+                self._currentModule=i[name['Modulo']]
                 break            
         except:
             raise 'error no se encontro el modulo' 
 
-    def run(self,pregunta) -> None:
+    def run(self,pregunta:dict) -> None:
         try:
             while True:
                 self.search_module(pregunta)
-                self.getmodulo.execute(self._Console)
+                self.getmodulo.execute(questionary,self._Console)
         except ModuleNotFoundError as e:
             print(e)
         except BaseException as e :

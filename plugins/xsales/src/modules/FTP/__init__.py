@@ -66,12 +66,12 @@ class FtpXsales:
         self.__ftp_client.mostrarar_achivos(excluide=self.config.xmlfile)
 
     def mostrar_info(self,dz,console):
-       
        with  console.status('Procesando',spinner=self.config.spinner):
             self.config.operacion=self.dato.Opcion
 
             self.config.user=dz[0]
             self.__ftp_client:IFtp =  ImplicitFTPTLS() if self.config.protocol== 'FTPS' else  SFTP_()
+            
             self.__ftp_client.acceso(
                 self.config.host,
                 *self.config.CredencialesFtp
