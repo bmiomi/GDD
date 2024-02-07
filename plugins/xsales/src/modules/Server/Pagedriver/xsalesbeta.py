@@ -6,7 +6,8 @@ from plugins.xsales.src.modules.Server.config import ConfigServer
 class Xsales:
   
   _config=ConfigServer()
-  
+  contador =0
+
   def __init__(self,name:str) -> None:
     self.session=HTMLSession()
     self.xsalesresponse=None 
@@ -15,6 +16,7 @@ class Xsales:
     self._config.CredencialesServer='default'
     self.cookies_ = { 'ASP.NET_SessionId': self.__sesssionxsales() }  
     self.__logerarseesion()
+    Xsales.contador+=1
 
   @property
   def config(self):
@@ -180,5 +182,5 @@ class Xsales:
 
     responsed = self.session.request('post','https://prd1.xsalesmobile.net/'+self.name+'/xsm/app/webForms/webTools/sqlQuery/DBQueryUI.aspx', headers=headers, cookies=self.cookies_,data=data)
     
-    with open( f'{self._config.folderexcel()}{self.name}.xlsx','wb') as file:
+    with open( f'{self._config.folderexcel}{self.name}.xlsx','wb') as file:
         file.write(responsed.content )

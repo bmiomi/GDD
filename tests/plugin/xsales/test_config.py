@@ -16,6 +16,13 @@ class TestConfig(TestCase):
     def test_path(self):
         print(f'mi Molulo: {self.config.path}')
 
+    def test_file_ftp(self):
+        self.config.config['datos'],{'dato':'hola mundo'}
+
+    def test_file_server(self):
+        self.config.config['datod'],{'config':'asd'}
+
+
     def test_Dz(self):
         pass
 

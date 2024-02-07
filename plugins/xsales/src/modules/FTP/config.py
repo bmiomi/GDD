@@ -7,6 +7,10 @@ class ConfigFtp(Config):
     spinner = 'smiley'
 
     @property
+    def configftp(self):
+        return self.config.get('datos').get('FTP')    
+
+    @property
     def operacion(self):
         return self.__operacion
 
@@ -25,47 +29,46 @@ class ConfigFtp(Config):
     @property
     def protocol(self):
         if self.__operacion == "Validar Maestros":
-            return self.config.get('FTP').get('Maestros').get(self.__user).get('protocol')
-        return self.config.get('FTP').get('Repositorio').get('protocol')
+            return self.configftp.get('Maestros').get(self.__user).get('protocol')
+        return self.configftp.get('Repositorio').get('protocol')
 
     @property
     def host(self):
-        return self.config.get('FTP').get('Repositorio').get('host')
+        return self.configftp.get('Repositorio').get('host')
 
     @property
     def port(self):
-        return self.config.get('FTP').get('Repositorio').get('port')
+        return self.configftp.get('Repositorio').get('port')
 
     @property
     def pathdownload(self):
 
-        path = self.config.get('FTP').get('Repositorio').get(
+        path = self.configftp.get('Repositorio').get(
             'credenciales').get(self.user).get('path', None)
         if path:
             return path.get('Download')
-        return self.config.get('FTP').get('defaul_path').get('Download')
+        return self.configftp.get('defaul_path').get('Download')
 
     @property
     def excluide(self):
-        path = self.config.get('FTP').get('Repositorio').get(
+        path = self.configftp.get('Repositorio').get(
             'credenciales').get(self.user).get('excluide')
         if path:
             return path
-        return self.config.get('FTP').get('excluide')
+        return self.configftp.get('excluide')
 
     @property
     def xmlfile(self):
-        return self.config.get('FTP').get('xmlfile')
+        return self.configftp.get('xmlfile')
 
     @property
     def CredencialesFtp(self) -> tuple:
         credenciales = None
-        print('se imprime operacion',self.__operacion)
         if 'DESC' in self.__operacion:
-            credenciales = self.config.get('FTP').get(
+            credenciales = self.configftp.get(
                 'Repositorio').get('credenciales').get(self.__user)
         if 'Maestros' in self.__operacion:
-            credenciales = self.config.get('FTP').get(
+            credenciales = self.configftp.get(
                 'Maestros').get(self.__user)
         return self.Credenciales(credenciales)
 

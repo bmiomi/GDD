@@ -3,7 +3,6 @@ from typing import Any, Hashable
 import pandas as pd
 from io import StringIO
 
-from plugins.xsales.confi import Config
 from ....util import  remove, listdir
 
 
@@ -52,11 +51,10 @@ class ExcelFile:
 
 
     @classmethod
-    def create_file(cls, nombre,dfs,config):
-        # nombrearchivo=config.path.join(nombre,config.fecha+'.xlsm')
-        temporal=pd.DataFrame(dfs)
-        cls.Cdf=pd.concat([temporal,cls.Cdf])
-        cls.Cdf.to_excel(str(config.folderexcel+nombre+'.xlsx'), index=False, sheet_name=nombre)
+    def read_list_files(cls, directorio):
+            for file in directorio:
+                dfs = pd.read_excel(file, dtype="str")
+                cls.Cdf=pd.concat([dfs,cls.Cdf])
 
 
     @classmethod

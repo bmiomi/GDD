@@ -11,7 +11,7 @@ class Data:
     ContenedorDZ:Optional[List]=None
     dato:Optional[str]=None 
 
-def preguntass(config:Config) ->Dict:    
+def preguntass(config:Config) ->Dict:  
 
    uno=questionary.rawselect('selecciona el turno que te toca',choices=config.Turnos,).ask()
    dos=questionary.rawselect('Selecione el proceso a realizar',choices=config.Revisiones).ask()

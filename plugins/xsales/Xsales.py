@@ -1,7 +1,7 @@
 from typing import Dict, List
 
 from core.Interfaces.Iplugins import IPluging
-from plugins.xsales.inputquestion import Data, preguntass
+from .inputquestion import Data, preguntass
 from .src import XsalesFactory
 from .util import scandir,sep
 
@@ -27,13 +27,12 @@ class Plugin(IPluging):
             #asignamos el nombre del modulo a la configuracion
             modulo.config.Revisiones=SModulo 
             #realizamos las preguntas
-            resp=preguntass(modulo.config)
-            
+            resp=preguntass((modulo.config))
             data=Data(**resp)
-            
             modulo.dato=data
 
             modulo.mostrar_info(data.ContenedorDZ,consola)
 
-        except BaseException:
+        except BaseException as e :
+            print (e)
             pass
