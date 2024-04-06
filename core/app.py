@@ -14,39 +14,33 @@ class MyApplication:
     _Console = Console()
     _currentModule=None
         
-    def __new__(cls) -> Self:
-        modules={'defaul':importlib.import_module('default.defult')}
+
+    @classmethod
+    def plugins(cls):
+        modules={}        
         for  i in os.listdir('plugins'):
             modules[i]=loadplugin(i)
-        
         cls.__plugin.append(modules)
-        return object.__new__(cls)
+        return cls.__plugin
 
-    @property
-    def plugins(self):
-        return self.__plugin
+    @classmethod
+    def getmodulo(cls) -> IPluging:
+        return cls._currentModule.Plugin()
 
-    @property
-    def getmodulo(self) -> IPluging:
-        return self._currentModule.Plugin()
+    @classmethod
+    def search_module(cls,name): 
+        "Se busca el modolo selecionado y se retorna su directorio"
+        module_found = list(filter(lambda i: name in i, cls.plugins()))
+        if module_found:
+            cls._currentModule = module_found[0][name]
+        else:
+            raise ValueError('Módulo no encontrado')
 
-    def search_module(self,name): 
-        try:
-            for i in self.__plugin:
-                self._currentModule=i[name['Modulo']]
-                break            
-        except:
-            raise 'error no se encontro el modulo' 
-
-    def run(self,pregunta:dict) -> None:
-        try:
-            while True:
-                self.search_module(pregunta)
-                self.getmodulo.execute(questionary,self._Console)
-        except ModuleNotFoundError as e:
-            print(e)
-        except BaseException as e :
-            print(e)       
+    @classmethod
+    def run(cls) -> None:
+        while True:
+            cls.search_module( questionary.rawselect( message="SELECCIONE EL MODULO A USAR: ", choices=sorted(os.listdir("plugins"), reverse=True)).ask())
+            cls.getmodulo().execute(questionary,cls._Console)
 
     def update(self):
         import requests

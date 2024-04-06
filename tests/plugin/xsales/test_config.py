@@ -22,18 +22,8 @@ class TestConfig(TestCase):
     def test_file_server(self):
         self.config.config['datod'],{'config':'asd'}
 
-
     def test_Dz(self):
         pass
-
-
-
-
-
-
-
-
-
 
 if __name__=="__main__":
     main()

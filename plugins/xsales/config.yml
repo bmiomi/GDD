@@ -5,24 +5,13 @@ PathFolder:
   folderNocturnos:   'REPORTES/SERVER/Nocturnos'
   folderStatus:      'REPORTES/STATUS'
 
-Consultas:
-
-  server:
-
-    CLIENTES: "select top 1000 * from customer"
-
-    ClientesNuevos: "select top 100 * from customerup where rotcode='100' order by cussystemdate desc "
-  
-  Base:
-
-    descuentos: "select * from discountdetailup"
-
 Turnos:
 
     - TECNICO 3-AM
     - TECNICO(1) 4-AM
     - TECNICO(2) 4-AM
     - TECNICO 1 PM
+    - TECNICO 2 PM
 
 Revisiones:
 

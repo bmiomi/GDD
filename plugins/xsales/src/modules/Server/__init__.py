@@ -1,29 +1,21 @@
 import os
-from typing import Dict, List
-
-from plugins.xsales.src.service.excelservice.service_excel import ExcelFile
-from plugins.xsales.src.service.fileservice.fileservice import FileService
-
 from .Pagedriver.xsalesbeta import  Xsales
 from .User.validador import ValidatorSql
 from .User.Consultas import consultas
 
-
 class  Page(Xsales):
     
-
-    def __init__(self) :
+    def __init__(self):
 
         """
             nombre: Nmbre del Dz que se toma para ingresar a la paguina solicitada defecto Pronaca 
 
         """
+        self.config.Revisiones= 'Server'
         self.validadorsql=None
         self.contenedor=[]
         
-
     def __get_consulta( self,opcion):
-
         dic_consultas={
         'DESC.NOCTURNOS':consultas.Descuentos_Nocturno,
         'Total_Pedidos':consultas.totalPedidos,
@@ -31,16 +23,12 @@ class  Page(Xsales):
         'DESC.DIURNOS':consultas.Descuentos_Demadrugada,
         'REVICION_MADRUGADA':consultas.revisionmadrugada
         }
-
         try:
-
             s=dic_consultas.get(opcion,0)
-
             if isinstance(s,int):
                 return self._config.config['Consultas']['server'][opcion]
             return s()
-        except TypeError:
-            
+        except TypeError:            
             if self.dato.dato!=None and self.name!=None:
                  return dic_consultas.get(opcion)(self.dato.dato)
             return dic_consultas.get(opcion)(self.name)
@@ -62,22 +50,19 @@ class  Page(Xsales):
         elif self.get_tamanio_paguinacion >=1:
 
             self.Descargar_excel(sql)
-
     
-
     def generararchivo(self,nombre:str,data:list[dict]):
 
         archivo=self.config.path.join(self._config.folderMadrugada,f'{nombre}.txt')
 
         self.config.excelfile.create_file(nombre,data,self.config)
-
         
     def mostrar_info(self,nombresdz,console):
         with console.status('Procesando..',spinner=self.config.spinner):
             for nombredz in nombresdz:
                 try:
                     super().__init__(name=nombredz)
-                    self.consulta_Basedatos()                  
+                    self.consulta_Basedatos()             
                     console.log( f'Revisión completada para {nombredz}')
                 except Warning as e:
                     console.log( f"{str(e)} DZ/Regional {nombredz}")
@@ -95,5 +80,3 @@ class  Page(Xsales):
             # if self.config.path.exists( self.config.path.join( self.config.folderexcel,self.config.fecha) ):
             #     for i in os.listdir:
             #         self.generararchivo(self.nombre,i)
-
-   

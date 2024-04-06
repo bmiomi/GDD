@@ -24,7 +24,7 @@ class consultas:
             'ecoal'       : "When company.comName = 'Ecoal' Then '373'     "        ,
             'grampir'     : "When company.comName = 'Granpir' Then '234'"           ,
             'garvelproduct' :  "When company.comName = 'Garvel Product' Then '517'",
-            'h_m'  :   "When company.comName = 'H&M' Then '324'"               ,
+            'h_m'  :   "When company.comName = 'DISTMANA' Then '324'"               ,
             'judispro'  :   "When company.comName = 'Judispro' Then '239'   "       , 
             'madeli'   :    "When company.comName = 'Madeli' Then '128'    "        ,
             'patricio_cevallos'   :    "When company.comName = 'Patricio_Cevallos' Then '254'" ,

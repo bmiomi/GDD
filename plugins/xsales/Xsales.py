@@ -1,3 +1,6 @@
+from ast import mod
+from cgitb import small
+import os
 from typing import Dict, List
 
 from core.Interfaces.Iplugins import IPluging
@@ -19,20 +22,23 @@ class Plugin(IPluging):
         return 'Xsales'
 
     def execute(self,question,consola):
-       
+  
         try:
+            print('*'*10)
             SModulo=question.prompt(self.__modulos)
             #objeto a retornar
-            modulo =XsalesFactory.getModulo(value=SModulo) 
-            #asignamos el nombre del modulo a la configuracion
-            modulo.config.Revisiones=SModulo 
+            modulo =XsalesFactory.getModulo(value=SModulo.get('Modulo')) 
             #realizamos las preguntas
-            resp=preguntass((modulo.config))
-            data=Data(**resp)
-            modulo.dato=data
+            resp=preguntass(question,modulo.config)
 
-            modulo.mostrar_info(data.ContenedorDZ,consola)
+            modulo.dato=resp
+            print(resp)
+
+            for namedz in resp.ContenedorDZ:
+                modulo.mostrar_info(namedz,consola)
 
         except BaseException as e :
-            print (e)
+            print ('s:'+e)
             pass
+        except KeyboardInterrupt:
+            return 0       

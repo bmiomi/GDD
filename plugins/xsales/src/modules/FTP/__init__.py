@@ -40,6 +40,8 @@ class FtpXsales:
         self.__ftp_client.change_dir('..')
 
     def procesarInfo(self,destinopath:str)->None:
+##TODO
+        # VALORES A ARREGLAR
 
         origenpath= ''.join([i for i in destinopath.rsplit(sep)[-1] ])
         database = destinopath+sep+"Main.sqlite"
@@ -95,7 +97,8 @@ class FtpXsales:
                      #     console.print(" [ERROR: ][bold red]]'NO se TIENE BASES:")
                 except ValueError as e:
                     console.print(" [ERROR: ][bold red] No se tiene Habilitado Modulo de GDD [\]", e)
-
+                except BaseException as e:
+                    print( 'se tiene error: ',e)
 
     #2022 09 15 03 45 02
 

@@ -1,6 +1,6 @@
 
+from typing import Dict
 from plugins.xsales.src.service.excelservice.service_excel import ExcelFile
-
 from plugins.xsales.confi import Config
 from plugins.xsales.util import sep
 
@@ -12,14 +12,18 @@ class ConfigServer(Config):
     __credencialpassword:str=''
 
     @property
-    def configserver(self):
+    def configserver(self)->Dict:
         return self.config.get('datod').get('Server')
 
 
     @property
     def CredencialesServer(self):
-        return ( self.__credencialpassword,self.__credencialuser[0],)
-
+        respuesta=self.configserver.get('credenciales')[0].get('default')
+        if isinstance(respuesta,dict):
+            self.__credencialuser=respuesta['USER']
+            self.__credencialpassword=respuesta['PASSWORD'] 
+        return (self.__credencialpassword,self.__credencialuser)  
+    
     @CredencialesServer.setter
     def CredencialesServer(self,credencial) -> None:
         credenciales = self.configserver.get('credenciales')
@@ -28,6 +32,7 @@ class ConfigServer(Config):
                 self.__credencialuser=opcion[credencial]['USER'], 
                 self.__credencialpassword=opcion[credencial]['PASSWORD']
 
+ 
     @property
     def folderexcel(self) -> str:
 
@@ -43,7 +48,6 @@ class ConfigServer(Config):
     @property
     def folderMadrugada(self) -> str:
         foldermadrugada = self.config.get('PathFolder').get('folderMadrugada')
-
         if not self.path.isdir(foldermadrugada):
             self.nuevacarpeta(foldermadrugada)
         return foldermadrugada+sep

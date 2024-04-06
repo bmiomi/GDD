@@ -4,6 +4,10 @@ Server:
         USER: SoporteBz
         PASSWORD: BZs2023*
 
-    - PROORIENTE:
-        USER: soporte.nuo
-        PASSWORD: Nuo2021*
+    # - PRONACA:
+    #     USER: SoporteBz
+    #     PASSWORD: BZs2023*
+
+    # - PROORIENTE:
+    #     USER: soporte.nuo
+    #     PASSWORD: Nuo2021*
