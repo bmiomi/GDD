@@ -1,8 +1,4 @@
-from ast import mod
-from cgitb import small
-import os
 from typing import Dict, List
-
 from core.Interfaces.Iplugins import IPluging
 from .inputquestion import Data, preguntass
 from .src import XsalesFactory
@@ -30,15 +26,12 @@ class Plugin(IPluging):
             modulo =XsalesFactory.getModulo(value=SModulo.get('Modulo')) 
             #realizamos las preguntas
             resp=preguntass(question,modulo.config)
-
             modulo.dato=resp
-            print(resp)
-
-            for namedz in resp.ContenedorDZ:
-                modulo.mostrar_info(namedz,consola)
+            modulo.mostrar_info(resp.ContenedorDZ,consola)
+            modulo.generararchivo(resp.reporte,resp.Opcion,consola)
 
         except BaseException as e :
-            print ('s:'+e)
+            print (f's:{e}')
             pass
         except KeyboardInterrupt:
             return 0       

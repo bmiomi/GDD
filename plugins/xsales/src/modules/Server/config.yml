@@ -1,7 +1,7 @@
 Server:
   credenciales:
     - default:
-        USER: SoporteBz
+        USER: SoporteBZ
         PASSWORD: BZs2023*
 
     # - PRONACA:

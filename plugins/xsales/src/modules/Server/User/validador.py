@@ -1,5 +1,7 @@
 from datetime import date, timedelta, datetime
 from enum import Enum
+from tkinter.tix import Tree
+from typing import List
 
 class HorasenvioStock(Enum):
 
@@ -10,8 +12,9 @@ class HorasenvioStock(Enum):
 
 class ValidatorSql:
 
+    DZCOMPLETO=[]
 
-    def __init__(self, tipoconsulta: str, dataset: list[dict]):
+    def __init__(self, tipoconsulta: str, dataset: List[dict]):
         self.__dataset = dataset
         self.validador = self.validar(tipoconsulta)
 
@@ -31,32 +34,28 @@ class ValidatorSql:
             raise ValueError('No se reconoce el tipo de consulta')
         estado = funcion()
         if estado:
+            ValidatorSql.DZCOMPLETO.append(self.__dataset)
             return self.__dataset
-        return [{}]
+        return {}
     
-    def vmatutina(self):
-        
+    def vmatutina(self) -> bool:        
         "valida informacion de revisiones matutinas"
-
         waringistemporales = []
-
         for i in self.__dataset:
             for x in i:
                 if x.startswith('preventa') and i[x] != date.today().strftime('%d/%m/%Y'):
-                    raise ValueError(
-                        f'[ERROR] {x} {i[x]}')
+                    raise ValueError(f'[ERROR] {x}')
                 if x.find('Inicio') != -1 or x.find('INICIO') != -1:
                     Hora_stock = i[x]  # d m a h:m:s p
-                    self._calcularstock(i,Hora_stock)
-
+                    self._calcularstock(i,x,Hora_stock)
                 if i[x] == 0:
-                    waringistemporales.append(x)
-            
+                    waringistemporales.append(i[x])
+                            
         if len(waringistemporales) >= 1:
             raise Warning(f"[Warnnig] No se tiene datos para  {waringistemporales} ")
         return True
 
-    def _calcularstock(self,clave_hora:str, valor_Hora_stock:str):
+    def _calcularstock(self,clave_hora:str, valor_Hora_stock:str)->bool:
         """ 
         si la fecha  obtenida de la consulta no es la actual  y la hora es es menor return TRUE 
         si la fecha  obtenida en la consulta es la actual  y la hora es es menor  return TRUE
@@ -80,6 +79,7 @@ class ValidatorSql:
             raise Warning(
                 f"[ERROR-DIRECTA] stock fuera de horario  para {valor_Hora_stock} "
             )
+        return True
 
     def validartotalpedidos(self):
 

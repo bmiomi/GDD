@@ -3,7 +3,8 @@ from logging import config
 from typing import Dict, List, Self
 from os import path
 import yaml
-from yamlinclude import YamlIncludeConstructor 
+import yaml_include
+
 from .util import sep,createfolder
 
 class Config:
@@ -15,7 +16,7 @@ class Config:
     def config(self) -> Dict:
         if self._cached_config is None:
             file = path.join("plugins", "xsales")
-            YamlIncludeConstructor.add_to_loader_class(loader_class=yaml.FullLoader, base_dir=file)
+            yaml.add_constructor("!include", yaml_include.Constructor(base_dir=file))
             try:
                 self._cached_config = yaml.load(open(f'{file}\config.yml'), Loader=yaml.FullLoader)
             except FileNotFoundError as e:
@@ -69,7 +70,3 @@ class Config:
         if ldz.get("Opcion") == "Validar Maestros":
             return returndz.get("Maestros")
  
-
-
-
-    

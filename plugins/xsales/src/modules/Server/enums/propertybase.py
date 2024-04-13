@@ -1,6 +1,6 @@
 from enum import Enum
 
-class PropertyBase:
+class PropertyBase (Enum):
 
   URLBASE='https://prd1.xsalesmobile.net/'
 

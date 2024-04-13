@@ -31,11 +31,9 @@ class ConfigServer(Config):
             if opcion.get(credencial):
                 self.__credencialuser=opcion[credencial]['USER'], 
                 self.__credencialpassword=opcion[credencial]['PASSWORD']
-
  
     @property
     def folderexcel(self) -> str:
-
         currpath = self.path.join(
             self.config.get('PathFolder').get('folder_file_excel'),
             self.fecha
