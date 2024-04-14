@@ -1,7 +1,6 @@
 import time
 import base64
 from typing import Dict, List, Tuple
-ñ
 from rich.live import Live
 from rich.table import Table
 from rich import box
