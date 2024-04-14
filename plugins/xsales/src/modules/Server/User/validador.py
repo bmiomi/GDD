@@ -18,7 +18,6 @@ class ValidatorSql:
         self.__dataset = dataset
         self.validador = self.validar(tipoconsulta)
 
-
     def validar(self,tipoconsulta:str):
 
         contenedor = {

@@ -7,7 +7,7 @@ class XsalesFactory:
 
     @classmethod
     def getModulo (cls,value:str) -> object:
-        modulo={'Server':Page,'FTP':FtpXsales,'Status':Status}
+        modulo={'Server':Page,'Ftp':FtpXsales,'Status':Status}
         return modulo.get(value)()
 
 

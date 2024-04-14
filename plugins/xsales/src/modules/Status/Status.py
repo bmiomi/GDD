@@ -1,7 +1,7 @@
 import time
 import base64
 from typing import Dict, List, Tuple
-
+ñ
 from rich.live import Live
 from rich.table import Table
 from rich import box
@@ -17,6 +17,7 @@ class Status:
 
         self.dzincompletos:List[Dict]=[] #incremental
         self.dzcompletos:list=[]
+        self.config.Revisiones='Status'
 
     @property
     def estado(self):

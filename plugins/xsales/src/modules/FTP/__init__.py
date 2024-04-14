@@ -7,19 +7,15 @@ from .IFtp import IFtp
 from .sftp import SFTP_
 from .config import ConfigFtp
 
-
 linea = '-' * 60
-
 class FtpXsales:
 
-    """
+    """Conexion con el Ftp de Xsales"""
 
-        Conexion con el Ftp de Xsales
-
-    """
     config=ConfigFtp()
 
     def __init__(self) -> None:
+        self.config.Revisiones='Ftp'
         self.dato=None
         # self.config.operacion=self.dato.Opcion
         self.rutascero = []
@@ -150,3 +146,6 @@ class FtpXsales:
 #       self.__ftp_client.cdir('COMUNES')
 #        print(self.__ftp_client.nlst())
         return d
+
+    def generararchivo(self,a,b,c):
+        pass
