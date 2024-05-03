@@ -1,9 +1,9 @@
 import time
 import base64
 from typing import Dict, List, Tuple
+from rich import box
 from rich.live import Live
 from rich.table import Table
-from rich import box
 
 from plugins.xsales.src.modules.Status.config import ConfigStatus
 

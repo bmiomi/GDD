@@ -1,6 +1,5 @@
 from datetime import date, timedelta, datetime
 from enum import Enum
-from tkinter.tix import Tree
 from typing import List
 
 class HorasenvioStock(Enum):
@@ -21,7 +20,6 @@ class ValidatorSql:
     def validar(self,tipoconsulta:str):
 
         contenedor = {
-
             'REVICION_MADRUGADA': self.vmatutina,
             'DESC.DIURNOS': self.descuentosDiurnos,
             'Total_Pedidos': self.validartotalpedidos,
@@ -29,15 +27,18 @@ class ValidatorSql:
         }
 
         funcion = contenedor.get(tipoconsulta, 0)
-        if not callable(funcion):
-            raise ValueError('No se reconoce el tipo de consulta')
-        estado = funcion()
-        if estado:
+        if not funcion:
+            print(f'No se reconoce el tipo de consulta {funcion}')
+            return {}
+
+        if funcion():
             ValidatorSql.DZCOMPLETO.append(self.__dataset)
             return self.__dataset
         return {}
     
     def vmatutina(self) -> bool:        
+        #TODO
+        #revisar este proceso
         "valida informacion de revisiones matutinas"
         waringistemporales = []
         for i in self.__dataset:
@@ -48,6 +49,7 @@ class ValidatorSql:
                     Hora_stock = i[x]  # d m a h:m:s p
                     self._calcularstock(i,x,Hora_stock)
                 if i[x] == 0:
+                    print(i)
                     waringistemporales.append(i[x])
                             
         if len(waringistemporales) >= 1:
