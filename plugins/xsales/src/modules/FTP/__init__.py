@@ -38,9 +38,12 @@ class FtpXsales:
     def procesarInfo(self,destinopath:str)->None:
 ##TODO
         # VALORES A ARREGLAR
+
         origenpath= ''.join([i for i in destinopath.rsplit(sep)[-1] ])
         database = destinopath+sep+"Main.sqlite"
         tablas=['DISCOUNTDETAIL','DISCOUNTROUTE']
+
+        print(database)
 
         with  open(f"{destinopath[:-len(origenpath)]}{sep}logo", 'a') as archivo, DataConn(database) as conn:
             archivo.write(linea+'\n')

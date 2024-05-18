@@ -11,6 +11,10 @@ class Tests_Page(TestCase):
     def test_instancia(self):
         self.assertIsInstance(self.page,Page)
     
+    def test_opcion(self):
+        self.page.name='Cenacop'
+        self.page.get_consulta('Total_Pedidos')
+
 
 if __name__=='__main__':
     main()

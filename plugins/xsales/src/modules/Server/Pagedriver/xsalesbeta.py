@@ -1,7 +1,7 @@
 import json
-from typing import Dict
+from typing import Dict, Optional
+from requests import Response
 from requests_html import HTMLSession
-
 from ..config import ConfigServer
 from ..enums.propertybase import PropertyBase
 
@@ -22,23 +22,23 @@ class Xsales:
     self.logerarseesion(username=self.config.CredencialesServer[1],password=self.config.CredencialesServer[0])
 
   @property
-  def config(self):
+  def config(self) ->ConfigServer:
      return self._config
 
   @property
-  def versionxsales(self)->str | None:
+  def versionxsales(self)->Optional[str]:
      self.responsexsales.html.render()
      if self.responsexsales.status_code==200:
        return self.responsexsales.html.xpath('//*[@id="loginFooter"]/div/span/sup')[0].text
 
   @property
-  def respuestasXsales(self)-> str:
+  def respuestasXsales(self)-> Optional[int]:
     #AHV revisar esa propieda
       respu=self.xsalesresponse.html.xpath('//*[@id="container-QueryBD"]/div/div[2]/div[3]/div[1]')
       return 0 if "QueryOk" ==self.xsalesresponse.html.xpath('//*[@id="container-QueryBD"]/div/div[2]/div[3]/div[1]').text else 0
 
   @property
-  def responsexsales(self):
+  def responsexsales(self)->Response:
      return self.session.request('get',f"{self.URLBASE}{self.name}/xsm/Login/")
 
   def __sesssionxsales(self):
@@ -70,7 +70,7 @@ class Xsales:
           self._config.CredencialesServer= self.name
           self.logerarseesion(password=self._config.CredencialesServer[0],username=self._config.CredencialesServer[1])
           intentos+=1
-
+      
   def consulta_new_version(self,sql) -> Dict:
       self.HEADERS['Referer'] = self.URLBASE + self.name + '/xsm/app/css/global.css?vcss=20191107'
       data={"Catalog":self.name+"_XSS_441_PRD", "Query":sql, "CultureName":"es-VE", "Decimals":" "}

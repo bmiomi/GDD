@@ -18,4 +18,3 @@ class PropertyBase (Enum):
           'Sec-Fetch-Dest': 'document',
           'Accept-Language': 'es-ES,es;q=0.9',
       }
-    

@@ -1,5 +1,4 @@
 from unittest import TestCase,main
-
 from plugins.xsales.src.modules.Server import ValidatorSql
 
 preventa='03/12/2023'
@@ -76,14 +75,14 @@ revisionMDZ=[
 
 class Test_Validator(TestCase):
 
-
   def setUp(self) -> None:
+   self.validacion=ValidatorSql('REVICION_MADRUGADA' ,revisionMDZ)
 
-    self.validacion=ValidatorSql('REVICION_MADRUGADA' ,revisionMDZ)
+  def test_validar_matutina_error(self):
+    with self.assertRaises( ValueError) as error:
+      self.validacion.vmatutina()
+    self.assertIn( '[ERROR] ',error.exception.args[0],'El string no tiene coincidencias')
 
-
-  def test_validar_matutina(self):
-    self.validacion.vmatutina()
 
   def test_stock(self,validador):
     assert len(self.validacion.validador)!=0

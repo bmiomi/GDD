@@ -25,7 +25,4 @@ class Plugin(IPluging):
 
         request.post('https://bzhelp.com.ec/Home',data)
 
-
-
-
         print(f'response {response} cookie {response.cookies}')

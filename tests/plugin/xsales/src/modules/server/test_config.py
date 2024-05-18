@@ -1,9 +1,9 @@
 from unittest import TestCase,main
+
 from plugins.xsales.src.modules.Server.config import ConfigServer
 
+
 class Tests_ConfigServer(TestCase):
-
-
 
     def setUp(self) -> None:
         self.testconfig=ConfigServer()

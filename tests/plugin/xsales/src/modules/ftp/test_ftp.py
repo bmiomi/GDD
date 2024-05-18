@@ -1,20 +1,18 @@
-# from questionary import prompt
-# from rich.console import Console
+import unittest
 
-# from plugins.xsales.src.modules.FTP import FtpXsales
-# from plugins.xsales.confi import ConfigFactory
-# from plugins.xsales.Xsales import Data
+from plugins.xsales.src.modules.Ftp import FtpXsales
 
 
+class Test_Ftp(unittest.TestCase):
 
-# def test_prueba():
-#     console=Console()
 
-#     ftp=ConfigFactory.getModulo('FTP')
+    def setUp(self) -> None:
+        self.ftp=FtpXsales()
 
-#     data={'ContenedorDZ':['Xsales'],'Turno':'TECNICO 3.a.m','questionary':prompt,'console':console,'Opcion':'Validar Maestros'}
+    def test_prueba(self):
+        self.ftp.procesarInfo('REPORTES\\FTP\\Distribuidores\\DISPROLOP\\2024-05-18\\250')
 
-#     result=Data(**data)
 
-#     ftp=FtpXsales(result,ftp)
-#     ftp.maestrosftp()
+
+if __name__=="__main::":
+    unittest.main()

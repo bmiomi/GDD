@@ -1,13 +1,12 @@
 from datetime import date, timedelta, datetime
 from enum import Enum
-from typing import List
+from typing import Dict, List, Optional
 
 class HorasenvioStock(Enum):
 
     horaDiurnodz='11:59:00 AM'
 
     horaNocturnodz='11:59:00 PM'
-
 
 class ValidatorSql:
 
@@ -17,7 +16,7 @@ class ValidatorSql:
         self.__dataset = dataset
         self.validador = self.validar(tipoconsulta)
 
-    def validar(self,tipoconsulta:str):
+    def validar(self,tipoconsulta:str)->Optional[List[Dict]]:
 
         contenedor = {
             'REVICION_MADRUGADA': self.vmatutina,
@@ -25,7 +24,6 @@ class ValidatorSql:
             'Total_Pedidos': self.validartotalpedidos,
             'VALIDAR_ClIENTE':self.general
         }
-
         funcion = contenedor.get(tipoconsulta, 0)
         if not funcion:
             print(f'No se reconoce el tipo de consulta {funcion}')
@@ -34,7 +32,6 @@ class ValidatorSql:
         if funcion():
             ValidatorSql.DZCOMPLETO.append(self.__dataset)
             return self.__dataset
-        return {}
     
     def vmatutina(self) -> bool:        
         #TODO
@@ -44,7 +41,7 @@ class ValidatorSql:
         for i in self.__dataset:
             for x in i:
                 if x.startswith('preventa') and i[x] != date.today().strftime('%d/%m/%Y'):
-                    raise ValueError(f'[ERROR] {x}')
+                    raise ValueError(f'[ERROR] {i["DZ_Regional"]} con preventa {i[x]} ')
                 if x.find('Inicio') != -1 or x.find('INICIO') != -1:
                     Hora_stock = i[x]  # d m a h:m:s p
                     self._calcularstock(i,x,Hora_stock)

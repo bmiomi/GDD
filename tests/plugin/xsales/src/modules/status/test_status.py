@@ -1,5 +1,4 @@
 from unittest import TestCase,main
-
 from plugins.xsales.src.modules.Status.Status import Status
 
 class Test_Status(TestCase):
@@ -8,8 +7,8 @@ class Test_Status(TestCase):
         self.teststatus=Status()
 
     def test_dz(self):
-       print(self.teststatus.dz)
-       self.assertEqual(type(self.teststatus.dz),list)
+       print(self.teststatus.dzcompletos)
+       self.assertEqual(type(self.teststatus.dzincompletos),list)
 
     def test_retornardz(self):
 
@@ -35,7 +34,3 @@ class Test_Status(TestCase):
 if __name__=='__main__':
     main()
 
-
-
-dz=22
-dzcompletos=1
