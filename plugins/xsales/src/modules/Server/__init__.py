@@ -32,7 +32,7 @@ class  Page(Xsales):
             archivo=self.config.path.join(self._config.folderMadrugada,f'{nombre}')
             self.config.excelfile.create_file(archivo,self.validadorsql.DZCOMPLETO)
             console.log(f'SE GENERO EL ARCHOVO EN LA RUTA {archivo}')
-#            del self.validadorsql.DZCOMPLETO
+            del self.validadorsql.DZCOMPLETO
 
         
     def mostrar_info(self,nombresdz,console):        
