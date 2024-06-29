@@ -31,6 +31,8 @@ class ConfigServer(Config):
             if opcion.get(credencial):
                 self.__credencialuser=opcion[credencial]['USER'], 
                 self.__credencialpassword=opcion[credencial]['PASSWORD']
+            else:
+                raise Exception(f'No se encontro credencial {credencial}')
  
     @property
     def folderexcel(self) -> str:
