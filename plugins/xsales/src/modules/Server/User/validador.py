@@ -32,7 +32,6 @@ class ValidatorSql:
 
         if funcion():
             ValidatorSql.DZCOMPLETO.append(self.__dataset)
-            print(self.__dataset)
             return self.__dataset
     
     def vmatutina(self) -> bool:        
