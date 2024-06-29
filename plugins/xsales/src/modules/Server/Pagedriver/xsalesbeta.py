@@ -68,6 +68,7 @@ class Xsales:
       while intentos>=2:
           print(f'\n Contraseña defaul Errada..\n Intentando con clave del archivo {self.config.CredencialesServer[0], self.config.CredencialesServer[1]}')
           self._config.CredencialesServer= self.name
+          print('sa')
           self.logerarseesion(password=self._config.CredencialesServer[0],username=self._config.CredencialesServer[1])
           intentos+=1
       
