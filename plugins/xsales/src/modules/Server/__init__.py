@@ -4,6 +4,8 @@ from .User.Consultas import consultas
 
 class  Page(Xsales):
     
+    sss=[]
+
     def __init__(self):
 
         """
@@ -24,15 +26,17 @@ class  Page(Xsales):
             sql=self.__get_consulta(self.dato.Opcion)
             result=self.consulta_new_version(sql)
             self.validadorsql:ValidatorSql=ValidatorSql(self.dato.Opcion,result)
+            self.sss.append(self.validadorsql)
+            print(self.sss)
         except BaseException as e:
             print(e)
         
     def generararchivo(self,respuesta,nombre:str,console):
         if respuesta:
             archivo=self.config.path.join(self._config.folderMadrugada,f'{nombre}')
-            self.config.excelfile.create_file(archivo,self.validadorsql.DZCOMPLETO)
+            self.config.excelfile.create_file(archivo,self.sss)
             console.log(f'SE GENERO EL ARCHOVO EN LA RUTA {archivo}')
-            del self.validadorsql.DZCOMPLETO
+#            del self.validadorsql.DZCOMPLETO
 
         
     def mostrar_info(self,nombresdz,console):        

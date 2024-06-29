@@ -17,9 +17,8 @@ class Plugin(IPluging):
     @property
     def nombre(self) -> str:
         return 'Xsales'
-
-    def execute(self,question,consola):
-  
+    
+    def execute(self,question,consola):  
         try:
             SModulo=question.prompt(self.__modulos)
             #objeto a retornar
@@ -34,6 +33,6 @@ class Plugin(IPluging):
             modulo.generararchivo(resp.reporte,resp.Opcion,consola)
 
         except BaseException as e :
-            print (f's:{e}')
+            print (f's:{e.__class__.__name__}{e}')
         except KeyboardInterrupt:
             return 0       

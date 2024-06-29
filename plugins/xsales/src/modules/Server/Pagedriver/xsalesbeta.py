@@ -74,5 +74,9 @@ class Xsales:
   def consulta_new_version(self,sql) -> Dict:
       self.HEADERS['Referer'] = self.URLBASE + self.name + '/xsm/app/css/global.css?vcss=20191107'
       data={"Catalog":self.name+"_XSS_441_PRD", "Query":sql, "CultureName":"es-VE", "Decimals":" "}
-      respuesta=json.loads( self.session.request('post',self.URLBASE+self.name+'/xsm/QueryBD/ExecuteConsult', headers=self.HEADERS, data=data).text)
-      return respuesta['Data']['Result']
+      response=self.session.request('post',self.URLBASE+self.name+'/xsm/QueryBD/ExecuteConsult', headers=self.HEADERS, data=data)
+      if response.status_code==200:  
+         respuesta=json.loads( response.text)
+         return respuesta['Data']['Result']
+      else:
+         return None

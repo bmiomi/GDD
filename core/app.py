@@ -1,46 +1,38 @@
-import importlib
+import os
 import questionary
 from rich.console import Console
+from typing import List
+from .util import  loadplugin,PLUGIN_PACKAGE
 from core.Interfaces.Iplugins import IPluging
-from typing import Self
-from .util import  loadplugin
-import os
-
 
 class MyApplication:
 
     __VERSION = '0.1'
-    __plugin = []
     _Console = Console()
-    _currentModule=None
-        
+    _currentModule=None        
 
     @classmethod
-    def plugins(cls):
-        modules={}        
-        for  i in os.listdir('plugins'):
-            modules[i]=loadplugin(i)
-        cls.__plugin.append(modules)
-        return cls.__plugin
+    def plugins(cls) ->List:      
+        return list(map( lambda  i: {i:loadplugin(i)}, os.listdir(PLUGIN_PACKAGE)) )
 
     @classmethod
-    def getmodulo(cls) -> IPluging:
+    def get_current_module(cls) -> IPluging:
         return cls._currentModule.Plugin()
 
     @classmethod
-    def search_module(cls,name): 
+    def find_module_by_name(cls,name): 
         "Se busca el modolo selecionado y se retorna su directorio"
-        module_found = list(filter(lambda i: name in i, cls.plugins()))
+        module_found = any(name in i for i in cls.plugins())
         if module_found:
-            cls._currentModule = module_found[0][name]
+            cls._currentModule = next(i for i in cls.plugins() if name in i)[name]
         else:
-            raise ValueError('Módulo no encontrado')
+            raise ValueError(f'Módulo {name}no encontrado')
 
     @classmethod
     def run(cls) -> None:
         while True:
-            cls.search_module( questionary.rawselect( message="SELECCIONE EL MODULO A USAR: ", choices=sorted(os.listdir("plugins"), reverse=True)).ask())
-            cls.getmodulo().execute(questionary,cls._Console)
+            cls.find_module_by_name( questionary.rawselect( message="SELECCIONE EL MODULO A USAR: ", choices=sorted(os.listdir(PLUGIN_PACKAGE), reverse=True)).ask())
+            cls.get_current_module().execute(questionary,cls._Console)
 
     def update(self):
         import requests
