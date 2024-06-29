@@ -1,0 +1,13 @@
+{
+  "MessageType": 73,
+  "Message": "User or Password Incorrect",
+  "Data": {
+    "userValid": false,
+    "userDeleted": false,
+    "option": 0,
+    "multibranch": []
+  },
+  "SystemMessage": "",
+  "Duration": "1155",
+  "Process": "Login"
+}

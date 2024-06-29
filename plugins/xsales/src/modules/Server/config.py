@@ -32,7 +32,7 @@ class ConfigServer(Config):
                 self.__credencialuser=opcion[credencial]['USER'], 
                 self.__credencialpassword=opcion[credencial]['PASSWORD']
             else:
-                raise Exception(f'No se encontro credencial {credencial}')
+                raise Exception(f'No se encontro credencial para {credencial} en el archivo config')
  
     @property
     def folderexcel(self) -> str:
