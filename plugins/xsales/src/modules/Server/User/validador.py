@@ -13,12 +13,11 @@ class ValidatorSql:
     DZCOMPLETO=[]
 
     def __init__(self, tipoconsulta: str, dataset: List[dict]):
-        print("asd") 
         self.__dataset = dataset
         self.validador = self.validar(tipoconsulta)
 
     def validar(self,tipoconsulta:str)->Optional[List[Dict]]:
-        print('ss')
+
         contenedor = {
             'REVICION_MADRUGADA': self.vmatutina,
             'DESC.DIURNOS': self.descuentosDiurnos,
