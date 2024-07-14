@@ -11,7 +11,7 @@ class ConfigFtp(Config):
         return self.config.get('datos').get('FTP')    
 
     @property
-    def operacion(self):
+    def operacion(self)->str:
         return self.__operacion
 
     @operacion.setter
@@ -28,9 +28,7 @@ class ConfigFtp(Config):
 
     @property
     def protocol(self):
-        if self.__operacion == "Validar Maestros":
-            return self.configftp.get('Maestros').get(self.__user).get('protocol')
-        return self.configftp.get('Repositorio').get('protocol')
+       return  self.configftp.get('Maestros').get(self.__user).get('protocol') if self.__operacion == "Validar Maestros" else self.configftp.get('Repositorio').get('protocol')
 
     @property
     def host(self):
@@ -64,12 +62,10 @@ class ConfigFtp(Config):
     @property
     def CredencialesFtp(self) -> tuple:
         credenciales = None
-        if 'DESC' in self.__operacion:
-            credenciales = self.configftp.get(
-                'Repositorio').get('credenciales').get(self.__user)
+        if  self.__operacion not in ('Maestros'):
+            credenciales = self.configftp.get('Repositorio').get('credenciales').get(self.__user)
         if 'Maestros' in self.__operacion:
-            credenciales = self.configftp.get(
-                'Maestros').get(self.__user)
+            credenciales = self.configftp.get('Maestros').get(self.__user)
         return self.Credenciales(credenciales)
 
     def Credenciales(self, credenciales):
