@@ -1,4 +1,4 @@
-from typing import List, Protocol
+from typing import  Protocol
 
 class IFtp(Protocol):
 
@@ -12,4 +12,7 @@ class IFtp(Protocol):
         raise NotImplemented
 
     def list_dir(self, *arg):
+        raise NotImplemented
+    
+    def descarga(self,origen,destino,file):
         raise NotImplemented

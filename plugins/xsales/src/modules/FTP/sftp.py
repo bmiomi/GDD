@@ -1,9 +1,9 @@
 from datetime import date, datetime,timedelta
-
 from paramiko import Transport,SFTP
 
-
 class SFTP_(Transport):
+
+#MAESTRO DE PRONACA
 
     sftp = None
     files=[]
@@ -21,10 +21,11 @@ class SFTP_(Transport):
     def list_dir(self,*args):
         return self.sftp.listdir(*args)
 
-    def mostrarar_achivos(self,excluide=None):
+    def descarga(self,s,r,d):
+        pass
 
-        self.change_dir('PROD')
-        
+    def mostrarar_achivos(self,excluide=None):
+        self.change_dir('PROD')        
         for i in [i for i in self.list_dir() if  i not in excluide]:
             path=self.sftp.getcwd()
             file_date=self.sftp.stat(path+'/'+i).st_mtime

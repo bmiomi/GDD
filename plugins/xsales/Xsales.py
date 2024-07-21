@@ -24,13 +24,11 @@ class Plugin(IPluging):
             #objeto a retornar
             modulo =XsalesFactory.getModulo(value=SModulo.get('Modulo')) 
             #realizamos las preguntas
-            resp=preguntass(question,modulo.config)
+            modulo.dato=preguntass(question,modulo.config)
 
-            modulo.dato=resp
+            modulo.mostrar_info(modulo.dato.ContenedorDZ,consola)
 
-            modulo.mostrar_info(resp.ContenedorDZ,consola)
-
-            modulo.generararchivo(resp.reporte,resp.Opcion,consola)
+            modulo.generararchivo(modulo.dato.reporte,modulo.dato.Opcion,consola)
 
         except BaseException as e :
             print (f's:{e.__class__.__name__}{e}')
