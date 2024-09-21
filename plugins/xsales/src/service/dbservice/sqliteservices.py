@@ -24,14 +24,4 @@ class DataConn:
             raise f"se tiene un error de tipo {exc_val}"
 
 
-    def execute_consult(self,pathfile,tablas:List,destinopath:str,namefile:str):
-        result:dict={}
-        listresult:list=[]
 
-        with  DataConn(pathfile) as conn:
-            for table in self.config.tablevalidacion:
-                result = conn.execute(f"SELECT COUNT(*) FROM  {table} WHERE DISCODE NOT LIKE 'DES%'")
-                result, =result.fetchone()
-                listresult.append({{table}:{result}})
-                if result == 0:
-                    self.rutascero.append({'ruta':origenpath,'table':table,'result':result})

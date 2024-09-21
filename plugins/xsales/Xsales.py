@@ -30,6 +30,7 @@ class Plugin(IPluging):
 
             modulo.generararchivo(modulo.dato.reporte,modulo.dato.Opcion,consola)
 
+
         except BaseException as e :
             print (f's:{e.__class__.__name__}{e}')
         except KeyboardInterrupt:

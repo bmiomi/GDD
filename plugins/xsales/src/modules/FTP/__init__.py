@@ -11,6 +11,7 @@ from .sftp import SFTP_
 from .config import ConfigFtp
 
 linea = '-' * 60
+
 class FtpXsales:
 
     """Conexion con el Ftp de Xsales"""
@@ -34,19 +35,37 @@ class FtpXsales:
         # VALORES A ARREGLAR
         origenpath= ''.join([i for i in destinopath.rsplit(sep)[-1] ])
         database = destinopath+sep+"Main.sqlite"
-        with  open(f"{destinopath[:-len(origenpath)]}{sep}log.txt", 'a') as archivo, DataConn(database) as conn:
-            archivo.write(linea+'\n')
-            archivo.write("Ruta: "+origenpath+'\n')
+
+        lista:List=[]
+
+        with  DataConn(database) as conn:
             for table in self.config.tablevalidacion:
                 result = conn.execute(f"SELECT COUNT(*) FROM  {table} WHERE DISCODE NOT LIKE 'DES%'")
                 result, =result.fetchone()
-                archivo.write(f"REGISTROS EN {table}: {result}\n")
-                if result == 0:
-                    self.rutascero.append({'ruta':origenpath,'table':table,'result':result})
+                lista.append({'Tabla':table,'Ruta':origenpath,'registros':result})
 
-                # if len(self.rutascero)>3:
-                #     print(self.rutascero)
-                #     raise ValueError ("Rutas con modulos Bloqueado")
+#                 with  open(f"{destinopath[:-len(origenpath)]}{sep}log.txt", 'a') as archivo:
+#                     archivo.write(lista)
+# #        archivo.write(f"REGISTROS EN {table}: {result}\n")
+#                     if result == 0:
+#                         self.rutascero.append({'ruta':origenpath,'table':table,'result':result})
+#                     if len(self.rutascero)>3:
+#                         print(self.rutascero)
+#                         raise ValueError ("Rutas con modulos Bloqueado")
+
+        
+        # open('log.txt', 'a').writelines(map(
+        #     lambda x: f"REGISTROS EN {x['table']}: {x['result']}\n",lista)
+        #     )
+        
+        # with  open(f"{destinopath[:-len(origenpath)]}{sep}log.txt", 'a') as archivo:
+        #         archivo.write(f"REGISTROS EN {table}: {result}\n")
+        #         if result == 0:
+        #             self.rutascero.append({'ruta':origenpath,'table':table,'result':result})
+
+        #         if len(self.rutascero)>3:
+        #             print(self.rutascero)
+        #             raise ValueError ("Rutas con modulos Bloqueado")
 
     def maestrosftp(self):
         self.__ftp_client.mostrarar_achivos(excluide=self.config.xmlfile)
@@ -69,7 +88,7 @@ class FtpXsales:
                 except ValueError as e:
                     console.print(" [ERROR: ][bold red] No se tiene Habilitado Modulo de GDD [\]", e)
                 except BaseException as e:
-                    print( 'se tiene error: ',e)
+                    print( 'se tiene error: ',e.__class__)
 
     #2022 09 15 03 45 02
     def procesar_info(self,lista_rutas,console):
