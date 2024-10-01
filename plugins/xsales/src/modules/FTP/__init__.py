@@ -31,13 +31,12 @@ class FtpXsales:
         return [filename[49:] for filename in dirs if not filename[49:].startswith('T')and filename[49:] not in self.config.excluide]
 
     def procesar_base(self,destinopath:str)->None:
+
 ##TODO
         # VALORES A ARREGLAR
         origenpath= ''.join([i for i in destinopath.rsplit(sep)[-1] ])
         database = destinopath+sep+"Main.sqlite"
-
         lista:List=[]
-
         with  DataConn(database) as conn:
             for table in self.config.tablevalidacion:
                 result = conn.execute(f"SELECT COUNT(*) FROM  {table} WHERE DISCODE NOT LIKE 'DES%'")

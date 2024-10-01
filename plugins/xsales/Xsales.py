@@ -12,8 +12,7 @@ class Plugin(IPluging):
             'message': "Que Sub Modulo de Xsales desea ? ",
             'choices': [i.name for i in scandir (f'.{sep}plugins{sep}xsales{sep}src{sep}modules') if i.is_dir() and i.name!='__pycache__']
         }
-    
-    
+        
     @property
     def nombre(self) -> str:
         return 'Xsales'
@@ -30,8 +29,8 @@ class Plugin(IPluging):
 
             modulo.generararchivo(modulo.dato.reporte,modulo.dato.Opcion,consola)
 
-
         except BaseException as e :
             print (f's:{e.__class__.__name__}{e}')
         except KeyboardInterrupt:
             return 0       
+    #esta subido el archivo
