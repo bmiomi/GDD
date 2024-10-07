@@ -2,7 +2,7 @@ from typing import List
 
 import questionary
 
-from plugins.xsales.src.modules.Ftp.enums.enumftp import Enumftp
+from plugins.xsales.src.modules.FTP.enums.enumftp import Enumftp
 from plugins.xsales.util import descomprimir,sep,path
 from ...service.dbservice.sqliteservices import DataConn
 from .ftp import ImplicitFTPTLS

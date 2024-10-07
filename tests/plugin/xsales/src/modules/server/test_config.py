@@ -1,39 +1,14 @@
-<<<<<<< HEAD
 from unittest import TestCase,main
-
 from plugins.xsales.src.modules.Server.config import ConfigServer
+import json
 
 
 class Tests_ConfigServer(TestCase):
 
     def setUp(self) -> None:
         self.testconfig=ConfigServer()
-
-    def test_buscar_Credenciales(self):
-        dictcionario=self.testconfig.buscar_credenciales('default')
-        self.assertEqual(type(dictcionario),dict)
-        self.assertDictEqual({'default': {'USER': 'SoporteBZ', 'PASSWORD': 'BZs2024*'}},dictcionario)
-
-    def test_credenciales(self):
-        print(f"respuesta: {self.testconfig.configserver['credenciales'][0]['default']}")
-        self.assertIsNotNone(self.testconfig.CredencialesServer)
-
-    def test_foldermadrugada(self):
-        self.testconfig.Revisiones
-        self.assertEqual(type(self.testconfig.folderMadrugada),str)
-
-
-if __name__=="__main__":
-=======
-from unittest import TestCase,main
-
-from plugins.xsales.src.modules.Server.config import ConfigServer
-
-
-class Tests_ConfigServer(TestCase):
-
-    def setUp(self) -> None:
-        self.testconfig=ConfigServer()
+        with open('.\\tests\\data\\Consultas.json') as json_File:
+            self.json=json.load(json_File)
 
     def test_credenciales(self):
         print(f"respuesta: {self.testconfig.configserver['credenciales'][0]['default']}")
@@ -45,6 +20,34 @@ class Tests_ConfigServer(TestCase):
         self.assertEqual(type(self.testconfig.folderMadrugada),str)
 
 
+    def test_consultas(self):
+        self.assertEqual(type(self.testconfig.configserver['Consultas']), dict)
+
+    def test_string_REVICION_MADRUGADA(self):
+            stringyalm = self.testconfig.configserver['Consultas']['REVICION_MADRUGADA']['sql']['then'].replace('\\', ' ').replace('\n', ' ').replace('\t', ' ').replace(' ','')
+            stringjson="".join(self.json['REVICION_MADRUGADA']['sql']['PRONACA'] ).replace(" ", "")
+            self.assertEqual( stringyalm, stringjson)
+
+    def test_validar_Variables(self):   
+        
+        self.testconfig.configserver['Consultas']['REVICION_MADRUGADA']['parametros'][1] = {'NDISTRIBUIDOR': 'PRONACA'}
+        NDISTRIBUIDOR = self.testconfig.configserver['Consultas']['REVICION_MADRUGADA']['parametros'][1]['NDISTRIBUIDOR']
+
+        if NDISTRIBUIDOR == "PRONACA":
+            consulta_sql = self.testconfig.configserver['Consultas']['REVICION_MADRUGADA']['sql']['then']
+        else:
+            # Ejecuta la consulta SQL correspondiente
+            consulta_sql = self.testconfig.configserver['Consultas']['REVICION_MADRUGADA']['sql']['else']
+
+        # # Ahora, podemos utilizar la variable NDISTRIBUIDOR en el archivo YAML
+        # yaml_config = self.testconfig.configserver['Consultas']['REVICION_MADRUGADA']
+        # yaml_config['sql']['if'] = f"{{NDISTRIBUIDOR}} == 'ALSODI'"
+        # print(yaml_config['sql']['if'])
+
+        self.assertEqual(consulta_sql.replace(" ", ""),self.json['REVICION_MADRUGADA']['sql']['PRONACA'].replace(" ", ""))
+
+
+
+
 if __name__=="__main__":
->>>>>>> 8be410330e0e34aa49b9dec88801aabcfc683771
     main()
