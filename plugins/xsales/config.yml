@@ -1,9 +1,9 @@
 PathFolder:
-  Distribuidores:    'REPORTES/FTP/Distribuidores'
-  folder_file_excel: 'REPORTES/SERVER/Descargas'
+  Distribuidores:    'REPORTES\FTP\Distribuidores'
+  folder_file_excel: 'REPORTES\SERVER\Descargas'
   folderMadrugada:   'REPORTES\SERVER\Madrugada'
-  folderNocturnos:   'REPORTES/SERVER/Nocturnos'
-  folderStatus:      'REPORTES/STATUS'
+  folderNocturnos:   'REPORTES\SERVER\Nocturnos'
+  folderStatus:      'REPORTES\STATUS'
 
 Turnos:
     - TECNICO 3-AM

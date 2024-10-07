@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from unittest import TestCase,main
 
 from plugins.xsales.src.modules.Server.config import ConfigServer
@@ -23,4 +24,27 @@ class Tests_ConfigServer(TestCase):
 
 
 if __name__=="__main__":
+=======
+from unittest import TestCase,main
+
+from plugins.xsales.src.modules.Server.config import ConfigServer
+
+
+class Tests_ConfigServer(TestCase):
+
+    def setUp(self) -> None:
+        self.testconfig=ConfigServer()
+
+    def test_credenciales(self):
+        print(f"respuesta: {self.testconfig.configserver['credenciales'][0]['default']}")
+        self.assertIsNotNone(self.testconfig.CredencialesServer)
+
+
+    def test_foldermadrugada(self):
+        self.testconfig.Revisiones
+        self.assertEqual(type(self.testconfig.folderMadrugada),str)
+
+
+if __name__=="__main__":
+>>>>>>> 8be410330e0e34aa49b9dec88801aabcfc683771
     main()

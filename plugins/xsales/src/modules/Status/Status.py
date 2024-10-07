@@ -4,6 +4,7 @@ from typing import Dict, List, Tuple
 from rich import box
 from rich.live import Live
 from rich.table import Table
+from rich.console import Console
 
 from plugins.xsales.src.modules.Status.config import ConfigStatus
 
@@ -94,17 +95,18 @@ class Status:
             numero+=1
         return self.table
    
-    def mostrar_info(self,namedz,console):
+    def mostrar_info(self,namedz,console:Console):
 
         try:
             self.validardz(namedz)
 
             with Live (self.generar_table(),console=console,) as live:
-                while self.estado:
-                    time.sleep(5)
-                    self.dzincompletos=[]
-                    self.validardz(namedz)
-                    live.update(self.generar_table())
+                with console.pager():
+                    while self.estado:
+                        time.sleep(5)
+                        self.dzincompletos=[]
+                        self.validardz(namedz)
+                        live.update(self.generar_table())
         except KeyboardInterrupt :
 
             print('Cancelled by user')

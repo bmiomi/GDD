@@ -101,7 +101,9 @@ FTP:
         PASS: 'PR00RIENTE@supp0rt#2020'
         path:
           Download: 'XSales_Replication/Databases/Download/'
- 
+    Download:
+      file: main.zip
+
   Maestros:
 
       Xsales:
@@ -162,3 +164,12 @@ FTP:
     - 'Descuentos4.xml'
     - 'PRODUCTOS.xml'
     - 'ClienteDireccion.xml'
+
+  Validacionfile:
+
+    sqlite:
+
+      - 'DISCOUNTDETAIL'
+      - 'DISCOUNTROUTE'
+
+    

@@ -1,4 +1,5 @@
 from sqlite3 import  connect
+from typing import List
 
 class DataConn:
 
@@ -21,3 +22,6 @@ class DataConn:
         self.conn.close()
         if exc_val:
             raise f"se tiene un error de tipo {exc_val}"
+
+
+
