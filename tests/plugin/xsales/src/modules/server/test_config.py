@@ -8,10 +8,14 @@ class Tests_ConfigServer(TestCase):
     def setUp(self) -> None:
         self.testconfig=ConfigServer()
 
+    def test_buscar_Credenciales(self):
+        dictcionario=self.testconfig.buscar_credenciales('default')
+        self.assertEqual(type(dictcionario),dict)
+        self.assertDictEqual({'default': {'USER': 'SoporteBZ', 'PASSWORD': 'BZs2024*'}},dictcionario)
+
     def test_credenciales(self):
         print(f"respuesta: {self.testconfig.configserver['credenciales'][0]['default']}")
         self.assertIsNotNone(self.testconfig.CredencialesServer)
-
 
     def test_foldermadrugada(self):
         self.testconfig.Revisiones

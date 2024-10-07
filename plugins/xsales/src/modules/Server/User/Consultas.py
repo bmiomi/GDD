@@ -118,7 +118,44 @@ class consultas:
     @classmethod
     def revisionmadrugada(cls)->str:
         "se revisa consultas en la madrugada"
-        return """declare @customerxss int, @cusdelete int, @customerroute int, @cusst int, @customerstatus int, @customerroute1 int,@product int, @catalog int, @promotion int, @promotiond int, @promotiondp int, @genericou int, @genericog int, @genericoc int, @genericom int,@PreventastockD1  varchar(255),@DespachostockD1  varchar(255),@horainicioD01 varchar(255),@horafinD01 varchar(255),@horainicioD02 varchar(255),@horafinD02 varchar(255),@horainicioD04 varchar(255),@horafinD04 varchar(255),@horainicioD05 varchar(255),@horafinD05 varchar(255),@PreventastockD2 varchar(255),@DespachostockD2  varchar(255),@PreventastockD4 varchar(255),@DespachostockD4  varchar(255),@PreventastockD5 varchar(255), @DespachostockD5  varchar(255)select @customerxss= (select count(*) from customer)select @cusdelete=(select count(*) from customer where _Deleted='0' )select @customerroute=(select count(distinct cuscode) from customerroute where ctrvisittoday='1' and rotcode not like'%t%')select @customerroute1=(select count(distinct cuscode) from customerroute)select @cusst=(select count(*) from customerstatus where cuscode in(select cusCode from customerroute where ctrVisitToday='1' and rotcode not like'%t%'))select @customerstatus=(select count(*) from customerstatus WHERE CUSCODE IN (SELECT CUSCODE FROM CUSTOMERROUTE))select @product=(select count(*) from product where _Deleted='0')Select @catalog=(select count(*) From CatalogDetail)select @promotion=(select count(*) from promotion)select @promotiond=(select count(*) from promotiondetail)select @promotiondp=(select count(*) from promotiondetailproduct)select @genericou=(select count(*) from customerstatus where cusCode like'%199998%')select @genericog=(select count(*) from customerstatus where cusCode like'%299998%')select @genericoc=(select count(*) from customerstatus where cusCode like'%488888%')select @genericom=(select count(*) from customerstatus where cusCode like'%588888%')select @horainicioD01=(SELECT max(Trndate) FROM[TRANSACTION] WHERE TRNSCRIPTS LIKE'%CALCULATE%' and  TRNSCRIPTS  like'%D01%')select  @horafinD01=(SELECT max(trnLastDate) FROM[TRANSACTION]WHERE TRNSCRIPTS LIKE'%CALCULATE%'and TRNSCRIPTS like'%D01%')select @horainicioD02=(SELECT max(Trndate) FROM[TRANSACTION] WHERE TRNSCRIPTS LIKE'%CALCULATE%' and TRNSCRIPTS like'%D02%')select @horafinD02=(SELECT max(trnLastDate) FROM[TRANSACTION]WHERE TRNSCRIPTS LIKE'%CALCULATE%'and TRNSCRIPTS like'%D02%')select @horainicioD04=(SELECT max(Trndate) FROM[TRANSACTION] WHERE TRNSCRIPTS LIKE'%CALCULATE%' and TRNSCRIPTS like'%D04%')select @horafinD04=(SELECT max(trnLastDate) FROM[TRANSACTION]WHERE TRNSCRIPTS LIKE'%CALCULATE%'and TRNSCRIPTS like'%D04%')select @horainicioD05=(SELECT max(Trndate) FROM[TRANSACTION] WHERE TRNSCRIPTS LIKE'%CALCULATE%' and TRNSCRIPTS like'%D05%')select @horafinD05=(SELECT max(trnLastDate) FROM[TRANSACTION]WHERE TRNSCRIPTS LIKE'%CALCULATE%'and TRNSCRIPTS like'%D05%')select @PreventastockD1= (select  distinct top 1 convert(varchar,aptTransactionDate,103) from areaproduct where areCode='D01')select @DespachostockD1= (select  distinct top 1 convert(varchar,aptServerLastUpdate,103) from areaproduct where areCode='D01')select @PreventastockD2= (select  distinct top 1 convert(varchar,aptTransactionDate,103) from areaproduct where areCode='D02')select @DespachostockD2= (select  distinct top 1 convert(varchar,aptServerLastUpdate,103) from areaproduct where areCode='D02')select @PreventastockD4= (select  distinct top 1 convert(varchar,aptTransactionDate,103) from areaproduct where areCode='D04')select @DespachostockD4= (select  distinct top 1 convert(varchar,aptServerLastUpdate,103) from areaproduct where areCode='D04')select @PreventastockD5= (select  distinct top 1 convert(varchar,aptTransactionDate,103) from areaproduct where areCode='D05')select @DespachostockD5= (select  distinct top 1 convert(varchar,aptServerLastUpdate,103) from areaproduct where areCode='D05')select @PreventastockD1 as preventaQuito, @DespachostockD1 as DespachoQuito, dateadd (hh,-1,@horainicioD01) as INICIOHoraUIO,@horafinD01 as FINHoraUIO,@PreventastockD2 as preventaGYE, @DespachostockD2 as DespachoGYE,dateadd (hh,-1,@horainicioD02) as INICIOHORAGYE,@horafinD02 as FINHORAGYE,@PreventastockD4 as preventaCuenca, @DespachostockD4 as DespachoCuenca, dateadd (hh,-1,@horainicioD04)   as INICIOHORACUENCA,@horafinD04 as FINHORACUENCA,@PreventastockD5 as preventaMontecristi, @DespachostockD5 as DespachoMontecristi,dateadd (hh,-1,@horainicioD05) as INICIOHORAMONTEC,@horafinD05 as FINHORAMONTEC,@customerxss as CUSTOMER_XSS, @cusdelete as CUSTOMER_DELETE_0,@customerroute1 as CUSROUT_TOTAL,@customerroute as CUSROUTE_VISIT_TODAY,@cusst as CUSSTATUS_VISIT_TODAY,@customerstatus as CUSSTATUS_TOTAL,@product as PRODUCT, @catalog as CATALOG, @promotion as PROMOTION,@promotiond as PROMOTIOND, @promotiondp as PROMOTIONDP, @genericou as GENUIO, @genericog as GENGYE, @genericoc as GENCUE, @genericom as GENMON""" if cls.NDISTRIBUIDOR =='PRONACA' else """declare @preventa varchar(25), @despacho varchar(25), @customerxss int, @cusdelete int, @customerroute int, @cusst int, @customerstatus int, @customerroute1 int, @product int, @promotion int, @promotiond int, @promotiondp int, @generico int, @horainicio datetime,@horafin datetime select @preventa= (select top 1 convert(varchar,aptTransactionDate,103)  from areaproduct group by aptTransactionDate) select @despacho= (select top 1 convert(varchar,aptServerLastUpdate,103)  from areaproduct  group by aptServerLastUpdate) select @customerxss= (select count(*) from customer)  select @cusdelete=(select count(*) from customer where _Deleted='0' ) select @customerroute=(select count(distinct cuscode) from customerroute  where ctrvisittoday='1' and rotcode not like'%t%') select @customerstatus=(select count(*) from customerstatus WHERE CUSCODE IN (SELECT CUSCODE FROM CUSTOMERROUTE))  select @cusst=(select count(*) from customerstatus where cuscode in(select cusCode from customerroute where ctrVisitToday='1' and rotcode not like'%t%')) select @customerroute1=(select count(distinct cuscode) from customerroute) select @product=(select count(*) from product where _Deleted='0') select @promotion=(select count(*) from promotion) select @promotiond=(select count(*) from promotiondetail) select @promotiondp=(select count(*) from promotiondetailproduct) select @generico=(select count(*) from customer where cusCode like'%099999999%' or cuscode like'%3030000074%' and cuscode in ( select cuscode from customerstatus ))  select @horainicio=(SELECT max(Trndate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE'%CALCULATE%') select  @horafin=(SELECT max(trnLastDate) FROM[TRANSACTION] WHERE TRNSCRIPTS LIKE'%CALCULATE%') select  DB_NAME() as  DZ_Regional,  @preventa as preventa, @despacho as despacho, dateadd(hh,-1,@horainicio) as HoraECUInicioStock,dateadd(hh,-1,@horafin) as HoraECUFinStock, @customerxss as CUSTOMER_XSS, @cusdelete as CUSTOMER_DELETE_0,  @customerroute1 as CUSROUT_TOTAL,@customerroute as CUSROUTE_VISIT_TODAY,@cusst as CUSSTATUS_VISIT_TODAY, @customerstatus as CUSSTATUS_TOTAL, @product as PRODUCT, @promotion as PROMOTION, @promotiond as PROMOTIOND, @promotiondp as PROMOTIONDP, @generico as GENERICO"""
+        return """select distinct top 1 
+    (select distinct top 1 convert(varchar, aptTransactionDate, 103) from areaproduct where areCode = 'D01') as preventaQuito,
+    (select distinct top 1 convert(varchar, aptServerLastUpdate, 103) from areaproduct where areCode = 'D01') as DespachoQuito,
+    dateadd (hh, -1, (SELECT max(Trndate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D01%')) as INICIOHoraUIO, 
+    (SELECT max(trnLastDate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D01%') as FINHoraUIO,
+    
+    (select distinct top 1 convert(varchar, aptTransactionDate, 103) from areaproduct where areCode = 'D02') as preventaGYE, 
+    (select distinct top 1 convert(varchar, aptServerLastUpdate, 103) from areaproduct where areCode = 'D02') as DespachoGYE, 
+    dateadd (hh, -1, (SELECT max(Trndate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D02%')) as INICIOHORAGYE, 
+    (SELECT max(trnLastDate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D02%') as FINHORAGYE,
+
+    (select distinct top 1 convert(varchar, aptTransactionDate, 103) from areaproduct where areCode = 'D04') as preventaCuenca, 
+    (select distinct top 1 convert(varchar, aptServerLastUpdate, 103) from areaproduct where areCode = 'D04') as DespachoCuenca, 
+    dateadd (hh, -1, (SELECT max(Trndate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D04%')) as INICIOHORACUENCA, 
+    (SELECT max(trnLastDate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D04%') as FINHORACUENCA,
+
+    (select distinct top 1 convert(varchar, aptTransactionDate, 103) from areaproduct where areCode = 'D05') as preventaMontecristi, 
+    (select distinct top 1 convert(varchar, aptServerLastUpdate, 103) from areaproduct where areCode = 'D05') as DespachoMontecristi, 
+    dateadd (hh, -1, (SELECT max(Trndate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D05%')) as INICIOHORAMONTEC, 
+    (SELECT max(trnLastDate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D05%') as FINHORAMONTEC,
+
+    (select count(*) from customer) as CUSTOMER_XSS,
+    (select count(*) from customer where _Deleted = '0') as CUSTOMER_DELETE_0,
+    (select count(distinct cuscode) from customerroute) as CUSROUT_TOTAL,
+    (select count(distinct cuscode) from customerroute where ctrvisittoday = '1' and rotcode not like '%t%') as CUSROUTE_VISIT_TODAY,
+    (select count(*) from customerstatus where cuscode in (select cusCode from customerroute where ctrVisitToday = '1' and rotcode not like '%t%')) as CUSSTATUS_VISIT_TODAY,
+    (select count(*) from customerstatus WHERE CUSCODE IN (SELECT CUSCODE FROM CUSTOMERROUTE)) as CUSSTATUS_TOTAL,
+
+    (select count(*) from product where _Deleted = '0') as PRODUCT,
+    (select count(*) From CatalogDetail) as CATALOG,
+    (select count(*) from promotion) as PROMOTION,
+    (select count(*) from promotiondetail) as PROMOTIOND,
+    (select count(*) from promotiondetailproduct) as PROMOTIONDP,
+
+    (select count(*) from customerstatus where cusCode like '%199998%') as GENUIO,
+    (select count(*) from customerstatus where cusCode like '%299998%') as GENGYE,
+    (select count(*) from customerstatus where cusCode like '%488888%') as GENCUE,
+    (select count(*) from customerstatus where cusCode like '%588888%') as GENMON""" if cls.NDISTRIBUIDOR =='PRONACA' else """declare @preventa varchar(25), @despacho varchar(25), @customerxss int, @cusdelete int, @customerroute int, @cusst int, @customerstatus int, @customerroute1 int, @product int, @promotion int, @promotiond int, @promotiondp int, @generico int, @horainicio datetime,@horafin datetime select @preventa= (select top 1 convert(varchar,aptTransactionDate,103)  from areaproduct group by aptTransactionDate) select @despacho= (select top 1 convert(varchar,aptServerLastUpdate,103)  from areaproduct  group by aptServerLastUpdate) select @customerxss= (select count(*) from customer)  select @cusdelete=(select count(*) from customer where _Deleted='0' ) select @customerroute=(select count(distinct cuscode) from customerroute  where ctrvisittoday='1' and rotcode not like'%t%') select @customerstatus=(select count(*) from customerstatus WHERE CUSCODE IN (SELECT CUSCODE FROM CUSTOMERROUTE))  select @cusst=(select count(*) from customerstatus where cuscode in(select cusCode from customerroute where ctrVisitToday='1' and rotcode not like'%t%')) select @customerroute1=(select count(distinct cuscode) from customerroute) select @product=(select count(*) from product where _Deleted='0') select @promotion=(select count(*) from promotion) select @promotiond=(select count(*) from promotiondetail) select @promotiondp=(select count(*) from promotiondetailproduct) select @generico=(select count(*) from customer where cusCode like'%099999999%' or cuscode like'%3030000074%' and cuscode in ( select cuscode from customerstatus ))  select @horainicio=(SELECT max(Trndate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE'%CALCULATE%') select  @horafin=(SELECT max(trnLastDate) FROM[TRANSACTION] WHERE TRNSCRIPTS LIKE'%CALCULATE%') select  DB_NAME() as  DZ_Regional,  @preventa as preventa, @despacho as despacho, dateadd(hh,-1,@horainicio) as HoraECUInicioStock,dateadd(hh,-1,@horafin) as HoraECUFinStock, @customerxss as CUSTOMER_XSS, @cusdelete as CUSTOMER_DELETE_0,  @customerroute1 as CUSROUT_TOTAL,@customerroute as CUSROUTE_VISIT_TODAY,@cusst as CUSSTATUS_VISIT_TODAY, @customerstatus as CUSSTATUS_TOTAL, @product as PRODUCT, @promotion as PROMOTION, @promotiond as PROMOTIOND, @promotiondp as PROMOTIONDP, @generico as GENERICO"""
 
     @classmethod
     def totalPedidos(cls)->str:
@@ -127,3 +164,512 @@ class consultas:
     @classmethod
     def  cliente(cls,valor)->str:
         return f"select top 1000 cuscode,cusTaxID1,cusName,cusBusinessName from customer where custaxid1 like '%{valor}%'"
+    
+
+    @classmethod
+    def enc_lpp (cls,fechaFin,fechaInicio,nombreDZ):
+        f"""
+        declare @inicio VARCHAR(255), @fin VARCHAR(255), @CIA VARCHAR(255), @DesCIA VARCHAR(255)
+        SET @Inicio={fechaFin} SET @Fin={fechaInicio}
+        SET @CIA = '{nombreDZ}'
+
+            Select Top 10000 @CIA as Compañia,lpq2.rotCode as Codigo_Ruta, R.rotName as Nombre_de_ruta, R.rotDummy2 as Regional, 
+            B.brcName as _Regional, lpq2.surName as Encuesta,
+            lpq2.cusCode as Codigo_Cliente, C.cusName as Nombre_Cliente, 
+            C.tp1Code as Canal, T1.tp1Name as _Canal,
+            C.tp2Code as SubCanal, T2.tp2Name as _SubCanal,C.cusLatitude,C.cusLongitude,
+            Entrevista.Fecha, 
+            lpq2.qelName as R1 ,lpq211.qelName as R2,lpq212.qelName as R3,lpq213.qelName as R4,lpq214.qelName as R5,lpq3.qelName as R6
+            ,lpq311.qelName as R7,lpq312.qelName as R8,lpq313.qelName as R9,lpq314.qelName as R10,lpq4.qelName as R11,lpq411.qelName as R12,lpq412.qelName as R13
+            ,lpq413.qelName as R14,lpq414.qelName as R15,lpq5.qelName as R16,lpq511.qelName as R17,lpq512.qelName as R18,lpq513.qelName as R19,lpq514.qelName as R20
+            From  
+            (
+            Select rotCode, cusCode, surCode, surName, EstructuraP.intCode, EstructuraP.qstCode, sqnOrder, 
+            IQDU.qstCodeQuestionDetail,
+            Respuestas.qelName 
+            From (
+            Select SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder
+            From surveyInterviewCustomer SIC Left Join Survey S On S.surCode= SIC.surCode
+            Inner Join surveyQuestion SQ On SQ.surCode = SIC.surCode 
+            Left Join interviewQuestionDetailUp IQDU On IQDU.intCode = SIC.intCode 
+            Where SIC.surCode='lpq'
+            Group By SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder 
+            ) EstructuraP
+            Left Join interviewQuestionDetailUp IQDU On IQDU.intCode = EstructuraP.intCode 
+                and IQDU.qstCode = EstructuraP.qstCode
+            Inner Join 
+            (
+            select IQDU.intCode, IQDU.qstCode, IQDU.qstCodeQuestionDetail, QD.qelName
+            From interviewQuestionDetailUp IQDU Inner Join questionDetail QD On IQDU.qstCode= QD.qstCode 
+            and IQDU.qstCodeQuestionDetail= QD.qelCode  
+            ) Respuestas On Respuestas.intCode = EstructuraP.intCode 
+            and Respuestas.qstCode = EstructuraP.qstCode
+            Where EstructuraP.qstCode = 'lpq2'
+            ) lpq2 
+            Left Join 
+            (
+            Select rotCode, cusCode, surCode, surName, EstructuraP.intCode, EstructuraP.qstCode, sqnOrder, 
+            IQDU.qstCodeQuestionDetail,
+            Respuestas.qelName 
+            From (
+            Select SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder
+            From surveyInterviewCustomer SIC Left Join Survey S On S.surCode= SIC.surCode
+            Inner Join surveyQuestion SQ On SQ.surCode = SIC.surCode 
+            Left Join interviewQuestionDetailUp IQDU On IQDU.intCode = SIC.intCode 
+            Where SIC.surCode='lpq'
+            Group By SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder 
+            ) EstructuraP
+            Left Join interviewQuestionDetailUp IQDU On IQDU.intCode = EstructuraP.intCode 
+                and IQDU.qstCode = EstructuraP.qstCode
+            Inner Join 
+            (
+            select IQDU.intCode, IQDU.qstCode, IQDU.qstCodeQuestionDetail, QD.qelName
+            From interviewQuestionDetailUp IQDU Inner Join questionDetail QD On IQDU.qstCode= QD.qstCode 
+            and IQDU.qstCodeQuestionDetail= QD.qelCode  
+            ) Respuestas On Respuestas.intCode = EstructuraP.intCode 
+            and Respuestas.qstCode = EstructuraP.qstCode
+            Where EstructuraP.qstCode = 'lpq3'
+            ) lpq3 On lpq2.rotCode = lpq3.rotCode and lpq2.cusCode = lpq3.cusCode and lpq2.intCode = lpq3.intCode 
+            Left Join 
+            (
+            Select rotCode, cusCode, surCode, surName, EstructuraP.intCode, EstructuraP.qstCode, sqnOrder, 
+            IQDU.qstCodeQuestionDetail,
+            Respuestas.qelName 
+            From (
+            Select SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder
+            From surveyInterviewCustomer SIC Left Join Survey S On S.surCode= SIC.surCode
+            Inner Join surveyQuestion SQ On SQ.surCode = SIC.surCode 
+            Left Join interviewQuestionDetailUp IQDU On IQDU.intCode = SIC.intCode 
+            Where SIC.surCode='lpq'
+            Group By SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder 
+            ) EstructuraP
+            Left Join interviewQuestionDetailUp IQDU On IQDU.intCode = EstructuraP.intCode 
+                and IQDU.qstCode = EstructuraP.qstCode
+            Inner Join 
+            (
+            select IQDU.intCode, IQDU.qstCode, IQDU.qstCodeQuestionDetail, QD.qelName
+            From interviewQuestionDetailUp IQDU Inner Join questionDetail QD On IQDU.qstCode= QD.qstCode 
+            and IQDU.qstCodeQuestionDetail= QD.qelCode  
+            ) Respuestas On Respuestas.intCode = EstructuraP.intCode 
+            and Respuestas.qstCode = EstructuraP.qstCode
+            Where EstructuraP.qstCode = 'lpq4'
+            ) lpq4 On lpq2.rotCode = lpq4.rotCode and lpq2.cusCode = lpq4.cusCode and lpq2.intCode = lpq4.intCode 
+            Left Join 
+            (
+            Select rotCode, cusCode, surCode, surName, EstructuraP.intCode, EstructuraP.qstCode, sqnOrder, 
+            IQDU.qstCodeQuestionDetail,
+            Respuestas.qelName 
+            From (
+            Select SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder
+            From surveyInterviewCustomer SIC Left Join Survey S On S.surCode= SIC.surCode
+            Inner Join surveyQuestion SQ On SQ.surCode = SIC.surCode 
+            Left Join interviewQuestionDetailUp IQDU On IQDU.intCode = SIC.intCode 
+            Where SIC.surCode='lpq'
+            Group By SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder 
+            ) EstructuraP
+            Left Join interviewQuestionDetailUp IQDU On IQDU.intCode = EstructuraP.intCode 
+                and IQDU.qstCode = EstructuraP.qstCode
+            Inner Join 
+            (
+            select IQDU.intCode, IQDU.qstCode, IQDU.qstCodeQuestionDetail, QD.qelName
+            From interviewQuestionDetailUp IQDU Inner Join questionDetail QD On IQDU.qstCode= QD.qstCode 
+            and IQDU.qstCodeQuestionDetail= QD.qelCode  
+            ) Respuestas On Respuestas.intCode = EstructuraP.intCode 
+            and Respuestas.qstCode = EstructuraP.qstCode
+            Where EstructuraP.qstCode = 'lpq5'
+            ) lpq5 On lpq2.rotCode = lpq5.rotCode and lpq2.cusCode = lpq5.cusCode and lpq2.intCode = lpq5.intCode 
+            Left Join 
+            (
+            Select rotCode, cusCode, surCode, surName, EstructuraP.intCode, EstructuraP.qstCode, sqnOrder, 
+            IQDU.qstCodeQuestionDetail,
+            Respuestas.qelName 
+            From (
+            Select SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder
+            From surveyInterviewCustomer SIC Left Join Survey S On S.surCode= SIC.surCode
+            Inner Join surveyQuestion SQ On SQ.surCode = SIC.surCode 
+            Left Join interviewQuestionDetailUp IQDU On IQDU.intCode = SIC.intCode 
+            Where SIC.surCode='lpq'
+            Group By SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder 
+            ) EstructuraP
+            Left Join interviewQuestionDetailUp IQDU On IQDU.intCode = EstructuraP.intCode 
+                and IQDU.qstCode = EstructuraP.qstCode
+            Inner Join 
+            (
+            select IQDU.intCode, IQDU.qstCode, IQDU.qstCodeQuestionDetail, QD.qelName
+            From interviewQuestionDetailUp IQDU Inner Join questionDetail QD On IQDU.qstCode= QD.qstCode 
+            and IQDU.qstCodeQuestionDetail= QD.qelCode  
+            ) Respuestas On Respuestas.intCode = EstructuraP.intCode 
+            and Respuestas.qstCode = EstructuraP.qstCode
+            Where EstructuraP.qstCode = 'lpq213'
+            ) lpq213 On lpq2.rotCode = lpq213.rotCode and lpq2.cusCode = lpq213.cusCode and lpq2.intCode = lpq213.intCode 
+            Left Join 
+            (
+            Select rotCode, cusCode, surCode, surName, EstructuraP.intCode, EstructuraP.qstCode, sqnOrder, 
+            IQDU.qstCodeQuestionDetail,
+            Respuestas.qelName 
+            From (
+            Select SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder
+            From surveyInterviewCustomer SIC Left Join Survey S On S.surCode= SIC.surCode
+            Inner Join surveyQuestion SQ On SQ.surCode = SIC.surCode 
+            Left Join interviewQuestionDetailUp IQDU On IQDU.intCode = SIC.intCode 
+            Where SIC.surCode='lpq'
+            Group By SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder 
+            ) EstructuraP
+            Left Join interviewQuestionDetailUp IQDU On IQDU.intCode = EstructuraP.intCode 
+                and IQDU.qstCode = EstructuraP.qstCode
+            Inner Join 
+            (
+            select IQDU.intCode, IQDU.qstCode, IQDU.qstCodeQuestionDetail, QD.qelName
+            From interviewQuestionDetailUp IQDU Inner Join questionDetail QD On IQDU.qstCode= QD.qstCode 
+            and IQDU.qstCodeQuestionDetail= QD.qelCode  
+            ) Respuestas On Respuestas.intCode = EstructuraP.intCode 
+            and Respuestas.qstCode = EstructuraP.qstCode
+            Where EstructuraP.qstCode = 'lpq214'
+            ) lpq214 On lpq2.rotCode = lpq214.rotCode and lpq2.cusCode = lpq214.cusCode and lpq2.intCode = lpq214.intCode 
+            Left Join 
+            (
+            Select rotCode, cusCode, surCode, surName, EstructuraP.intCode, EstructuraP.qstCode, sqnOrder, 
+            IQDU.qstCodeQuestionDetail,
+            Respuestas.qelName 
+            From (
+            Select SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder
+            From surveyInterviewCustomer SIC Left Join Survey S On S.surCode= SIC.surCode
+            Inner Join surveyQuestion SQ On SQ.surCode = SIC.surCode 
+            Left Join interviewQuestionDetailUp IQDU On IQDU.intCode = SIC.intCode 
+            Where SIC.surCode='lpq'
+            Group By SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder 
+            ) EstructuraP
+            Left Join interviewQuestionDetailUp IQDU On IQDU.intCode = EstructuraP.intCode 
+                and IQDU.qstCode = EstructuraP.qstCode
+            Inner Join 
+            (
+            select IQDU.intCode, IQDU.qstCode, IQDU.qstCodeQuestionDetail, QD.qelName
+            From interviewQuestionDetailUp IQDU Inner Join questionDetail QD On IQDU.qstCode= QD.qstCode 
+            and IQDU.qstCodeQuestionDetail= QD.qelCode  
+            ) Respuestas On Respuestas.intCode = EstructuraP.intCode 
+            and Respuestas.qstCode = EstructuraP.qstCode
+            Where EstructuraP.qstCode = 'lpq311'
+            ) lpq311 On lpq2.rotCode = lpq311.rotCode and lpq2.cusCode = lpq311.cusCode and lpq2.intCode = lpq311.intCode 
+            Left Join 
+            (
+            Select rotCode, cusCode, surCode, surName, EstructuraP.intCode, EstructuraP.qstCode, sqnOrder, 
+            IQDU.qstCodeQuestionDetail,
+            Respuestas.qelName 
+            From (
+            Select SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder
+            From surveyInterviewCustomer SIC Left Join Survey S On S.surCode= SIC.surCode
+            Inner Join surveyQuestion SQ On SQ.surCode = SIC.surCode 
+            Left Join interviewQuestionDetailUp IQDU On IQDU.intCode = SIC.intCode 
+            Where SIC.surCode='lpq'
+            Group By SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder 
+            ) EstructuraP
+            Left Join interviewQuestionDetailUp IQDU On IQDU.intCode = EstructuraP.intCode 
+                and IQDU.qstCode = EstructuraP.qstCode
+            Inner Join 
+            (
+            select IQDU.intCode, IQDU.qstCode, IQDU.qstCodeQuestionDetail, QD.qelName
+            From interviewQuestionDetailUp IQDU Inner Join questionDetail QD On IQDU.qstCode= QD.qstCode 
+            and IQDU.qstCodeQuestionDetail= QD.qelCode  
+            ) Respuestas On Respuestas.intCode = EstructuraP.intCode 
+            and Respuestas.qstCode = EstructuraP.qstCode
+            Where EstructuraP.qstCode = 'lpq314'
+            ) lpq314 On lpq2.rotCode = lpq314.rotCode and lpq2.cusCode = lpq314.cusCode and lpq2.intCode = lpq314.intCode 
+            Left Join 
+            (
+            Select rotCode, cusCode, surCode, surName, EstructuraP.intCode, EstructuraP.qstCode, sqnOrder, 
+            IQDU.qstCodeQuestionDetail,
+            Respuestas.qelName 
+            From (
+            Select SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder
+            From surveyInterviewCustomer SIC Left Join Survey S On S.surCode= SIC.surCode
+            Inner Join surveyQuestion SQ On SQ.surCode = SIC.surCode 
+            Left Join interviewQuestionDetailUp IQDU On IQDU.intCode = SIC.intCode 
+            Where SIC.surCode='lpq'
+            Group By SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder 
+            ) EstructuraP
+            Left Join interviewQuestionDetailUp IQDU On IQDU.intCode = EstructuraP.intCode 
+                and IQDU.qstCode = EstructuraP.qstCode
+            Inner Join 
+            (
+            select IQDU.intCode, IQDU.qstCode, IQDU.qstCodeQuestionDetail, QD.qelName
+            From interviewQuestionDetailUp IQDU Inner Join questionDetail QD On IQDU.qstCode= QD.qstCode 
+            and IQDU.qstCodeQuestionDetail= QD.qelCode  
+            ) Respuestas On Respuestas.intCode = EstructuraP.intCode 
+            and Respuestas.qstCode = EstructuraP.qstCode
+            Where EstructuraP.qstCode = 'lpq411'
+            ) lpq411 On lpq2.rotCode = lpq411.rotCode and lpq2.cusCode = lpq411.cusCode and lpq2.intCode = lpq411.intCode 
+            Left Join 
+            (
+            Select rotCode, cusCode, surCode, surName, EstructuraP.intCode, EstructuraP.qstCode, sqnOrder, 
+            IQDU.qstCodeQuestionDetail,
+            Respuestas.qelName 
+            From (
+            Select SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder
+            From surveyInterviewCustomer SIC Left Join Survey S On S.surCode= SIC.surCode
+            Inner Join surveyQuestion SQ On SQ.surCode = SIC.surCode 
+            Left Join interviewQuestionDetailUp IQDU On IQDU.intCode = SIC.intCode 
+            Where SIC.surCode='lpq'
+            Group By SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder 
+            ) EstructuraP
+            Left Join interviewQuestionDetailUp IQDU On IQDU.intCode = EstructuraP.intCode 
+                and IQDU.qstCode = EstructuraP.qstCode
+            Inner Join 
+            (
+            select IQDU.intCode, IQDU.qstCode, IQDU.qstCodeQuestionDetail, QD.qelName
+            From interviewQuestionDetailUp IQDU Inner Join questionDetail QD On IQDU.qstCode= QD.qstCode 
+            and IQDU.qstCodeQuestionDetail= QD.qelCode  
+            ) Respuestas On Respuestas.intCode = EstructuraP.intCode 
+            and Respuestas.qstCode = EstructuraP.qstCode
+            Where EstructuraP.qstCode = 'lpq414'
+            ) lpq414 On lpq2.rotCode = lpq414.rotCode and lpq2.cusCode = lpq414.cusCode and lpq2.intCode = lpq414.intCode 
+            Left Join 
+            (
+            Select rotCode, cusCode, surCode, surName, EstructuraP.intCode, EstructuraP.qstCode, sqnOrder, 
+            IQDU.qstCodeQuestionDetail,
+            Respuestas.qelName 
+            From (
+            Select SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder
+            From surveyInterviewCustomer SIC Left Join Survey S On S.surCode= SIC.surCode
+            Inner Join surveyQuestion SQ On SQ.surCode = SIC.surCode 
+            Left Join interviewQuestionDetailUp IQDU On IQDU.intCode = SIC.intCode 
+            Where SIC.surCode='lpq'
+            Group By SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder 
+            ) EstructuraP
+            Left Join interviewQuestionDetailUp IQDU On IQDU.intCode = EstructuraP.intCode 
+                and IQDU.qstCode = EstructuraP.qstCode
+            Inner Join 
+            (
+            select IQDU.intCode, IQDU.qstCode, IQDU.qstCodeQuestionDetail, QD.qelName
+            From interviewQuestionDetailUp IQDU Inner Join questionDetail QD On IQDU.qstCode= QD.qstCode 
+            and IQDU.qstCodeQuestionDetail= QD.qelCode  
+            ) Respuestas On Respuestas.intCode = EstructuraP.intCode 
+            and Respuestas.qstCode = EstructuraP.qstCode
+            Where EstructuraP.qstCode = 'lpq511'
+            ) lpq511 On lpq2.rotCode = lpq511.rotCode and lpq2.cusCode = lpq511.cusCode and lpq2.intCode = lpq511.intCode 
+            Left Join 
+            (
+            Select rotCode, cusCode, surCode, surName, EstructuraP.intCode, EstructuraP.qstCode, sqnOrder, 
+            IQDU.qstCodeQuestionDetail,
+            Respuestas.qelName 
+            From (
+            Select SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder
+            From surveyInterviewCustomer SIC Left Join Survey S On S.surCode= SIC.surCode
+            Inner Join surveyQuestion SQ On SQ.surCode = SIC.surCode 
+            Left Join interviewQuestionDetailUp IQDU On IQDU.intCode = SIC.intCode 
+            Where SIC.surCode='lpq'
+            Group By SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder 
+            ) EstructuraP
+            Left Join interviewQuestionDetailUp IQDU On IQDU.intCode = EstructuraP.intCode 
+                and IQDU.qstCode = EstructuraP.qstCode
+            Inner Join 
+            (
+            select IQDU.intCode, IQDU.qstCode, IQDU.qstCodeQuestionDetail, QD.qelName
+            From interviewQuestionDetailUp IQDU Inner Join questionDetail QD On IQDU.qstCode= QD.qstCode 
+            and IQDU.qstCodeQuestionDetail= QD.qelCode  
+            ) Respuestas On Respuestas.intCode = EstructuraP.intCode 
+            and Respuestas.qstCode = EstructuraP.qstCode
+            Where EstructuraP.qstCode = 'lpq514'
+            ) lpq514 On lpq2.rotCode = lpq514.rotCode and lpq2.cusCode = lpq514.cusCode and lpq2.intCode = lpq514.intCode 
+            Left Join 
+            (
+            Select rotCode, cusCode, surCode, surName, EstructuraP.intCode, EstructuraP.qstCode, sqnOrder, 
+            IQDU.iqnMoneyValue as qstCodeQuestionDetail,
+            IQDU.iqnMoneyValue as qelName 
+            From (
+            Select SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder
+            From surveyInterviewCustomer SIC Left Join Survey S On S.surCode= SIC.surCode
+            Inner Join surveyQuestion SQ On SQ.surCode = SIC.surCode 
+            Left Join interviewQuestionUp IQDU On IQDU.intCode = SIC.intCode 
+            Where SIC.surCode='lpq'
+            Group By SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder 
+            ) EstructuraP
+            Left Join interviewQuestionUp IQDU On IQDU.intCode = EstructuraP.intCode 
+                and IQDU.qstCode = EstructuraP.qstCode
+            Where EstructuraP.qstCode = 'lpq211'
+            ) lpq211 On lpq2.rotCode = lpq211.rotCode and lpq2.cusCode = lpq211.cusCode and lpq2.intCode = lpq211.intCode 
+            Left Join 
+            (
+            Select rotCode, cusCode, surCode, surName, EstructuraP.intCode, EstructuraP.qstCode, sqnOrder, 
+            IQDU.iqnMoneyValue as qstCodeQuestionDetail,
+            IQDU.iqnMoneyValue as qelName 
+            From (
+            Select SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder
+            From surveyInterviewCustomer SIC Left Join Survey S On S.surCode= SIC.surCode
+            Inner Join surveyQuestion SQ On SQ.surCode = SIC.surCode 
+            Left Join interviewQuestionUp IQDU On IQDU.intCode = SIC.intCode 
+            Where SIC.surCode='lpq'
+            Group By SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder 
+            ) EstructuraP
+            Left Join interviewQuestionUp IQDU On IQDU.intCode = EstructuraP.intCode 
+                and IQDU.qstCode = EstructuraP.qstCode
+            Where EstructuraP.qstCode = 'lpq212'
+            ) lpq212 On lpq2.rotCode = lpq212.rotCode and lpq2.cusCode = lpq212.cusCode and lpq2.intCode = lpq212.intCode 
+            Left Join 
+            (
+            Select rotCode, cusCode, surCode, surName, EstructuraP.intCode, EstructuraP.qstCode, sqnOrder, 
+            IQDU.iqnMoneyValue as qstCodeQuestionDetail,
+            IQDU.iqnMoneyValue as qelName 
+            From (
+            Select SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder
+            From surveyInterviewCustomer SIC Left Join Survey S On S.surCode= SIC.surCode
+            Inner Join surveyQuestion SQ On SQ.surCode = SIC.surCode 
+            Left Join interviewQuestionUp IQDU On IQDU.intCode = SIC.intCode 
+            Where SIC.surCode='lpq'
+            Group By SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder 
+            ) EstructuraP
+            Left Join interviewQuestionUp IQDU On IQDU.intCode = EstructuraP.intCode 
+                and IQDU.qstCode = EstructuraP.qstCode
+            Where EstructuraP.qstCode = 'lpq312'
+            ) lpq312 On lpq2.rotCode = lpq312.rotCode and lpq2.cusCode = lpq312.cusCode and lpq2.intCode = lpq312.intCode 
+            Left Join 
+            (
+            Select rotCode, cusCode, surCode, surName, EstructuraP.intCode, EstructuraP.qstCode, sqnOrder, 
+            IQDU.iqnMoneyValue as qstCodeQuestionDetail,
+            IQDU.iqnMoneyValue as qelName 
+            From (
+            Select SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder
+            From surveyInterviewCustomer SIC Left Join Survey S On S.surCode= SIC.surCode
+            Inner Join surveyQuestion SQ On SQ.surCode = SIC.surCode 
+            Left Join interviewQuestionUp IQDU On IQDU.intCode = SIC.intCode 
+            Where SIC.surCode='lpq'
+            Group By SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder 
+            ) EstructuraP
+            Left Join interviewQuestionUp IQDU On IQDU.intCode = EstructuraP.intCode 
+                and IQDU.qstCode = EstructuraP.qstCode
+            Where EstructuraP.qstCode = 'lpq313'
+            ) lpq313 On lpq2.rotCode = lpq313.rotCode and lpq2.cusCode = lpq313.cusCode and lpq2.intCode = lpq313.intCode 
+            Left Join 
+            (
+            Select rotCode, cusCode, surCode, surName, EstructuraP.intCode, EstructuraP.qstCode, sqnOrder, 
+            IQDU.iqnMoneyValue as qstCodeQuestionDetail,
+            IQDU.iqnMoneyValue as qelName 
+            From (
+            Select SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder
+            From surveyInterviewCustomer SIC Left Join Survey S On S.surCode= SIC.surCode
+            Inner Join surveyQuestion SQ On SQ.surCode = SIC.surCode 
+            Left Join interviewQuestionUp IQDU On IQDU.intCode = SIC.intCode 
+            Where SIC.surCode='lpq'
+            Group By SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder 
+            ) EstructuraP
+            Left Join interviewQuestionUp IQDU On IQDU.intCode = EstructuraP.intCode 
+                and IQDU.qstCode = EstructuraP.qstCode
+            Where EstructuraP.qstCode = 'lpq412'
+            ) lpq412 On lpq2.rotCode = lpq412.rotCode and lpq2.cusCode = lpq412.cusCode and lpq2.intCode = lpq412.intCode 
+            Left Join 
+            (
+            Select rotCode, cusCode, surCode, surName, EstructuraP.intCode, EstructuraP.qstCode, sqnOrder, 
+            IQDU.iqnMoneyValue as qstCodeQuestionDetail,
+            IQDU.iqnMoneyValue as qelName 
+            From (
+            Select SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder
+            From surveyInterviewCustomer SIC Left Join Survey S On S.surCode= SIC.surCode
+            Inner Join surveyQuestion SQ On SQ.surCode = SIC.surCode 
+            Left Join interviewQuestionUp IQDU On IQDU.intCode = SIC.intCode 
+            Where SIC.surCode='lpq'
+            Group By SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder 
+            ) EstructuraP
+            Left Join interviewQuestionUp IQDU On IQDU.intCode = EstructuraP.intCode 
+                and IQDU.qstCode = EstructuraP.qstCode
+            Where EstructuraP.qstCode = 'lpq413'
+            ) lpq413 On lpq2.rotCode = lpq413.rotCode and lpq2.cusCode = lpq413.cusCode and lpq2.intCode = lpq413.intCode 
+            Left Join 
+            (
+            Select rotCode, cusCode, surCode, surName, EstructuraP.intCode, EstructuraP.qstCode, sqnOrder, 
+            IQDU.iqnMoneyValue as qstCodeQuestionDetail,
+            IQDU.iqnMoneyValue as qelName 
+            From (
+            Select SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder
+            From surveyInterviewCustomer SIC Left Join Survey S On S.surCode= SIC.surCode
+            Inner Join surveyQuestion SQ On SQ.surCode = SIC.surCode 
+            Left Join interviewQuestionUp IQDU On IQDU.intCode = SIC.intCode 
+            Where SIC.surCode='lpq'
+            Group By SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder 
+            ) EstructuraP
+            Left Join interviewQuestionUp IQDU On IQDU.intCode = EstructuraP.intCode 
+                and IQDU.qstCode = EstructuraP.qstCode
+            Where EstructuraP.qstCode = 'lpq512'
+            ) lpq512 On lpq2.rotCode = lpq512.rotCode and lpq2.cusCode = lpq512.cusCode and lpq2.intCode = lpq512.intCode 
+            Left Join 
+            (
+            Select rotCode, cusCode, surCode, surName, EstructuraP.intCode, EstructuraP.qstCode, sqnOrder, 
+            IQDU.iqnMoneyValue as qstCodeQuestionDetail,
+            IQDU.iqnMoneyValue as qelName 
+            From (
+            Select SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder
+            From surveyInterviewCustomer SIC Left Join Survey S On S.surCode= SIC.surCode
+            Inner Join surveyQuestion SQ On SQ.surCode = SIC.surCode 
+            Left Join interviewQuestionUp IQDU On IQDU.intCode = SIC.intCode 
+            Where SIC.surCode='lpq'
+            Group By SIC.rotCode, SIC.cusCode,S.surCode, S.surName, SIC.intCode, SQ.qstCode,
+            SQ.sqnOrder 
+            ) EstructuraP
+            Left Join interviewQuestionUp IQDU On IQDU.intCode = EstructuraP.intCode 
+                and IQDU.qstCode = EstructuraP.qstCode
+            Where EstructuraP.qstCode = 'lpq513'
+            ) lpq513 On lpq2.rotCode = lpq513.rotCode and lpq2.cusCode = lpq513.cusCode and lpq2.intCode = lpq513.intCode 
+
+            Right Join 
+            (
+            Select intCode, rotCode, cusCode, Convert(date,intStartTime,101) as Fecha  
+            From interviewUp Where surCode='lpq' 
+            and Convert(date,intStartTime,101) Between @Inicio and @Fin
+            )Entrevista On lpq2.rotCode = Entrevista.rotCode and lpq2.cusCode = Entrevista.cusCode 
+            and lpq2.intCode = Entrevista.intCode
+
+            Left Join customer C On lpq2.cusCode = C.cusCode
+            Left Join Type1 T1 On T1.tp1Code = C.tp1Code 
+            Left Join Type2 T2 On T2.tp2Code = C.tp2Code 
+            Left Join Route R On R.rotCode = lpq2.rotCode 
+            Left Join Branch B On B.brcCode = R.rotDummy2
+
+            Where lpq2.rotCode is not null
+
+            Group By 
+            lpq2.rotCode, R.rotName, R.rotDummy2, 
+            B.brcName, 
+            lpq2.cusCode, C.cusName, 
+            C.tp1Code, T1.tp1Name,C.tp2Code, T2.tp2Name,C.citcode, C.cusPhone, C.cusStreet1,C.cusLatitude,C.cusLongitude,
+            lpq2.surCode, lpq2.surName, Entrevista.Fecha, 
+            lpq2.qelName,lpq2.qelName,lpq3.qelName,lpq4.qelName,lpq5.qelName,lpq211.qelName,lpq212.qelName,lpq213.qelName,lpq214.qelName,lpq311.qelName,lpq312.qelName,lpq313.qelName,lpq314.qelName,lpq411.qelName
+            ,lpq412.qelName,lpq413.qelName,lpq414.qelName,lpq511.qelName,lpq512.qelName,lpq513.qelName,lpq514.qelName
+
+            """

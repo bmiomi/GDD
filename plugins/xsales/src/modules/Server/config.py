@@ -1,5 +1,5 @@
 
-from typing import Dict
+from typing import Dict, List
 from plugins.xsales.src.service.excelservice.service_excel import ExcelFile
 from plugins.xsales.confi import Config
 from plugins.xsales.util import sep
@@ -10,30 +10,40 @@ class ConfigServer(Config):
     
     __credencialuser:str=''
     __credencialpassword:str=''
+    __credencialName:str='default'
 
     @property
-    def configserver(self)->Dict:
+    def configserver(self)->List:   
         return self.config.get('datod').get('Server')
-
 
     @property
     def CredencialesServer(self):
-        respuesta=self.configserver.get('credenciales')[0].get('default')
-        if isinstance(respuesta,dict):
-            self.__credencialuser=respuesta['USER']
-            self.__credencialpassword=respuesta['PASSWORD'] 
-        return (self.__credencialpassword,self.__credencialuser)  
+        credencialname=self.__credencialName
+        respuesta=self.buscar_credenciales(credencialname)
+        if respuesta:
+            self.__credencialuser=respuesta[self.__credencialName]['USER']
+            self.__credencialpassword=respuesta[self.__credencialName]['PASSWORD'] 
+        return (self.__credencialuser,self.__credencialpassword,)  
     
     @CredencialesServer.setter
     def CredencialesServer(self,credencial) -> None:
-        credenciales = self.configserver.get('credenciales')
-        for opcion in credenciales:
-            if opcion.get(credencial):
-                self.__credencialuser=opcion[credencial]['USER'], 
-                self.__credencialpassword=opcion[credencial]['PASSWORD']
-            else:
-                raise Exception(f'No se encontro credencial para {credencial} en el archivo config')
- 
+        self.__credencialName=credencial
+        credenciales = self.buscar_credenciales(credencial)
+        self.__credencialuser=credenciales[self.__credencialName]['USER'], 
+        self.__credencialpassword=credenciales[self.__credencialName]['PASSWORD']
+
+    def buscar_credenciales(self,credencial_name:str)->Dict:
+        try:
+            credencial = next(
+                (credencial for credencial in self.configserver.get('credenciales')
+                 if  credencial_name in credencial ),
+                None
+            )
+            return credencial
+        except KeyError:
+            print("No se encontró la clave en el diccionario")
+            return None
+
     @property
     def folderexcel(self) -> str:
         currpath = self.path.join(
