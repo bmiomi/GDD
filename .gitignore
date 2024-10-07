@@ -6,6 +6,7 @@ __pycache__
 .vscode
 ejemplos
 wslenv
+.devcontainer
 
 #file
 .gitignore

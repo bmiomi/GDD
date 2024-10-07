@@ -63,19 +63,22 @@ class Xsales:
          data=data
         )
 
-    print(response.text,file=open('dat','w'))
-
-
     if response.status_code==200:
         respuesta=json.loads( response.text)
-        if respuesta['Message'] =="User or Password Incorrect":
+        if respuesta['Message'] in ("User or Password Incorrect","Usuario o Password Incorrectos"):
           intentos=0
           while intentos<=2:
-              print(f'\n Contraseña defaul Errada..\n Intentando con clave del archivo {self.config.CredencialesServer[0], self.config.CredencialesServer[1]}')
-              self._config.CredencialesServer= self.name
-              self.logerarseesion(password=self._config.CredencialesServer[0],username=self._config.CredencialesServer[1])
+              print(f'\n Contraseña defaul Errada..\n Intentando con credenciales Personalizadas')
+              self.loginsessiondz()
               intentos+=1
         
+  def loginsessiondz(self):
+       try:
+         self._config.CredencialesServer= self.name
+         self.logerarseesion(password=self._config.CredencialesServer[0],username=self._config.CredencialesServer[1])
+       except BaseException as e:
+          print(' '+e)
+          
   def consulta_new_version(self,sql) -> Dict:
       self.HEADERS['Referer'] = self.URLBASE + self.name + '/xsm/app/css/global.css?vcss=20191107'
       data={"Catalog":self.name+"_XSS_441_PRD", "Query":sql, "CultureName":"es-VE", "Decimals":" "}

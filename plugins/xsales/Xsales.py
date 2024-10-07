@@ -17,6 +17,7 @@ class Plugin(IPluging):
     def nombre(self) -> str:
         return 'Xsales'
     
+
     def execute(self,question,consola):  
         try:
             SModulo=question.prompt(self.__modulos)
@@ -33,4 +34,6 @@ class Plugin(IPluging):
             print (f's:{e.__class__.__name__}{e}')
         except KeyboardInterrupt:
             return 0       
+
     #esta subido el archivo
+    

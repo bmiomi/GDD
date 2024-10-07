@@ -15,7 +15,6 @@ class ConfigServer(Config):
     def configserver(self)->Dict:
         return self.config.get('datod').get('Server')
 
-
     @property
     def CredencialesServer(self):
         respuesta=self.configserver.get('credenciales')[0].get('default')
@@ -33,7 +32,7 @@ class ConfigServer(Config):
                 self.__credencialpassword=opcion[credencial]['PASSWORD']
             else:
                 raise Exception(f'No se encontro credencial para {credencial} en el archivo config')
- 
+    
     @property
     def folderexcel(self) -> str:
         currpath = self.path.join(

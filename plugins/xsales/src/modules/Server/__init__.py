@@ -13,7 +13,6 @@ class  Page(Xsales):
         self.config.Revisiones= 'Server'
         self.validadorsql=None
         self.contenedor=[]
-        self.contador=0
         
     def __get_consulta( self,opcion):
         consultas.NDISTRIBUIDOR=self.name
@@ -42,7 +41,6 @@ class  Page(Xsales):
                     super().__init__(name=nombredz)
                     self.consulta_Basedatos()             
                     console.log( f'Revisión completada para {nombredz}')
-                    self.contador+=1
                 except Warning as e:
                     console.log( f"{str(e)} DZ/Regional {nombredz}")
                 except ValueError as e:

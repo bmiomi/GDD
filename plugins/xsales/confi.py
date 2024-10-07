@@ -16,7 +16,7 @@ class Config:
             file = path.join("plugins", "xsales")
             yaml.add_constructor("!include", yaml_include.Constructor(base_dir=file))
             try:
-                self._cached_config = yaml.load(open(f'{file}\config.yml'), Loader=yaml.FullLoader)
+                self._cached_config = yaml.load(open(f'{file}{path.sep}config.yml'), Loader=yaml.FullLoader)
             except FileNotFoundError as e:
                 print(e, 'No se tiene archivo de configuracion.')
         return self._cached_config
