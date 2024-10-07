@@ -12,21 +12,22 @@ class consultas:
     def consulta(cls,dato,config):      
         for key in config.keys():
             if key == dato:
-                return cls.retornar_Sentencia_sql(config[key]['sql'])
+                return cls.retornar_Sentencia_sql(config[key])
             
 
 
 
     @classmethod
     def retornar_Sentencia_sql(cls,parametro:dict):
+        cls.validar_parametros(parametro)
         if parametro['sql'].get('if'):
                 return parametro['if']
         return parametro['sql']
 
 
     @classmethod
-    def validar_parametros(cls,):
-            self.
+    def validar_parametros(cls,parametro):
+            parametro['parametros']
 
 
     @classmethod
