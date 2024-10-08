@@ -14,6 +14,10 @@ class ConfigServer(Config):
     @property
     def configserver(self)->Dict:
         return self.config.get('datod').get('Server')
+   
+    @property
+    def configConsultas(self)->Dict:
+        return self.config.get('datod').get('Server').get('Consultas')
 
     @property
     def CredencialesServer(self):

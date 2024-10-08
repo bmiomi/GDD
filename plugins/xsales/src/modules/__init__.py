@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from .Ftp import FtpXsales
+from .FTP import FtpXsales
 from .Status.Status import Status 
 from .Server import Page
 

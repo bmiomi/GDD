@@ -7,18 +7,28 @@ ayer = ahora -timedelta(days=2) if ahora.weekday() == 0  else ahora -timedelta(d
 class consultas:
 
     NDISTRIBUIDOR=None;
-    __CONSULTA={}
  
     @classmethod
-    def consulta(cls,value):
-        __CONSULTA={
-        'REVICION_MADRUGADA':consultas.revisionmadrugada,
-        'DESC.DIURNOS':consultas.Descuentos_Demadrugada,
-        'Total_Pedidos':consultas.totalPedidos,
-        'VALIDAR_ClIENTE':consultas.cliente,
-        'DESC.NOCTURNOS':consultas.Descuentos_Nocturno,
-        }
-        return __CONSULTA[value]
+    def consulta(cls,dato,config):      
+        for key in config.keys():
+            if key == dato:
+                return cls.retornar_Sentencia_sql(config[key])
+            
+
+
+
+    @classmethod
+    def retornar_Sentencia_sql(cls,parametro:dict):
+        cls.validar_parametros(parametro)
+        if parametro['sql'].get('if'):
+                return parametro['if']
+        return parametro['sql']
+
+
+    @classmethod
+    def validar_parametros(cls,parametro):
+            parametro['parametros']
+
 
     @classmethod
     def Descuentos_Demadrugada(cls):
