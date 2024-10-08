@@ -17,6 +17,9 @@ class Tests_ConfigServer(TestCase):
         self.testconfig.Revisiones
         self.assertEqual(type(self.testconfig.folderMadrugada),str)
 
+    def test_Consultas(self):
+      self.assertEqual( type(sef.testconfig['Consultas']),dict)
+
 
 if __name__=="__main__":
     main()
