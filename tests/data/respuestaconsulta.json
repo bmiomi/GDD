@@ -1,0 +1,135 @@
+{
+    "MessageType": 83,
+    "Message": "QueryOK ",
+    "Data": {
+        "QueryInfResult": [
+            {
+                "Msg": "QueryOK ",
+                "MsgType": "S",
+                "Time": "00: 00: 00",
+                "Rows": "1 Registro(s)"
+            }
+        ],
+        "Result": [
+            {
+                "dz_regional": "DISPROLOP_XSS_441_PRD",
+                "preventa": "08/04/2024",
+                "despacho": "09/04/2024",
+                "horaecuiniciostock": "2024-04-06T18: 24: 05.267",
+                "horaecufinstock": "2024-04-06T18: 38: 33.76",
+                "customer_xss": 8147,
+                "customer_delete_0": 8147,
+                "cusrout_total": 2841,
+                "cusroute_visit_today": 366,
+                "cusstatus_visit_today": 375,
+                "cusstatus_total": 2995,
+                "product": 10842,
+                "promotion": 101,
+                "promotiond": 1199,
+                "promotiondp": 2593,
+                "generico": 2
+            }
+        ],
+        "ObjTabulator": [
+            {
+                "title": "dz_regional",
+                "field": "dz_regional",
+                "width": "100",
+                "titleDownload": "dz_regional"
+            },
+            {
+                "title": "preventa",
+                "field": "preventa",
+                "width": "100",
+                "titleDownload": "preventa"
+            },
+            {
+                "title": "despacho",
+                "field": "despacho",
+                "width": "100",
+                "titleDownload": "despacho"
+            },
+            {
+                "title": "horaecuiniciostock",
+                "field": "horaecuiniciostock",
+                "width": "100",
+                "titleDownload": "horaecuiniciostock"
+            },
+            {
+                "title": "horaecufinstock",
+                "field": "horaecufinstock",
+                "width": "100",
+                "titleDownload": "horaecufinstock"
+            },
+            {
+                "title": "customer_xss",
+                "field": "customer_xss",
+                "width": "100",
+                "titleDownload": "customer_xss"
+            },
+            {
+                "title": "customer_delete_0",
+                "field": "customer_delete_0",
+                "width": "100",
+                "titleDownload": "customer_delete_0"
+            },
+            {
+                "title": "cusrout_total",
+                "field": "cusrout_total",
+                "width": "100",
+                "titleDownload": "cusrout_total"
+            },
+            {
+                "title": "cusroute_visit_today",
+                "field": "cusroute_visit_today",
+                "width": "100",
+                "titleDownload": "cusroute_visit_today"
+            },
+            {
+                "title": "cusstatus_visit_today",
+                "field": "cusstatus_visit_today",
+                "width": "100",
+                "titleDownload": "cusstatus_visit_today"
+            },
+            {
+                "title": "cusstatus_total",
+                "field": "cusstatus_total",
+                "width": "100",
+                "titleDownload": "cusstatus_total"
+            },
+            {
+                "title": "product",
+                "field": "product",
+                "width": "100",
+                "titleDownload": "product"
+            },
+            {
+                "title": "promotion",
+                "field": "promotion",
+                "width": "100",
+                "titleDownload": "promotion"
+            },
+            {
+                "title": "promotiond",
+                "field": "promotiond",
+                "width": "100",
+                "titleDownload": "promotiond"
+            },
+            {
+                "title": "promotiondp",
+                "field": "promotiondp",
+                "width": "100",
+                "titleDownload": "promotiondp"
+            },
+            {
+                "title": "generico",
+                "field": "generico",
+                "width": "100",
+                "titleDownload": "generico"
+            }
+        ]
+    },
+    "SystemMessage": "",
+    "Duration": "0",
+    "Process": ""
+}

@@ -1,6 +1,6 @@
 import os
 import questionary
-from rich.console import Console
+
 from typing import List
 from .util import  loadplugin,PLUGIN_PACKAGE
 from core.Interfaces.Iplugins import IPluging
@@ -8,7 +8,6 @@ from core.Interfaces.Iplugins import IPluging
 class MyApplication:
 
     __VERSION = '0.1'
-    _Console = Console()
     _currentModule=None        
 
     @classmethod
@@ -31,8 +30,15 @@ class MyApplication:
     @classmethod
     def run(cls) -> None:
         while True:
-            cls.find_module_by_name( questionary.rawselect( message="SELECCIONE EL MODULO A USAR: ", choices=sorted(os.listdir(PLUGIN_PACKAGE), reverse=True)).ask())
-            cls.get_current_module().execute(questionary,cls._Console)
+
+            cls.find_module_by_name( questionary.rawselect( 
+                                                            message="SELECCIONE EL MODULO A USAR: ", 
+                                                            choices=sorted(os.listdir(PLUGIN_PACKAGE), 
+                                                                            reverse=True)
+                                                           ).ask()
+                                    )
+
+            cls.get_current_module().execute(questionary)
 
     def update(self):
         import requests

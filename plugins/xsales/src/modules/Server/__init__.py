@@ -13,20 +13,19 @@ class  Page(Xsales):
 
         """
         self.config.Revisiones= 'Server'
-        self.validadorsql=None
         self.contenedor=[]
         self.contador=0
         
     def __get_consulta( self,opcion):
         consultas.NDISTRIBUIDOR=self.name
-        return consultas.consulta(opcion,self.config.configConsultas)()
+        return consultas.consulta(opcion)()
             
     def consulta_Basedatos(self,nombredz,console:Console)-> None:
         try:
             if self.estado:
                 sql=self.__get_consulta(self.dato.Opcion)
                 result=self.consulta_new_version(sql)
-                self.contenedor.append(result[0])
+                self.contenedor.append(result)
                 self.validadorsql:ValidatorSql=ValidatorSql(self.dato.Opcion,result)
                 console.log( f'Revisión completada para {nombredz}')
         except BaseException as e:
@@ -37,11 +36,12 @@ class  Page(Xsales):
                 console.log( f"{str(e)} DZ/Regional {nombredz}")
          
         
-    def generararchivo(self,respuesta,nombre:str,console):
-        if respuesta:
+    def generararchivo(self,respuesta,nombre:str,console:Console)-> None:
+
+        if respuesta :
             archivo=self.config.path.join(self._config.folderMadrugada,f'{nombre}')
-            self.config.excelfile.create_file(archivo,self.validadorsql.DZCOMPLETO)
-            console.prit(f'SE GENERO EL ARCHOVO EN LA RUTA {archivo}')
+            self.config.excelfile.create_file(archivo,self.contenedor)
+            console.print(f'SE GENERO EL ARCHOVO EN LA RUTA {archivo}')
             del ValidatorSql.DZCOMPLETO
 
         

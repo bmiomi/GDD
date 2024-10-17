@@ -8,8 +8,20 @@ class consultas:
 
     NDISTRIBUIDOR=None;
  
+
     @classmethod
-    def consulta(cls,dato,config):      
+    def consulta(cls,value):
+        __CONSULTA={
+        'REVICION_MADRUGADA':consultas.revisionmadrugada,
+        'DESC.DIURNOS':consultas.Descuentos_Demadrugada,
+        'Total_Pedidos':consultas.totalPedidos,
+        'VALIDAR_ClIENTE':consultas.cliente,
+        'DESC.NOCTURNOS':consultas.Descuentos_Nocturno,
+        }
+        return __CONSULTA[value]
+
+    @classmethod
+    def consulta_beta(cls,dato,config):      
         for key in config.keys():
             if key == dato:
                 return cls.retornar_Sentencia_sql(config[key])
@@ -128,43 +140,44 @@ class consultas:
     def revisionmadrugada(cls)->str:
         "se revisa consultas en la madrugada"
         return """select distinct top 1 
-    (select distinct top 1 convert(varchar, aptTransactionDate, 103) from areaproduct where areCode = 'D01') as preventaQuito,
-    (select distinct top 1 convert(varchar, aptServerLastUpdate, 103) from areaproduct where areCode = 'D01') as DespachoQuito,
-    dateadd (hh, -1, (SELECT max(Trndate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D01%')) as INICIOHoraUIO, 
-    (SELECT max(trnLastDate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D01%') as FINHoraUIO,
-    
-    (select distinct top 1 convert(varchar, aptTransactionDate, 103) from areaproduct where areCode = 'D02') as preventaGYE, 
-    (select distinct top 1 convert(varchar, aptServerLastUpdate, 103) from areaproduct where areCode = 'D02') as DespachoGYE, 
-    dateadd (hh, -1, (SELECT max(Trndate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D02%')) as INICIOHORAGYE, 
-    (SELECT max(trnLastDate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D02%') as FINHORAGYE,
+         DB_NAME() as  DZ_Regional,
+        (select distinct top 1 convert(varchar, aptTransactionDate, 103) from areaproduct where areCode = 'D01') as preventaQuito,
+        (select distinct top 1 convert(varchar, aptServerLastUpdate, 103) from areaproduct where areCode = 'D01') as DespachoQuito,
+        dateadd (hh, -1, (SELECT max(Trndate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D01%')) as INICIOHoraUIO, 
+        (SELECT max(trnLastDate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D01%') as FINHoraUIO,
+        
+        (select distinct top 1 convert(varchar, aptTransactionDate, 103) from areaproduct where areCode = 'D02') as preventaGYE, 
+        (select distinct top 1 convert(varchar, aptServerLastUpdate, 103) from areaproduct where areCode = 'D02') as DespachoGYE, 
+        dateadd (hh, -1, (SELECT max(Trndate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D02%')) as INICIOHORAGYE, 
+        (SELECT max(trnLastDate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D02%') as FINHORAGYE,
 
-    (select distinct top 1 convert(varchar, aptTransactionDate, 103) from areaproduct where areCode = 'D04') as preventaCuenca, 
-    (select distinct top 1 convert(varchar, aptServerLastUpdate, 103) from areaproduct where areCode = 'D04') as DespachoCuenca, 
-    dateadd (hh, -1, (SELECT max(Trndate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D04%')) as INICIOHORACUENCA, 
-    (SELECT max(trnLastDate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D04%') as FINHORACUENCA,
+        (select distinct top 1 convert(varchar, aptTransactionDate, 103) from areaproduct where areCode = 'D04') as preventaCuenca, 
+        (select distinct top 1 convert(varchar, aptServerLastUpdate, 103) from areaproduct where areCode = 'D04') as DespachoCuenca, 
+        dateadd (hh, -1, (SELECT max(Trndate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D04%')) as INICIOHORACUENCA, 
+        (SELECT max(trnLastDate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D04%') as FINHORACUENCA,
 
-    (select distinct top 1 convert(varchar, aptTransactionDate, 103) from areaproduct where areCode = 'D05') as preventaMontecristi, 
-    (select distinct top 1 convert(varchar, aptServerLastUpdate, 103) from areaproduct where areCode = 'D05') as DespachoMontecristi, 
-    dateadd (hh, -1, (SELECT max(Trndate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D05%')) as INICIOHORAMONTEC, 
-    (SELECT max(trnLastDate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D05%') as FINHORAMONTEC,
+        (select distinct top 1 convert(varchar, aptTransactionDate, 103) from areaproduct where areCode = 'D05') as preventaMontecristi, 
+        (select distinct top 1 convert(varchar, aptServerLastUpdate, 103) from areaproduct where areCode = 'D05') as DespachoMontecristi, 
+        dateadd (hh, -1, (SELECT max(Trndate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D05%')) as INICIOHORAMONTEC, 
+        (SELECT max(trnLastDate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D05%') as FINHORAMONTEC,
 
-    (select count(*) from customer) as CUSTOMER_XSS,
-    (select count(*) from customer where _Deleted = '0') as CUSTOMER_DELETE_0,
-    (select count(distinct cuscode) from customerroute) as CUSROUT_TOTAL,
-    (select count(distinct cuscode) from customerroute where ctrvisittoday = '1' and rotcode not like '%t%') as CUSROUTE_VISIT_TODAY,
-    (select count(*) from customerstatus where cuscode in (select cusCode from customerroute where ctrVisitToday = '1' and rotcode not like '%t%')) as CUSSTATUS_VISIT_TODAY,
-    (select count(*) from customerstatus WHERE CUSCODE IN (SELECT CUSCODE FROM CUSTOMERROUTE)) as CUSSTATUS_TOTAL,
+        (select count(*) from customer) as CUSTOMER_XSS,
+        (select count(*) from customer where _Deleted = '0') as CUSTOMER_DELETE_0,
+        (select count(distinct cuscode) from customerroute) as CUSROUT_TOTAL,
+        (select count(distinct cuscode) from customerroute where ctrvisittoday = '1' and rotcode not like '%t%') as CUSROUTE_VISIT_TODAY,
+        (select count(*) from customerstatus where cuscode in (select cusCode from customerroute where ctrVisitToday = '1' and rotcode not like '%t%')) as CUSSTATUS_VISIT_TODAY,
+        (select count(*) from customerstatus WHERE CUSCODE IN (SELECT CUSCODE FROM CUSTOMERROUTE)) as CUSSTATUS_TOTAL,
 
-    (select count(*) from product where _Deleted = '0') as PRODUCT,
-    (select count(*) From CatalogDetail) as CATALOG,
-    (select count(*) from promotion) as PROMOTION,
-    (select count(*) from promotiondetail) as PROMOTIOND,
-    (select count(*) from promotiondetailproduct) as PROMOTIONDP,
+        (select count(*) from product where _Deleted = '0') as PRODUCT,
+        (select count(*) From CatalogDetail) as CATALOG,
+        (select count(*) from promotion) as PROMOTION,
+        (select count(*) from promotiondetail) as PROMOTIOND,
+        (select count(*) from promotiondetailproduct) as PROMOTIONDP,
 
-    (select count(*) from customerstatus where cusCode like '%199998%') as GENUIO,
-    (select count(*) from customerstatus where cusCode like '%299998%') as GENGYE,
-    (select count(*) from customerstatus where cusCode like '%488888%') as GENCUE,
-    (select count(*) from customerstatus where cusCode like '%588888%') as GENMON;""" if cls.NDISTRIBUIDOR =='PRONACA' else """declare @preventa varchar(25), @despacho varchar(25), @customerxss int, @cusdelete int, @customerroute int, @cusst int, @customerstatus int, @customerroute1 int, @product int, @promotion int, @promotiond int, @promotiondp int, @generico int, @horainicio datetime,@horafin datetime select @preventa= (select top 1 convert(varchar,aptTransactionDate,103)  from areaproduct group by aptTransactionDate) select @despacho= (select top 1 convert(varchar,aptServerLastUpdate,103)  from areaproduct  group by aptServerLastUpdate) select @customerxss= (select count(*) from customer)  select @cusdelete=(select count(*) from customer where _Deleted='0' ) select @customerroute=(select count(distinct cuscode) from customerroute  where ctrvisittoday='1' and rotcode not like'%t%') select @customerstatus=(select count(*) from customerstatus WHERE CUSCODE IN (SELECT CUSCODE FROM CUSTOMERROUTE))  select @cusst=(select count(*) from customerstatus where cuscode in(select cusCode from customerroute where ctrVisitToday='1' and rotcode not like'%t%')) select @customerroute1=(select count(distinct cuscode) from customerroute) select @product=(select count(*) from product where _Deleted='0') select @promotion=(select count(*) from promotion) select @promotiond=(select count(*) from promotiondetail) select @promotiondp=(select count(*) from promotiondetailproduct) select @generico=(select count(*) from customer where cusCode like'%099999999%' or cuscode like'%3030000074%' and cuscode in ( select cuscode from customerstatus ))  select @horainicio=(SELECT max(Trndate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE'%CALCULATE%') select  @horafin=(SELECT max(trnLastDate) FROM[TRANSACTION] WHERE TRNSCRIPTS LIKE'%CALCULATE%') select  DB_NAME() as  DZ_Regional,  @preventa as preventa, @despacho as despacho, dateadd(hh,-1,@horainicio) as HoraECUInicioStock,dateadd(hh,-1,@horafin) as HoraECUFinStock, @customerxss as CUSTOMER_XSS, @cusdelete as CUSTOMER_DELETE_0,  @customerroute1 as CUSROUT_TOTAL,@customerroute as CUSROUTE_VISIT_TODAY,@cusst as CUSSTATUS_VISIT_TODAY, @customerstatus as CUSSTATUS_TOTAL, @product as PRODUCT, @promotion as PROMOTION, @promotiond as PROMOTIOND, @promotiondp as PROMOTIONDP, @generico as GENERICO"""
+        (select count(*) from customerstatus where cusCode like '%199998%') as GENUIO,
+        (select count(*) from customerstatus where cusCode like '%299998%') as GENGYE,
+        (select count(*) from customerstatus where cusCode like '%488888%') as GENCUE,
+        (select count(*) from customerstatus where cusCode like '%588888%') as GENMON;""" if cls.NDISTRIBUIDOR =='PRONACA' else """declare @preventa varchar(25), @despacho varchar(25), @customerxss int, @cusdelete int, @customerroute int, @cusst int, @customerstatus int, @customerroute1 int, @product int, @promotion int, @promotiond int, @promotiondp int, @generico int, @horainicio datetime,@horafin datetime select @preventa= (select top 1 convert(varchar,aptTransactionDate,103)  from areaproduct group by aptTransactionDate) select @despacho= (select top 1 convert(varchar,aptServerLastUpdate,103)  from areaproduct  group by aptServerLastUpdate) select @customerxss= (select count(*) from customer)  select @cusdelete=(select count(*) from customer where _Deleted='0' ) select @customerroute=(select count(distinct cuscode) from customerroute  where ctrvisittoday='1' and rotcode not like'%t%') select @customerstatus=(select count(*) from customerstatus WHERE CUSCODE IN (SELECT CUSCODE FROM CUSTOMERROUTE))  select @cusst=(select count(*) from customerstatus where cuscode in(select cusCode from customerroute where ctrVisitToday='1' and rotcode not like'%t%')) select @customerroute1=(select count(distinct cuscode) from customerroute) select @product=(select count(*) from product where _Deleted='0') select @promotion=(select count(*) from promotion) select @promotiond=(select count(*) from promotiondetail) select @promotiondp=(select count(*) from promotiondetailproduct) select @generico=(select count(*) from customer where cusCode like'%099999999%' or cuscode like'%3030000074%' and cuscode in ( select cuscode from customerstatus ))  select @horainicio=(SELECT max(Trndate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE'%CALCULATE%') select  @horafin=(SELECT max(trnLastDate) FROM[TRANSACTION] WHERE TRNSCRIPTS LIKE'%CALCULATE%') select  DB_NAME() as  DZ_Regional,  @preventa as preventa, @despacho as despacho, dateadd(hh,-1,@horainicio) as HoraECUInicioStock,dateadd(hh,-1,@horafin) as HoraECUFinStock, @customerxss as CUSTOMER_XSS, @cusdelete as CUSTOMER_DELETE_0,  @customerroute1 as CUSROUT_TOTAL,@customerroute as CUSROUTE_VISIT_TODAY,@cusst as CUSSTATUS_VISIT_TODAY, @customerstatus as CUSSTATUS_TOTAL, @product as PRODUCT, @promotion as PROMOTION, @promotiond as PROMOTIOND, @promotiondp as PROMOTIONDP, @generico as GENERICO"""
 
     @classmethod
     def totalPedidos(cls)->str:

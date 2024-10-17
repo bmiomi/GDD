@@ -16,10 +16,11 @@ class Xsales:
   HEADERS = PropertyBase.HEADERS.value
 
   def __init__(self,name) -> None:
+    self.estado=False
     self.name=name
     self.cookies_={}
     self.__sesssionxsales()
-    self.logerarseesion(username=self.config.CredencialesServer[1],password=self.config.CredencialesServer[0])
+    self.logerarseesion(*self.config.CredencialesServer)
 
   @property
   def config(self) ->ConfigServer:
@@ -54,24 +55,30 @@ class Xsales:
  
   def logerarseesion(self,username:str,password:str):        
  
-    data = { 'connectionName': self.name+'_XSS_441_PRD','password': password,'username': username }
+    try:
 
-    response=self.session.post(
-         f"{self.URLBASE}{self.name}/xsm/Login/userLogonServer",
-         headers=self.HEADERS, 
-         cookies=self.cookies_, 
-         data=data
-        )
+      data = { 'connectionName': self.name+'_XSS_441_PRD','password': password,'username': username }
 
-    if response.status_code==200:
-        respuesta=json.loads( response.text)
-        if respuesta['Message'] in ("User or Password Incorrect","Usuario o Password Incorrectos"):
-          intentos=0
-          while intentos<=2:
-              print(f'\n Contraseña defaul Errada..\n Intentando con credenciales Personalizadas')
-              self.loginsessiondz()
-              intentos+=1
-        
+      response=self.session.post(
+            f"{self.URLBASE}{self.name}/xsm/Login/userLogonServer",
+            headers=self.HEADERS, 
+            cookies=self.cookies_, 
+            data=data
+          )
+
+      if response.status_code==200:
+          respuesta=json.loads( response.text)
+          if respuesta['Message'] in ("User or Password Incorrect","Usuario o Password Incorrectos"):
+
+             print(f'\n Contraseña defaul Errada..\n Intentando con credenciales Personalizadas')
+             self._config.CredencialesServer= self.name
+             self.logerarseesion(*self._config.CredencialesServer)
+          self.estado=True
+    except BaseException as e:
+          print(f" ERROR:{e}") 
+
+
+
   def loginsessiondz(self):
        try:
          self._config.CredencialesServer= self.name
@@ -85,6 +92,8 @@ class Xsales:
       response=self.session.request('post',self.URLBASE+self.name+'/xsm/QueryBD/ExecuteConsult', headers=self.HEADERS, data=data)
       if response.status_code==200:  
          respuesta=json.loads( response.text)
-         return respuesta['Data']['Result']
+         if respuesta['Data']['Result']:
+          
+          return respuesta['Data']['Result']
       else:
          return None
