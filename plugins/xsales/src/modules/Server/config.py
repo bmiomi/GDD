@@ -36,6 +36,15 @@ class ConfigServer(Config):
         self.__credencialuser=credenciales[self.__credencialName]['USER'], 
         self.__credencialpassword=credenciales[self.__credencialName]['PASSWORD']
 
+    @property
+    def credencialuser(self):
+        return self.__credencialuser
+
+    @property
+    def credencialpassword(self):
+        return self.__credencialpassword
+
+
     def buscar_credenciales(self,credencial_name:str)->Dict:
         try:
             credencial = next(

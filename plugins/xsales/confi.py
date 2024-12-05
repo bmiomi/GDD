@@ -2,7 +2,6 @@ from datetime import datetime
 from typing import Dict, List
 import yaml
 import yaml_include
-
 from .util import path,createfolder
 
 class Config:

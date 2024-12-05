@@ -1,7 +1,6 @@
+import json
 from unittest import TestCase,main
 from plugins.xsales.src.modules.Server.config import ConfigServer
-import json
-
 
 class Tests_ConfigServer(TestCase):
 
@@ -14,11 +13,9 @@ class Tests_ConfigServer(TestCase):
         print(f"respuesta: {self.testconfig.configserver['credenciales'][0]['default']}")
         self.assertIsNotNone(self.testconfig.CredencialesServer)
 
-
     def test_foldermadrugada(self):
         self.testconfig.Revisiones
         self.assertEqual(type(self.testconfig.folderMadrugada),str)
-
 
     def test_consultas(self):
         self.assertEqual(type(self.testconfig.configserver['Consultas']), dict)

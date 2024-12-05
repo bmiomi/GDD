@@ -8,7 +8,6 @@ class consultas:
 
     NDISTRIBUIDOR=None;
  
-
     @classmethod
     def consulta(cls,value):
         __CONSULTA={
@@ -21,25 +20,55 @@ class consultas:
         return __CONSULTA[value]
 
     @classmethod
-    def consulta_beta(cls,dato,config):      
+    def consulta_beta(cls,dato,nombrerevicion,config):      
         for key in config.keys():
             if key == dato:
-                return cls.retornar_Sentencia_sql(config[key])
+                return cls.retornar_Sentencia_sql(config[key],nombrerevicion)
             
-
-
+    @classmethod
+    def retornar_Sentencia_sql(cls,revisiones:dict,nombrerevicion:str):
+        revi=cls.obtener_consulta(revisiones,nombrerevicion)
+        return revi
+        # if isinstance( type(revi['sql']),dict):
+        #         return revi.get('if')
+        # return revi['sql']
 
     @classmethod
-    def retornar_Sentencia_sql(cls,parametro:dict):
-        cls.validar_parametros(parametro)
-        if parametro['sql'].get('if'):
-                return parametro['if']
-        return parametro['sql']
+    def obtener_consulta(cls,revisiones:dict,nombrerevicion:str):
+        
+        consulta_sql:dict=revisiones[nombrerevicion]['sql']
+        parametros =revisiones[nombrerevicion]['parametros'] 
+        namedz="PRONACA"
+
+        if  'if' in revisiones.get(nombrerevicion).get('sql'):
+            
+            if 'distribuidores' in revisiones.get(nombrerevicion).get('sql'):
+
+                for key in revisiones.get(nombrerevicion).get('sql').get('distribuidores'):
+                    if key == '':
+
+                       revisiones[nombrerevicion]['sql']['then'].replace(f'{{ayer}}') 
+                       revisiones[nombrerevicion]['sql']['then'].replace(f'{{NDISTRIBUIDOR}}') 
 
 
-    @classmethod
-    def validar_parametros(cls,parametro):
-            parametro['parametros']
+            for key in parametros:
+                parametro=consulta_sql['if'].replace(f'{key}',str(namedz))
+
+            if parametro:
+                return revisiones[nombrerevicion]['sql']['then']
+            return revisiones[nombrerevicion]['sql']['else']
+
+
+
+        if revisiones.get(nombrerevicion).get('sql'):
+
+            return revisiones[nombrerevicion]['sql']
+
+
+
+
+
+
 
 
     @classmethod

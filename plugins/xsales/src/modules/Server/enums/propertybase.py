@@ -2,6 +2,8 @@ from enum import Enum
 
 class PropertyBase (Enum):
 
+  VERSION="XSales® SFA - 4.4.1 AFG"
+
   URLBASE='https://prd1.xsalesmobile.net/'
 
   HEADERS = {

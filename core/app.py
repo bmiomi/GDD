@@ -32,10 +32,10 @@ class MyApplication:
         while True:
 
             cls.find_module_by_name( questionary.rawselect( 
-                                                            message="SELECCIONE EL MODULO A USAR: ", 
-                                                            choices=sorted(os.listdir(PLUGIN_PACKAGE), 
-                                                                            reverse=True)
-                                                           ).ask()
+                                    message="SELECCIONE EL MODULO A USAR: ", 
+                                    choices=sorted(os.listdir(PLUGIN_PACKAGE), 
+                                                    reverse=True)
+                                                                    ).ask()
                                     )
 
             cls.get_current_module().execute(questionary)
