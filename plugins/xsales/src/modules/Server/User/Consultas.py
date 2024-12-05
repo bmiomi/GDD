@@ -40,29 +40,26 @@ class consultas:
         parametros =revisiones[nombrerevicion]['parametros'] 
         namedz="PRONACA"
 
-        if  'if' in revisiones.get(nombrerevicion).get('sql'):
-            
-            if 'distribuidores' in revisiones.get(nombrerevicion).get('sql'):
+        if  'if' in consulta_sql:
+  
+            if 'distribuidores' in consulta_sql:
 
-                for key in revisiones.get(nombrerevicion).get('sql').get('distribuidores'):
-                    if key == '':
-
-                       revisiones[nombrerevicion]['sql']['then'].replace(f'{{ayer}}') 
-                       revisiones[nombrerevicion]['sql']['then'].replace(f'{{NDISTRIBUIDOR}}') 
-
-
+                for key in consulta_sql.get('distribuidores'):
+                    if key == cls.NDISTRIBUIDOR:
+                       consulta_sql['then'].replace(f'{{ayer}}') 
+                       consulta_sql['then'].replace(f'{{NDISTRIBUIDOR}}') 
             for key in parametros:
                 parametro=consulta_sql['if'].replace(f'{key}',str(namedz))
 
             if parametro:
-                return revisiones[nombrerevicion]['sql']['then']
-            return revisiones[nombrerevicion]['sql']['else']
+                return consulta_sql['then']
+            return consulta_sql['else']
 
 
 
         if revisiones.get(nombrerevicion).get('sql'):
 
-            return revisiones[nombrerevicion]['sql']
+            return consulta_sql
 
 
 
