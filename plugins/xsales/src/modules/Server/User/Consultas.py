@@ -5,6 +5,9 @@ ahora = date.today()
 ayer = ahora -timedelta(days=2) if ahora.weekday() == 0  else ahora -timedelta(days=1)
 
 class consultas:
+#TODO
+# falta validar que al asignar los parametros estos se asigmen de forma correcta
+# y no se tenga que crear if
 
     NDISTRIBUIDOR=None;
 
