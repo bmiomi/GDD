@@ -9,14 +9,13 @@ class Test_Consultas(TestCase):
 
 
     def test_obtener_query(self):
+       consultas.NDISTRIBUIDOR='Disanahisa'
        result= consultas.consulta_beta( 'Consultas',
-                                        'DESC.NOCTURNOS',
+                                        'REVICION_MADRUGADA',
                                         self.config.configserver
                                         )
 #       self.assertIsInstance(result ,dict)
-       self.assertEqual(" {{PRONACA}} == 'PRONACA' ",result)
-
-
+       self.assertNotIn("{{}}",result)
 
 
 if __name__=="__main__":

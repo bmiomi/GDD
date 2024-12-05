@@ -18,15 +18,15 @@ class  Page(Xsales):
         
     def __get_consulta( self,opcion):
         consultas.NDISTRIBUIDOR=self.name
-        return consultas.consulta(opcion)()
+        return consultas.consulta_beta('Consultas',opcion,self.config.configserver)
             
     def consulta_Basedatos(self,nombredz,console:Console)-> None:
         try:
             if self.estado:
-                sql=self.__get_consulta(self.dato.Opcion)
+                sql=self.__get_consulta(self.dato.Opcion,)
                 result=self.consulta_new_version(sql)
-                self.contenedor.append(result)
                 self.validadorsql:ValidatorSql=ValidatorSql(self.dato.Opcion,result)
+                self.contenedor.append(result)
                 console.log( f'Revisión completada para {nombredz}')
         except BaseException as e:
                print(e)

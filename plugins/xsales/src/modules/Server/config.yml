@@ -107,7 +107,7 @@ Server:
           cenacop: "When company.comName = 'Cenacop' Then '325'"
           dimmia: "When company.comName = 'Dimmia' Then '111'"
           discarnicos: "When company.comName = 'Discarnicos' Then '261'"
-          disanahisa: "When company.comName = 'Disanahisa' Then '323'"
+          Disanahisa: "When company.comName = 'Disanahisa' Then '323'"
           disproalza: "When company.comName = 'Disproalza' Then '247'"
           disprovalles: "When company.comName = 'Disprovalles' Then '210'"
           disprolop: "When company.comName = 'Disprolop' Then '331'"
@@ -155,7 +155,7 @@ Server:
         - NDISTRIBUIDOR
 
     DESC.NOCTURNOS:
-      sql: "select top 1000 cuscode,cusTaxID1,cusName,cusBusinessName from customer where custaxid1 like '%{valor}%' "
+      sql: "select top 1000 cuscode,cusTaxID1,cusName,cusBusinessName from customer where custaxid1 like '%{{valor}}%' "
 
       parametros:
         - valor
