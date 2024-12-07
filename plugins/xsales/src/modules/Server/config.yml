@@ -4,15 +4,6 @@ Server:
         USER: SoporteBZ
         PASSWORD: BZs2024**
 
-    - PRONACA:
-        USER: SoporteBz
-        PASSWORD: BZs2024**
-    - CENACOP:
-        USER: SoporteBz
-        PASSWORD: BZs2024**
-    # - PROORIENTE:
-    #     USER: soporte.nuo
-    #     PASSWORD: Nuo2021*
 
   Consultas:
  
