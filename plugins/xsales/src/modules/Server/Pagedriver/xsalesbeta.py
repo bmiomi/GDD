@@ -16,6 +16,7 @@ class Xsales:
   HEADERS = PropertyBase.HEADERS.value
 
   def __init__(self,name) -> None:
+    self.estado=False
     self.name=name
     self.cookies_={}
     self.__sesssionxsales()
