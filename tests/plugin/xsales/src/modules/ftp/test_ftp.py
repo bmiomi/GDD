@@ -1,6 +1,6 @@
 import unittest
 
-from plugins.xsales.src.modules.Ftp import FtpXsales
+from plugins.xsales.src.modules.FTP import FtpXsales
 
 
 class Test_Ftp(unittest.TestCase):

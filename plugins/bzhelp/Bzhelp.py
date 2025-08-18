@@ -3,8 +3,6 @@ from requests import Session
 
 from core.Interfaces.Iplugins import IPluging
 
-
-
 class Plugin(IPluging):
 
     @property

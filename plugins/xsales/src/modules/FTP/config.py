@@ -87,3 +87,10 @@ class ConfigFtp(Config):
                       self.fecha,)
         return self.config.get('PathFolder').get('Distribuidores')
 
+    @property
+    def tablevalidacion(self):
+       return  self.configftp.get('Validacionfile').get('sqlite')
+
+    @property
+    def downloadfilebaseruta(self):
+       return  self.configftp.get('Repositorio').get('Download').get('file')

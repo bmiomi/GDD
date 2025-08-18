@@ -1,30 +1,28 @@
 from datetime import date, timedelta, datetime
 from enum import Enum
 from typing import Dict, List, Optional
-
-class HorasenvioStock(Enum):
-
-    horaDiurnodz='11:59:00 AM'
-
-    horaNocturnodz='11:59:00 PM'
+from ..enums.horastockenvio import HorasenvioStock
 
 class ValidatorSql:
 
     DZCOMPLETO=[]
 
     def __init__(self, tipoconsulta: str, dataset: List[dict]):
-        self.__dataset = dataset
+        self.__dataset:dict = dataset
         self.validador = self.validar(tipoconsulta)
 
     def validar(self,tipoconsulta:str)->Optional[List[Dict]]:
 
         contenedor = {
+
             'REVICION_MADRUGADA': self.vmatutina,
             'DESC.DIURNOS': self.descuentosDiurnos,
             'Total_Pedidos': self.validartotalpedidos,
             'VALIDAR_ClIENTE':self.general
         }
+
         funcion = contenedor.get(tipoconsulta, 0)
+
         if not funcion:
             print(f'No se reconoce el tipo de consulta {funcion}')
             return {}
@@ -111,7 +109,6 @@ class ValidatorSql:
         }
 
     def general(self):
-
         for i in self.__dataset:
             for x , v in i.items():
                 print(f"{x}: {v}",end=' ')
