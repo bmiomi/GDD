@@ -2,7 +2,7 @@ from typing import Protocol,List,Dict
 
 class IPluging(Protocol):
 
-    question: List[Dict] = None
+    question: List[Dict] 
 
     @property
     def nombre(self):

@@ -37,12 +37,28 @@ class  Page(Xsales):
                 console.log( f"{str(e)} DZ/Regional {nombredz}")
          
         
-    def generararchivo(self,respuesta,nombre:str,console):
+    def generararchivo(self, respuesta, nombre: str, console):
+        """Genera archivo Excel con los resultados"""
         if respuesta:
-            archivo=self.config.path.join(self._config.folderMadrugada,f'{nombre}')
-            self.config.excelfile.create_file(archivo,self.validadorsql.DZCOMPLETO)
-            console.prit(f'SE GENERO EL ARCHOVO EN LA RUTA {archivo}')
-            del ValidatorSql.DZCOMPLETO
+            # Verificar que existan datos para generar
+            if not self.validadorsql:
+                console.print('[yellow]⚠ No hay datos para generar el archivo. Verifica que las consultas se ejecutaron correctamente.')
+                return
+            
+            if not hasattr(self.validadorsql, 'DZCOMPLETO') or not self.validadorsql.DZCOMPLETO:
+                console.print('[yellow]⚠ No hay datos completos para generar el archivo.')
+                return
+            
+            try:
+                archivo = self.config.path.join(self._config.folderMadrugada, f'{nombre}')
+                self.config.excelfile.create_file(archivo, self.validadorsql.DZCOMPLETO)
+                console.print(f'[green]✓ Se generó el archivo en la ruta: {archivo}')
+                # Limpiar datos después de generar
+                if hasattr(ValidatorSql, 'DZCOMPLETO'):
+                    del ValidatorSql.DZCOMPLETO
+            except Exception as e:
+                console.print(f'[red]✗ Error al generar archivo: {e}')
+
 
         
     def mostrar_info(self,nombresdz,console):        

@@ -1,0 +1,41 @@
+# ============================================
+# CONFIGURACIÓN SERVER - SIN CREDENCIALES
+# ============================================
+# Las credenciales ahora se obtienen desde variables de entorno (.env)
+
+Server:
+  # Credenciales movidas a .env:
+  # SERVER_DEFAULT_USER
+  # SERVER_DEFAULT_PASS
+  
+  credenciales: []  # Vacío - usar .env
+  
+  Consultas:
+    REVICION_MADRUGADA:
+      sql:
+        if: " {{NDISTRIBUIDOR}} == 'PRONACA' "
+        then: |
+          select distinct top 1 
+          (select distinct top 1 convert(varchar, aptTransactionDate, 103) from areaproduct where areCode ='D01') as preventaQuito, 
+          (select distinct top 1 convert(varchar, aptServerLastUpdate, 103) from areaproduct where areCode ='D01') as DespachoQuito, 
+          dateadd (hh, -1, (SELECT max(Trndate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D01%')) as INICIOHoraUIO,  
+          (SELECT max(trnLastDate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D01%') as FINHoraUIO
+        else: |
+          declare @preventa varchar(25), @despacho varchar(25)
+          select @preventa= (select top 1 convert(varchar,aptTransactionDate,103) from areaproduct group by aptTransactionDate)
+          select @despacho= (select top 1 convert(varchar,aptServerLastUpdate,103) from areaproduct group by aptServerLastUpdate)
+      parametros:
+        - NDISTRIBUIDOR
+
+    DESC.DIURNOS:
+      sql:
+        if:
+        then: |
+          Declare @inicio VARCHAR(255), @fin VARCHAR(255) 
+          set @inicio = '{{ayer}} 00:00:00.000' 
+          set @fin = '{{ayer}} 23:59:00.000'                 
+          Select Top 1000000 
+          LTRIM(RTRIM(Emp_Codigo)) AS Emp_Codigo,
+          LTRIM(RTRIM(Id_Negociacion)) AS Id_Negociacion
+
+    # ... otras consultas SQL (mantener como están)

@@ -6,6 +6,10 @@ import yaml_include
 from .util import path,createfolder
 
 class Config:
+    """
+    Clase base de configuración para todos los módulos.
+    Proporciona acceso a config.yml y utilidades comunes.
+    """
 
     __tiporevision:List=[]
     _cached_config = None
@@ -14,9 +18,11 @@ class Config:
     def config(self) -> Dict:
         if self._cached_config is None:
             file = path.join("plugins", "xsales")
-            yaml.add_constructor("!include", yaml_include.Constructor(base_dir=file))
+            # Registrar constructor !include para SafeLoader
+            yaml.add_constructor("!include", yaml_include.Constructor(base_dir=file), Loader=yaml.SafeLoader)
             try:
-                self._cached_config = yaml.load(open(f'{file}{path.sep}config.yml'), Loader=yaml.FullLoader)
+                with open(f'{file}{path.sep}config.yml', 'r', encoding='utf-8') as f:
+                    self._cached_config = yaml.load(f, Loader=yaml.SafeLoader)
             except FileNotFoundError as e:
                 print(e, 'No se tiene archivo de configuracion.')
         return self._cached_config
@@ -43,13 +49,40 @@ class Config:
 
     def nuevacarpeta(self,*path):
         return createfolder(self.path,*path)
+    
+    def get_ftp_credentials(self, distribuidor: str) -> tuple[str, str]:
+        """
+        Obtiene credenciales FTP desde variables de entorno.
+        
+        Args:
+            distribuidor: Nombre del distribuidor (PRONACA, CENACOP, etc.)
+        
+        Returns:
+            Tupla (usuario, contraseña)
+        """
+        from core.config_manager import config_manager
+        return config_manager.get_credential('FTP', distribuidor)
 
     def Dz(self, ldz: dict = {"Opcion": "TODOS"}) -> list[str]:
+        """
+        Retorna lista de distribuidores según la opción seleccionada.
+        Intenta usar .env, si no existe hace fallback a config.yml
+        """
+        from core.config_manager import config_manager
+        # Intentar obtener de .env primero
+        try:
+            todos_distribuidores = config_manager.list_available_distributors('FTP')
+            if not todos_distribuidores:
+                # Si no hay en .env, usar config.yml
+                raise ValueError("No distributors in .env, using config.yml")
+        except:
+            # Fallback a config.yml (legacy)
+            todos_distribuidores = list(self.config.get('datos', {}).get('FTP', {}).get('Repositorio', {}).get('credenciales', {}).keys())
+        
         returndz = {
-
-            "TODOS": self.config['datos']["FTP"]["Repositorio"]["credenciales"].keys(),
-            "Grupos": [self.config["Grupos"]],
-            "Maestros":self.config['datos']['FTP']['Maestros'].keys()
+            "TODOS": todos_distribuidores,
+            "Grupos": [self.config.get("Grupos", {})],
+            "Maestros": self.config.get('datos', {}).get('FTP', {}).get('Maestros', {}).keys()
         }
 
         if ldz.get("Opcion") in ("REVICION_MADRUGADA", "Validar DESC"):

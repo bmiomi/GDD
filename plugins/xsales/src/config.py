@@ -11,7 +11,8 @@ class Config:
     def config(self) -> Dict:
         file = path.join(f"plugins{sep}xsales{sep}config.yaml")
         try:
-            return yaml.load(open(file, "r"), Loader=yaml.FullLoader)
+            with open(file, 'r', encoding='utf-8') as f:
+                return yaml.load(f, Loader=yaml.SafeLoader)
         except FileNotFoundError:
             print("No se tiene archivo de configuracion.")
             exit()

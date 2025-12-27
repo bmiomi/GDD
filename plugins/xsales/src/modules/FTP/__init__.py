@@ -85,7 +85,7 @@ class FtpXsales:
                 try:
                     self.procesar_info(lista_rutas,console)
                 except ValueError as e:
-                    console.print(" [ERROR: ][bold red] No se tiene Habilitado Modulo de GDD [\]", e)
+                    console.print(r" [ERROR: ][bold red] No se tiene Habilitado Modulo de GDD [\]", e)
                 except BaseException as e:
                     print( 'se tiene error: ',e.__class__)
 
