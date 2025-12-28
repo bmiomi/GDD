@@ -7,15 +7,28 @@ from .util import sep,createfolder
 
 def include_constructor(loader, node):
     """Constructor para manejar !include en archivos YAML"""
-    include_file = loader.construct_scalar(node)
-    # Obtener el directorio base del archivo principal
-    base_dir = path.dirname(loader.name) if hasattr(loader, 'name') else 'plugins/xsales'
-    file_path = path.join(base_dir, include_file)
-    
-    # Cargar y parsear el archivo incluido
-    with open(file_path, 'r', encoding='utf-8') as f:
-        content = yaml.load(f, Loader=yaml.FullLoader)
-        return content if content is not None else {}
+    try:
+        include_file = loader.construct_scalar(node)
+        
+        # Obtener el directorio base del archivo principal
+        if hasattr(loader, 'name') and loader.name:
+            base_dir = path.dirname(loader.name)
+        else:
+            # Si no hay nombre, asumir que es relativo a plugins/xsales
+            base_dir = path.join(path.dirname(__file__))
+        
+        file_path = path.join(base_dir, include_file)
+        
+        # Cargar y parsear el archivo incluido
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = yaml.load(f, Loader=yaml.FullLoader)
+            if content is None:
+                return {}
+            if not isinstance(content, dict):
+                raise ValueError(f"The included file {file_path} does not contain a valid YAML dict, but {type(content)}")
+            return content
+    except Exception as e:
+        raise
 
 # Registrar el constructor personalizado
 yaml.add_constructor('!include', include_constructor, yaml.FullLoader)

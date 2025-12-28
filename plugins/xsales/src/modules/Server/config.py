@@ -8,7 +8,19 @@ class ConfigServer(Config):
     spinner = 'bouncingBall'
 
     def CredencialesServer(self, credencial='default') -> tuple:
-        credenciales = self.config.get('datod', {}).get('Server', {}).get('credenciales', [])
+        config_data = self.config
+        datod = config_data.get('datod', {})
+        
+        if not isinstance(datod, dict):
+            raise TypeError(f"'datod' should be dict but is {type(datod)}")
+        
+        server = datod.get('Server', {})
+        
+        if not isinstance(server, dict):
+            raise TypeError(f"'Server' should be dict but is {type(server)}")
+        
+        credenciales = server.get('credenciales', [])
+        
         for opcion in credenciales:
             if opcion.get(credencial):
                 return opcion[credencial]['USER'], opcion[credencial]['PASSWORD']

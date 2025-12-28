@@ -2,6 +2,11 @@ from core.app import MyApplication
 import sys
 import os
 import shutil
+import io
+
+# Configurar stdout con encoding UTF-8 para evitar errores de charmap
+if sys.platform == 'win32':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 def clean_pycache():
     """Elimina cache de Python para evitar problemas con configuraciones antiguas"""
