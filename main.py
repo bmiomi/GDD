@@ -1,8 +1,23 @@
 from core.app import MyApplication
 import sys
+import os
+import shutil
+
+def clean_pycache():
+    """Elimina cache de Python para evitar problemas con configuraciones antiguas"""
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    for root, dirs, _ in os.walk(base_dir):
+        if '__pycache__' in dirs:
+            try:
+                shutil.rmtree(os.path.join(root, '__pycache__'))
+            except:
+                pass
 
 if __name__ == "__main__":
     try:
+        # Limpiar cache en cada ejecución para evitar problemas
+        clean_pycache()
+        
         sys.dont_write_bytecode = True
         MyApplication.start()        
     except ModuleNotFoundError as e:
