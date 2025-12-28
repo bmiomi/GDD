@@ -1,32 +1,38 @@
 from datetime import datetime
 from typing import Dict, List
+from os import path
 import yaml
-import yaml_include
 
-from .util import path,createfolder
+from .util import sep,createfolder
+
+def include_constructor(loader, node):
+    """Constructor para manejar !include en archivos YAML"""
+    include_file = loader.construct_scalar(node)
+    # Obtener el directorio base del archivo principal
+    base_dir = path.dirname(loader.name) if hasattr(loader, 'name') else 'plugins/xsales'
+    file_path = path.join(base_dir, include_file)
+    
+    with open(file_path, 'r') as f:
+        return yaml.load(f, Loader=yaml.FullLoader)
+
+# Registrar el constructor personalizado
+yaml.add_constructor('!include', include_constructor, yaml.FullLoader)
 
 class Config:
-    """
-    Clase base de configuración para todos los módulos.
-    Proporciona acceso a config.yml y utilidades comunes.
-    """
 
     __tiporevision:List=[]
-    _cached_config = None
-    
+
     @property
     def config(self) -> Dict:
-        if self._cached_config is None:
-            file = path.join("plugins", "xsales")
-            # Registrar constructor !include para SafeLoader
-            yaml.add_constructor("!include", yaml_include.Constructor(base_dir=file), Loader=yaml.SafeLoader)
-            try:
-                with open(f'{file}{path.sep}config.yml', 'r', encoding='utf-8') as f:
-                    self._cached_config = yaml.load(f, Loader=yaml.SafeLoader)
-            except FileNotFoundError as e:
-                print(e, 'No se tiene archivo de configuracion.')
-        return self._cached_config
-    
+        file = path.join(f"plugins{sep}xsales{sep}config.yml")
+        try:
+            with open(file, "r") as f:
+                loader = yaml.FullLoader(f)
+                loader.name = file  # Guardar el nombre del archivo para referencia
+                return loader.get_single_data()
+        except FileNotFoundError :
+           raise FileExistsError("No se tiene archivo de configuracion.")
+
     @property
     def fecha(self):
         return datetime.today().strftime("%Y-%m-%d")
@@ -45,44 +51,18 @@ class Config:
 
     @Revisiones.setter
     def Revisiones(self,value) -> List:
-        self.__tiporevision=self.config['Revisiones'][value]
+        self.__tiporevision=self.config['Revisiones'][value.get('Modulo')]
 
     def nuevacarpeta(self,*path):
         return createfolder(self.path,*path)
-    
-    def get_ftp_credentials(self, distribuidor: str) -> tuple[str, str]:
-        """
-        Obtiene credenciales FTP desde variables de entorno.
-        
-        Args:
-            distribuidor: Nombre del distribuidor (PRONACA, CENACOP, etc.)
-        
-        Returns:
-            Tupla (usuario, contraseña)
-        """
-        from core.config_manager import config_manager
-        return config_manager.get_credential('FTP', distribuidor)
 
     def Dz(self, ldz: dict = {"Opcion": "TODOS"}) -> list[str]:
-        """
-        Retorna lista de distribuidores según la opción seleccionada.
-        Intenta usar .env, si no existe hace fallback a config.yml
-        """
-        from core.config_manager import config_manager
-        # Intentar obtener de .env primero
-        try:
-            todos_distribuidores = config_manager.list_available_distributors('FTP')
-            if not todos_distribuidores:
-                # Si no hay en .env, usar config.yml
-                raise ValueError("No distributors in .env, using config.yml")
-        except:
-            # Fallback a config.yml (legacy)
-            todos_distribuidores = list(self.config.get('datos', {}).get('FTP', {}).get('Repositorio', {}).get('credenciales', {}).keys())
-        
+
         returndz = {
-            "TODOS": todos_distribuidores,
-            "Grupos": [self.config.get("Grupos", {})],
-            "Maestros": self.config.get('datos', {}).get('FTP', {}).get('Maestros', {}).keys()
+
+            "TODOS": self.config["datos"]["FTP"]["Repositorio"]["credenciales"].keys(),
+            "Grupos": [self.config["Grupos"]],
+            "Maestros":self.config['datos']['FTP']['Maestros'].keys()
         }
 
         if ldz.get("Opcion") in ("REVICION_MADRUGADA", "Validar DESC"):
@@ -95,9 +75,14 @@ class Config:
             ][0]
             return v
 
-        if ldz.get("Opcion") in ("Total_Pedidos","REVICION_MADRUGADA","Todas las rutas","VALIDAR_ClIENTE","DESC.DIURNOS","Descargar Base","TODOS"):
+        if ldz.get("Opcion") == "Total_Pedidos":
             return returndz.get("TODOS")
 
-        if ldz.get("Opcion") == "Validar Maestros":
-            return returndz.get("Maestros")
- 
+        if ldz.get("Opcion") == "REVICION_MADRUGADA":
+            return returndz.get("TODOS")
+        
+        # Retorno por defecto
+        return list(returndz.get("TODOS", []))
+
+
+    

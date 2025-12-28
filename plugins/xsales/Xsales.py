@@ -1,6 +1,7 @@
 from typing import Dict, List
+
 from core.Interfaces.Iplugins import IPluging
-from .inputquestion import  preguntass
+from plugins.xsales.inputquestion import Data, preguntass
 from .src import XsalesFactory
 from .util import scandir,sep
 
@@ -12,28 +13,26 @@ class Plugin(IPluging):
             'message': "Que Sub Modulo de Xsales desea ? ",
             'choices': [i.name for i in scandir (f'.{sep}plugins{sep}xsales{sep}src{sep}modules') if i.is_dir() and i.name!='__pycache__']
         }
-        
+    
     @property
     def nombre(self) -> str:
         return 'Xsales'
-    
 
-    def execute(self,question,consola):  
-        try:
-            SModulo=question.prompt(self.__modulos)
-            #objeto a retornar
-            modulo =XsalesFactory.getModulo(value=SModulo.get('Modulo')) 
-            #realizamos las preguntas
-            modulo.dato=preguntass(question,modulo.config)
+    def execute(self,question,consola):
+        SModulo=question.prompt(self.__modulos)
 
-            modulo.mostrar_info(modulo.dato.ContenedorDZ,consola)
+        #objeto a retornar
+        modulo =XsalesFactory.getModulo(value=SModulo) 
 
-            modulo.generararchivo(modulo.dato.reporte,modulo.dato.Opcion,consola)
+        #asignamos el nombre del modulo a la configuracion
+        print(modulo)
+        modulo.config.Revisiones=SModulo 
 
-        except BaseException as e :
-            print (f's:{e.__class__.__name__}{e}')
-        except KeyboardInterrupt:
-            return 0       
-
-    #esta subido el archivo
-    
+        #realizamos las preguntas
+        resp=preguntass(modulo.config)
+        data=Data(**resp)
+        modulo.dato=data    
+        with consola.status('Procesando..',spinner=modulo.config.spinner):
+            for namedz in data.ContenedorDZ:
+                consola.log(modulo.mostrar_info(namedz))
+                
