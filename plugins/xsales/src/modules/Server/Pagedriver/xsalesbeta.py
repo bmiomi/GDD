@@ -66,6 +66,7 @@ class Xsales:
 
     if response.status_code==200:
         respuesta=json.loads( response.text)
+        print(respuesta)
         if respuesta['Message'] in ("User or Password Incorrect","Usuario o Password Incorrectos"):
           intentos=0
           while intentos<=2:
@@ -86,6 +87,7 @@ class Xsales:
       response=self.session.request('post',self.URLBASE+self.name+'/xsm/QueryBD/ExecuteConsult', headers=self.HEADERS, data=data)
       if response.status_code==200:  
          respuesta=json.loads( response.text)
+         print(respuesta)
          return respuesta['Data']['Result']
       else:
          return None
