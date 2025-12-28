@@ -12,8 +12,10 @@ def include_constructor(loader, node):
     base_dir = path.dirname(loader.name) if hasattr(loader, 'name') else 'plugins/xsales'
     file_path = path.join(base_dir, include_file)
     
-    with open(file_path, 'r') as f:
-        return yaml.load(f, Loader=yaml.FullLoader)
+    # Cargar y parsear el archivo incluido
+    with open(file_path, 'r', encoding='utf-8') as f:
+        content = yaml.load(f, Loader=yaml.FullLoader)
+        return content if content is not None else {}
 
 # Registrar el constructor personalizado
 yaml.add_constructor('!include', include_constructor, yaml.FullLoader)
@@ -26,7 +28,7 @@ class Config:
     def config(self) -> Dict:
         file = path.join(f"plugins{sep}xsales{sep}config.yml")
         try:
-            with open(file, "r") as f:
+            with open(file, "r", encoding='utf-8') as f:
                 loader = yaml.FullLoader(f)
                 loader.name = file  # Guardar el nombre del archivo para referencia
                 return loader.get_single_data()
