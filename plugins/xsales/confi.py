@@ -66,7 +66,18 @@ class Config:
 
     @Revisiones.setter
     def Revisiones(self,value) -> List:
-        self.__tiporevision=self.config['Revisiones'][value.get('Modulo')]
+        # Aceptar tanto dict con clave 'Modulo' como string directo
+        if isinstance(value, dict):
+            modulo = value.get('Modulo')
+        elif isinstance(value, str):
+            modulo = value
+        else:
+            raise TypeError("Revisiones debe ser dict con 'Modulo' o string del nombre de módulo")
+
+        if modulo not in self.config['Revisiones']:
+            raise KeyError(f"Modulo de revisión desconocido: {modulo}")
+
+        self.__tiporevision = self.config['Revisiones'][modulo]
 
     def nuevacarpeta(self,*path):
         return createfolder(self.path,*path)
