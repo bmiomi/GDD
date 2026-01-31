@@ -3,7 +3,7 @@ Módulo FTP - Gestión de archivos vía FTP/SFTP.
 """
 from plugins.xsales.src.modules.base_module import XSalesModule, ModuleMetadata
 from plugins.xsales.src.modules.module_registry import ModuleRegistry
-from plugins.xsales.src.modules.FTP.config import ConfigFtp
+from plugins.xsales.src.modules.Ftp.config import ConfigFtp
 from typing import Any
 
 

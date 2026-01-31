@@ -137,21 +137,45 @@ class ModuleRegistry:
             import plugins.xsales.src.modules
             sys.modules[parent_package] = plugins.xsales.src.modules
         
-        module_name = f"{parent_package}.{folder_name}"
-        
+        module_folder = file_path.parent
+        package_name = f"{parent_package}.{folder_name}"
+
+        # Asegurar que el paquete exista para permitir imports internos (ej: plugins...Server.config)
+        if package_name not in sys.modules:
+            package_init = module_folder / "__init__.py"
+            if package_init.exists():
+                package_spec = importlib.util.spec_from_file_location(
+                    package_name,
+                    package_init,
+                    submodule_search_locations=[str(module_folder)]
+                )
+                package_module = importlib.util.module_from_spec(package_spec)
+                sys.modules[package_name] = package_module
+                try:
+                    package_spec.loader.exec_module(package_module)
+                except Exception as e:
+                    if package_name in sys.modules:
+                        del sys.modules[package_name]
+                    raise e
+
+        # Si el archivo no es __init__.py, cargarlo como submódulo
+        if file_path.name != "__init__.py":
+            module_name = f"{package_name}.{file_path.stem}"
+        else:
+            module_name = package_name
+
         spec = importlib.util.spec_from_file_location(
             module_name,
             file_path
         )
         module = importlib.util.module_from_spec(spec)
-        
-        # Registrar en sys.modules ANTES de ejecutar para que imports relativos funcionen
+
+        # Registrar en sys.modules ANTES de ejecutar para que imports funcionen
         sys.modules[module_name] = module
-        
+
         try:
             spec.loader.exec_module(module)
         except Exception as e:
-            # Limpiar si falla
             if module_name in sys.modules:
                 del sys.modules[module_name]
             raise e

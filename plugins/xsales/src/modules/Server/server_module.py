@@ -81,21 +81,82 @@ class ServerModule(XSalesModule):
         """Ejecuta consulta a base de datos"""
         from plugins.xsales.src.modules.Server.User.validador import ValidatorSql
         from plugins.xsales.src.modules.Server.User.Consultas import consultas
+        import traceback
         
         try:
-            if xsales.estado:
-                consultas.NDISTRIBUIDOR = xsales.name
-                sql = consultas.consulta(
-                    self.dato.Opcion,
-                    self._config.configConsultas
-                )()
+            # Validar que xsales se inicializó correctamente
+            if not hasattr(xsales, 'estado'):
+                console.log(f"[red]⚠ {nombredz}: Xsales no tiene atributo 'estado'")
+                return
+            
+            if not xsales.estado:
+                console.log(f"[yellow]⚠ {nombredz}: Sesión XSales no activa (estado=False)")
+                return
+            
+            # Configurar distribuidor
+            consultas.NDISTRIBUIDOR = xsales.name
+            
+            # Generar SQL - capturar error aquí específicamente
+            try:
+                # Usar la estructura correcta para consultas
+                sql_config = self._config.configConsultasStructured
+                if not sql_config:
+                    console.log(f"[red]⚠ {nombredz}: No hay configuración de consultas")
+                    return
                 
-                result = xsales.consulta_new_version(sql)
+                # Limpiar la opción de espacios en blanco
+                opcion_limpia = str(self.dato.Opcion).strip()
+                
+                # Normalizar: convertir a mayúsculas y eliminar espacios
+                opcion_normalizada = opcion_limpia.upper().strip()
+                
+                # Buscar en las claves disponibles
+                claves_disponibles = {k.upper(): k for k in sql_config.keys()}
+                
+                if opcion_normalizada not in claves_disponibles:
+                    console.log(f"[red]✗ {nombredz}: Opción no encontrada: '{opcion_normalizada}'")
+                    console.log(f"[red]  → Claves disponibles: {list(sql_config.keys())}")
+                    return
+                
+                # Obtener la clave correcta
+                clave_real = claves_disponibles[opcion_normalizada]
+                
+                # Llamar a consultas.consulta con la estructura correcta
+                sql_callable = consultas.consulta(
+                    clave_real,
+                    sql_config
+                )
+                
+                if not callable(sql_callable):
+                    console.log(f"[red]⚠ {nombredz}: consulta() no retornó callable para opción '{clave_real}'")
+                    return
+                
+                sql = sql_callable()
+                if not sql:
+                    console.log(f"[red]⚠ {nombredz}: SQL generado está vacío")
+                    return
+                    
+            except KeyError as ke:
+                console.log(f"[red]✗ {nombredz}: KeyError: {ke}")
+                console.log(f"[red]  → Claves disponibles: {list(sql_config.keys()) if sql_config else 'ninguna'}")
+                return
+            except Exception as sql_err:
+                console.log(f"[red]✗ {nombredz}: Error generando SQL: {sql_err}")
+                return
+            
+            # Ejecutar consulta
+            result = xsales.consultar(sql)
+            if result:
                 self.contenedor.append(result[0])
-                self.validadorsql = ValidatorSql(self.dato.Opcion, result)
-                console.log(f'Revisión completada para {nombredz}')
+                self.validadorsql = ValidatorSql(clave_real, result)
+                console.log(f"[green]✓ Revisión completada para {nombredz}")
+            else:
+                console.log(f"[yellow]⚠ {nombredz}: Resultado vacío de la consulta")
+                
         except BaseException as e:
-            console.log(f"Error en {nombredz}: {e}")
+            error_trace = traceback.format_exc()
+            console.log(f"[red]✗ Error en {nombredz}: {e}")
+            console.log(f"[red]{error_trace}")
     
     def generararchivo(self, respuesta, nombre: str, console):
         """Genera archivo Excel con los resultados"""

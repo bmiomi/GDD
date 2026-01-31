@@ -18,11 +18,33 @@ class consultas:
 
 
     @classmethod
-    def retornar_Sentencia_sql(cls,parametro:dict):
+    def retornar_Sentencia_sql(cls, parametro: dict):
+        """
+        Retorna una función que genera el SQL basado en la estructura if/then/else
+        
+        Args:
+            parametro: Dict con estructura {'sql': {'if': condition, 'then': sql1, 'else': sql2}, 'parametros': [...]}
+        
+        Returns:
+            Una función callable que al ejecutar retorna el SQL string
+        """
         cls.validar_parametros(parametro)
-        if parametro['sql'].get('if'):
-                return parametro['if']
-        return parametro['sql']
+        sql_config = parametro.get('sql', {})
+        
+        # Si es un diccionario con estructura if/then/else
+        if isinstance(sql_config, dict) and 'if' in sql_config:
+            # Aquí iría la lógica de evaluación condicional
+            # Por ahora, retorna el 'then' por defecto
+            sql_string = sql_config.get('then', '')
+        else:
+            # Si es string directo
+            sql_string = sql_config if isinstance(sql_config, str) else str(sql_config)
+        
+        # Retornar una función lambda que genera el SQL
+        def generar_sql():
+            return sql_string
+        
+        return generar_sql
 
 
     @classmethod

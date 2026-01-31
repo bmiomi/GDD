@@ -40,6 +40,7 @@ questionary==2.0.1
 requests==2.32.3
 requests-html==0.10.0
 rich==13.9.4
+selenium==4.39.0
 six==1.17.0
 soupsieve==2.6
 tqdm==4.67.1
