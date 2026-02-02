@@ -25,6 +25,8 @@ class ConfigServer(Config):
             if opcion.get(credencial):
                 print(f"Credenciales obtenidas para {credencial } ")
                 return opcion[credencial]['USER'], opcion[credencial]['PASSWORD']
+
+        raise ValueError(f"CredencialesServer: no se encontró '{credencial}' en config.yml")
     def folderexcel(self) -> str:
 
         currpath = self.path.join(

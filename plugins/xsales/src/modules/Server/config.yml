@@ -1,16 +1,16 @@
 Server:
   credenciales:
     - default:
-      USER: SoporteBZ
-      PASSWORD: BZs2026@
+        USER: SoporteBZ
+        PASSWORD: BZs2026@
 
     - PRONACA:
-      USER: SoporteBz
-      PASSWORD: BZs2024**
+        USER: SoporteBz
+        PASSWORD: BZs2024**
 
     - CENACOP:
-      USER: SoporteBz
-      PASSWORD: BZs2024**
+        USER: SoporteBz
+        PASSWORD: BZs2024**
 
   Consultas:
 
