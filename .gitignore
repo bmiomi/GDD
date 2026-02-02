@@ -52,5 +52,10 @@ htmlcov/
 # Archivos específicos
 beta.py
 
+# Plugins opcionales
+plugins/bzhelp/
+plugins/xsales/src/modules/Ftp/
+plugins/xsales/src/modules/Status/
+
 # OS
 Thumbs.db

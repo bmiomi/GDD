@@ -82,7 +82,7 @@ class MyApplication:
         try:
             if plugin_name == 'xsales':
                 # Cargar config específica de XSales
-                from plugins.xsales.confi import Config
+                from plugins.xsales.src.config import Config
                 config_instance = Config()
                 plugin_config = config_instance.config
         except:

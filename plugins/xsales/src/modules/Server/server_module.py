@@ -146,9 +146,22 @@ class ServerModule(XSalesModule):
             
             # Ejecutar consulta
             result = xsales.consultar(sql)
-            if result:
-                self.contenedor.append(result[0])
-                self.validadorsql = ValidatorSql(clave_real, result)
+
+            dataset = None
+            if getattr(xsales, 'use_query_api', False) and xsales.xsalesresponse_json:
+                data = xsales.xsalesresponse_json.get('Data') if isinstance(xsales.xsalesresponse_json, dict) else None
+                if isinstance(data, list):
+                    dataset = data
+                elif isinstance(data, dict):
+                    result = data.get('Result') or data.get('result') or data.get('data')
+                    if isinstance(result, list):
+                        dataset = result
+            elif isinstance(result, list):
+                dataset = result
+
+            if dataset:
+                self.contenedor.append(dataset[0])
+                self.validadorsql = ValidatorSql(clave_real, dataset)
                 console.log(f"[green]✓ Revisión completada para {nombredz}")
             else:
                 console.log(f"[yellow]⚠ {nombredz}: Resultado vacío de la consulta")
@@ -172,8 +185,8 @@ class ServerModule(XSalesModule):
             
             try:
                 from plugins.xsales.src.modules.Server.User.validador import ValidatorSql
-                archivo = self._config.path.join(self._config.folderMadrugada, f'{nombre}')
-                self._config.excelfile.create_file(archivo, self.validadorsql.DZCOMPLETO)
+                archivo = self._config.path.join(self._config.folderMadrugada(), f'{nombre}')
+                self._config.excelfile().create_file(archivo, self.validadorsql.DZCOMPLETO)
                 console.print(f'[green]✓ Archivo generado: {archivo}')
                 
                 if hasattr(ValidatorSql, 'DZCOMPLETO'):

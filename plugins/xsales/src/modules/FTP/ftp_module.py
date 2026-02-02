@@ -74,6 +74,7 @@ class FtpModule(XSalesModule):
         """Importar lógica del módulo FTP existente"""
         # Importar código existente de FTP/__init__.py
         from .enums.enumftp import Enumftp
+        import questionary
         
         self.config.operacion = self.dato.Opcion
         self.config.user = dz[0]
@@ -85,7 +86,18 @@ class FtpModule(XSalesModule):
         
         if self.dato.Opcion == Enumftp.Validar_DESC.value:
             _rutas = self.listbases()
-            # Resto de lógica...
+            lista_rutas = questionary.checkbox(
+                "Seleccione las bases a descargar",
+                choices=_rutas
+            ).ask()
+
+            with console.status('Procesando', spinner=self.config.spinner):
+                try:
+                    self.procesar_info(lista_rutas, console)
+                except ValueError as e:
+                    console.print(r" [ERROR: ][bold red] No se tiene Habilitado Modulo de GDD [\]", e)
+                except BaseException as e:
+                    console.print(f"[red]✗ Error FTP: {e.__class__.__name__}")
     
     def listbases(self):
         """Lista bases disponibles en FTP"""
@@ -102,6 +114,39 @@ class FtpModule(XSalesModule):
     def maestrosftp(self):
         """Muestra archivos maestros del FTP"""
         self.__ftp_client.mostrarar_achivos(excluide=self.config.xmlfile)
+
+    def procesar_info(self, lista_rutas, console):
+        from plugins.xsales.util import descomprimir, sep
+
+        if lista_rutas and len(lista_rutas) >= 1:
+            for i in lista_rutas:
+                dest_path = self.config.nuevacarpeta(
+                    self.config.pathdistribudor,
+                    self.config.user,
+                    self.config.fecha,
+                    i
+                )
+                self.__ftp_client.descarga(i, dest_path, self.config.downloadfilebaseruta)
+                descomprimir(dest_path)
+                self.procesar_base(dest_path)
+                console.log(f' proceso exitoso,validar archivo: {dest_path[:-3]}{sep}log')
+        else:
+            console.print(" [ERROR: ][bold red] NO SE TINE RUTAS QUE ITERAR")
+
+    def procesar_base(self, destinopath: str) -> None:
+        from plugins.xsales.util import sep
+        from plugins.xsales.src.service.dbservice.sqliteservices import DataConn
+
+        origenpath = ''.join([i for i in destinopath.rsplit(sep)[-1]])
+        database = destinopath + sep + "Main.sqlite"
+        lista = []
+        with DataConn(database) as conn:
+            for table in self.config.tablevalidacion:
+                result = conn.execute(
+                    f"SELECT COUNT(*) FROM  {table} WHERE DISCODE NOT LIKE 'DES%'"
+                )
+                result, = result.fetchone()
+                lista.append({'Tabla': table, 'Ruta': origenpath, 'registros': result})
     
     def generararchivo(self, reporte, opcion, console):
         """Genera archivos de reporte"""

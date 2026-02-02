@@ -1,6 +1,6 @@
 
 from plugins.xsales.src.service.excelservice.service_excel import ExcelFile
-from plugins.xsales.confi import Config
+from plugins.xsales.src.config import Config
 from plugins.xsales.util import sep
 
 class ConfigServer(Config):

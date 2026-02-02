@@ -1,5 +1,5 @@
 
-from plugins.xsales.confi import Config
+from plugins.xsales.src.config import Config
 
 class ConfigStatus(Config):
 
