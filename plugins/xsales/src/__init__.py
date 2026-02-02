@@ -1,5 +1,5 @@
  
 
-from .modules import XsalesFactory
+"""Paquete principal de XSales (arquitectura nueva)."""
 
 

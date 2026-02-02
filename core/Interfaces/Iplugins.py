@@ -4,7 +4,7 @@ from rich.console import Console
 
 class IPluging(Protocol):
 
-    question: List[Dict] = None
+    question: List[Dict] 
 
     console: Console = Console()
 

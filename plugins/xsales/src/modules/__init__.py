@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
-from .FTP import FtpXsales
-from .Status.Status import Status 
-from .Server import Page
+"""
+Sistema de submódulos de XSales
+"""
+from .base_module import XSalesModule, ModuleMetadata
+from .module_registry import ModuleRegistry, module_registry
 
-class XsalesFactory:
-
-    @classmethod
-    def getModulo (cls,value:str) -> object:
-        modulo={'Server':Page,'Ftp':FtpXsales,'Status':Status}
-        return modulo.get(value)()
+__all__ = [
+    'XSalesModule',
+    'ModuleMetadata',
+    'ModuleRegistry',
+    'module_registry'
+]
 
 
 

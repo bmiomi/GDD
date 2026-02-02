@@ -1,51 +1,59 @@
-#alicia albornos
+"""Constructor de consultas SQL para XSales."""
 from datetime import date, timedelta
 
 ahora = date.today()
-ayer = ahora -timedelta(days=2) if ahora.weekday() == 0  else ahora -timedelta(days=1)
+ayer = ahora - timedelta(days=2) if ahora.weekday() == 0 else ahora - timedelta(days=1)
+
 
 class consultas:
-#TODO
-# falta validar que al asignar los parametros estos se asigmen de forma correcta
-# y no se tenga que crear if
-
-    NDISTRIBUIDOR=None;
-
+    NDISTRIBUIDOR = None
 
     @classmethod
-    def consulta_beta(cls,dato,nombrerevicion,config):      
-        for key in config.keys():
-            if key == dato:
-                return cls.retornar_Sentencia_sql(config[key],nombrerevicion)
-            
-    @classmethod
-    def retornar_Sentencia_sql(cls,revisiones:dict,nombrerevicion:str):
-        return cls.obtener_consulta(revisiones,nombrerevicion)
+    def consulta(cls, nombrerevicion: str, config: dict):
+        """Retorna un callable que genera el SQL para la revisión indicada."""
+        revisiones = config.get(nombrerevicion) if isinstance(config, dict) else None
+        if not isinstance(revisiones, dict):
+            return lambda: ""
+        return lambda: cls.obtener_consulta(revisiones)
 
     @classmethod
-    def obtener_consulta(cls,revisiones:dict,nombrerevicion:str):
-        consulta_sql=revisiones[nombrerevicion]['sql']
-        parametros =revisiones[nombrerevicion]['parametros'] 
-        if 'if' in consulta_sql:
+    def obtener_consulta(cls, revision: dict) -> str:
+        consulta_sql = revision.get('sql')
+        parametros = revision.get('parametros', [])
+
+        if isinstance(consulta_sql, dict) and 'if' in consulta_sql:
+            # Manejo de distribuidores
             if 'distribuidores' in consulta_sql:
-                distribuidores=consulta_sql.get('distribuidores')
-                for key in distribuidores:
-                    if key == cls.NDISTRIBUIDOR:
-                       for key in parametros:
-                        sql=consulta_sql['then'].replace(f'{{{{{key}}}}}',str(ayer)) 
-                        if key=='NDISTRIBUIDOR':
-                            sql=sql.replace(f'{{{{{key}}}}}',distribuidores[cls.NDISTRIBUIDOR]) 
-                return sql
-            
-            for key in parametros:
-                parametro=consulta_sql['if'].replace(f'{{{{{key}}}}}', f"'{str(cls.NDISTRIBUIDOR)}'")
+                distribuidores = consulta_sql.get('distribuidores') or {}
+                nd = (cls.NDISTRIBUIDOR or '').lower()
+                if nd in distribuidores:
+                    sql = consulta_sql.get('then', '')
+                    for key in parametros:
+                        if key == 'ayer':
+                            sql = sql.replace(f'{{{{{key}}}}}', str(ayer))
+                        elif key == 'NDISTRIBUIDOR':
+                            sql = sql.replace(f'{{{{{key}}}}}', distribuidores[nd])
+                    return sql
 
-            if eval(parametro):
-                return consulta_sql['then']
-            return consulta_sql['else']
-        
-        if revisiones.get(nombrerevicion).get('sql'):
+            # Evaluar condición
+            condition = consulta_sql.get('if', '')
             for key in parametros:
-                valor=consulta_sql.replace(f'{{{{{key}}}}}','0952461093')
- 
-            return valor
+                if key == 'NDISTRIBUIDOR':
+                    condition = condition.replace(f'{{{{{key}}}}}', f"'{str(cls.NDISTRIBUIDOR)}'")
+                elif key == 'ayer':
+                    condition = condition.replace(f'{{{{{key}}}}}', str(ayer))
+
+            if condition and eval(condition):
+                return consulta_sql.get('then', '')
+            return consulta_sql.get('else', '')
+
+        if isinstance(consulta_sql, str):
+            sql = consulta_sql
+            for key in parametros:
+                if key == 'ayer':
+                    sql = sql.replace(f'{{{{{key}}}}}', str(ayer))
+                elif key == 'NDISTRIBUIDOR':
+                    sql = sql.replace(f'{{{{{key}}}}}', f"'{str(cls.NDISTRIBUIDOR)}'")
+            return sql
+
+        return ""

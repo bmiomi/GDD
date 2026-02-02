@@ -2,7 +2,7 @@ from typing import  Dict, List, Optional
 from dataclasses import dataclass
 
 import questionary
-from .confi import Config
+from .src.config import Config
 
 @dataclass
 class Data:

@@ -1,65 +1,32 @@
 
-from typing import Dict
 from plugins.xsales.src.service.excelservice.service_excel import ExcelFile
-from plugins.xsales.confi import Config
+from plugins.xsales.src.config import Config
 from plugins.xsales.util import sep
 
 class ConfigServer(Config):
 
     spinner = 'bouncingBall'
-    
-    __credencialuser:str=''
-    __credencialpassword:str=''
-    __credencialName:str='default'
 
-    @property
-    def configserver(self)->Dict:
-        return self.config.get('datod').get('Server')
-   
-    @property
-    def configConsultas(self)->Dict:
-        return self.config.get('datod').get('Server').get('Consultas')
-
-    @property
-    def CredencialesServer(self):
-        credencialname=self.__credencialName
-        respuesta=self.buscar_credenciales(credencialname)
-        if respuesta:
-            self.__credencialuser=respuesta[self.__credencialName]['USER']
-            self.__credencialpassword=respuesta[self.__credencialName]['PASSWORD'] 
-        return (self.__credencialuser,self.__credencialpassword,)  
-    
-    @CredencialesServer.setter
-    def CredencialesServer(self,credencial) -> None:
-        self.__credencialName=credencial
-        credenciales = self.buscar_credenciales(credencial)
-        self.__credencialuser=credenciales[self.__credencialName]['USER'], 
-        self.__credencialpassword=credenciales[self.__credencialName]['PASSWORD']
-
-    @property
-    def credencialuser(self):
-        return self.__credencialuser
-
-    @property
-    def credencialpassword(self):
-        return self.__credencialpassword
-
-
-    def buscar_credenciales(self,credencial_name:str)->Dict:
-        try:
-            credencial = next(
-                (credencial for credencial in self.configserver.get('credenciales')
-                 if  credencial_name in credencial ),
-                None
-            )
-            return credencial
-        except KeyError:
-            print("No se encontró la clave en el diccionario")
-            return None
-
-
-    @property
+    def CredencialesServer(self, credencial='default') -> tuple:
+        config_data = self.config
+        datod = config_data.get('datod', {})
+        print("Se Obtuvo CredencialesServer", credencial)
+        if not isinstance(datod, dict):
+            raise TypeError(f"'datod' should be dict but is {type(datod)}")
+        
+        server = datod.get('Server', {})
+        
+        if not isinstance(server, dict):
+            raise TypeError(f"'Server' should be dict but is {type(server)}")
+        
+        credenciales = server.get('credenciales', [])
+        
+        for opcion in credenciales:
+            if opcion.get(credencial):
+                print(f"Credenciales obtenidas para {credencial } ")
+                return opcion[credencial]['USER'], opcion[credencial]['PASSWORD']
     def folderexcel(self) -> str:
+
         currpath = self.path.join(
             self.config.get('PathFolder').get('folder_file_excel'),
             self.fecha
@@ -68,15 +35,37 @@ class ConfigServer(Config):
         if not self.path.isdir(currpath):
             self.nuevacarpeta(currpath)
         return currpath+sep
-    
-    @property
+
     def folderMadrugada(self) -> str:
         foldermadrugada = self.config.get('PathFolder').get('folderMadrugada')
         if not self.path.isdir(foldermadrugada):
             self.nuevacarpeta(foldermadrugada)
-        return foldermadrugada+sep
+        return foldermadrugada
 
     @property
+    def configConsultas(self) -> dict:
+        """Retorna la configuración de consultas desde config.yml"""
+        config_data = self.config
+        datod = config_data.get('datod', {})
+        server = datod.get('Server', {})
+        return server.get('Consultas', {})
+    
+    @property
+    def configConsultasStructured(self) -> dict:
+        """Retorna consultas estructuradas para usar con consultas.consulta()"""
+        consultas_raw = self.configConsultas
+        # Convertir cada consulta a la estructura esperada por consultas.consulta()
+        # Transforma: {'REVICION_MADRUGADA': {'sql': {...}}} 
+        # A: {'REVICION_MADRUGADA': {'sql': {...}, 'parametros': [...]}}
+        result = {}
+        for key, value in consultas_raw.items():
+            if isinstance(value, dict) and 'sql' in value:
+                result[key] = value
+            else:
+                # Si no tiene estructura correcta, envolver en 'sql'
+                result[key] = {'sql': value, 'parametros': []}
+        return result
+
     def excelfile(self):
         return ExcelFile
 
