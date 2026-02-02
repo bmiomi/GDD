@@ -1,8 +1,0 @@
-{
-  "MessageType": 69,
-  "Message": "Unauthorized request",
-  "Data": {},
-  "SystemMessage": "Unauthorized request",
-  "Duration": "0",
-  "Process": "Login"
-}

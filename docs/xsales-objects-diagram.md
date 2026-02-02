@@ -1,6 +1,5 @@
 # Diagrama de objetos XSales (Mermaid)
 
-```mermaid
 flowchart TB
   %% Contrato base
   IPlugin["IPlugin"]
