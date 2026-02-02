@@ -1,3 +1,0 @@
-
-"""Paquete Status (arquitectura nueva)."""
-
