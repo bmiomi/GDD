@@ -32,31 +32,28 @@ class ConfigFtp(Config):
 
     @property
     def protocol(self):
-        """Obtiene protocolo desde config o .env"""
+        """Obtiene protocolo desde config.yml"""
         if self.__operacion == "Validar Maestros":
             return self.configftp.get('Maestros', {}).get(self.__user, {}).get('protocol')
-        from core.config_manager import config_manager
-        return config_manager.get('FTP_PROTOCOL', default='FTPS')
+        return self.configftp.get('Repositorio', {}).get('protocol', 'FTPS')
 
     @property
     def host(self):
-        """Obtiene host desde variables de entorno"""
-        from core.config_manager import config_manager
-        return config_manager.get('FTP_HOST', required=True)
+        """Obtiene host desde config.yml"""
+        return self.configftp.get('Repositorio', {}).get('host', 'prd1.xsalesmobile.net')
 
     @property
     def port(self):
-        """Obtiene puerto desde variables de entorno"""
-        from core.config_manager import config_manager
-        return int(config_manager.get('FTP_PORT', default='990'))
+        """Obtiene puerto desde config.yml"""
+        return int(self.configftp.get('Repositorio', {}).get('port', 990))
 
     @property
     def pathdownload(self):
-        """Obtiene ruta de descarga desde .env o config"""
+        """Obtiene ruta de descarga desde config.yml"""
         path_config = self.configftp.get('Repositorio', {}).get('credenciales', {}).get(self.user, {}).get('path')
         if path_config:
             return path_config.get('Download')
-        return config_manager.get('FTP_PATH_DOWNLOAD', default='/COMUNES')
+        return self.configftp.get('Repositorio', {}).get('Download', {}).get('path', '/COMUNES')
 
     @property
     def excluide(self):
@@ -73,7 +70,7 @@ class ConfigFtp(Config):
     @property
     def CredencialesFtp(self) -> tuple:
         """
-        Obtiene credenciales FTP desde variables de entorno.
+        Obtiene credenciales FTP desde config.yml.
         
         Returns:
             Tupla (usuario, contraseña)
@@ -84,15 +81,11 @@ class ConfigFtp(Config):
             if credenciales:
                 return (credenciales.get('USER'), credenciales.get('PASS'))
         
-        # Usar variables de entorno
-        try:
-            return config_manager.get_credential('FTP', self.__user)
-        except ValueError as e:
-            # Fallback a config.yml si no existe en .env (para migración gradual)
-            credenciales = self.configftp.get('Repositorio', {}).get('credenciales', {}).get(self.__user, {})
-            if credenciales:
-                return (credenciales.get('USER'), credenciales.get('PASS'))
-            raise e
+        # Usar configuración de config.yml
+        credenciales = self.configftp.get('Repositorio', {}).get('credenciales', {}).get(self.__user, {})
+        if credenciales:
+            return (credenciales.get('USER'), credenciales.get('PASS'))
+        return (None, None)
 
     @property
     def pathdistribudor(self):
@@ -108,3 +101,15 @@ class ConfigFtp(Config):
     @property
     def downloadfilebaseruta(self):
        return  self.configftp.get('Repositorio', {}).get('Download', {}).get('file')
+    @property
+    def configConsultasStructured(self) -> dict:
+        """Retorna opciones de FTP como estructura de consultas para el menú"""
+        # FTP no tiene SQL, en su lugar usa las opciones del menú (Revisiones.Ftp)
+        opciones = self.Revisiones  # Obtiene la lista configurada en Revisiones.Ftp
+        
+        # Convertir opciones a estructura de diccionario {opcion: {sql: {...}}}
+        result = {}
+        if isinstance(opciones, list):
+            for opcion in opciones:
+                result[opcion] = {'sql': {}, 'parametros': []}
+        return result

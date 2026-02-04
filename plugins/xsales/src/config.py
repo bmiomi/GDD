@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Any, Dict, List
-from os import path
+from os import path, getenv
 import yaml
 from .util import sep, createfolder
 
@@ -33,16 +33,47 @@ class Config:
 
     __tiporevision:List=[]
 
+    def _get_config_path(self) -> str:
+        """
+        Obtiene la ruta del archivo config.yml.
+        
+        Busca en el siguiente orden:
+        1. CONFIG_PATH/xsales/config.yml (ruta externa definida por variable de entorno)
+        2. plugins/xsales/config.yml (ruta por defecto empaquetada)
+        
+        CONFIG_PATH se define con: export CONFIG_PATH=/path/to/external/configs
+        Estructura esperada en producción:
+            /path/to/external/configs/
+            ├── xsales/
+            │   ├── config.yml
+            │   └── modules/Server/config.yml
+            └── bzhelp/
+                └── config.yml
+        """
+        # Verificar ruta externa primero
+        external_config_path = getenv('CONFIG_PATH')
+        if external_config_path:
+            external_file = path.join(external_config_path, 'xsales', 'config.yml')
+            if path.exists(external_file):
+                return external_file
+        
+        # Fallback a ruta por defecto empaquetada
+        default_file = path.join(f"plugins{sep}xsales{sep}config.yml")
+        return default_file
+
     @property
     def config(self) -> Dict:
-        file = path.join(f"plugins{sep}xsales{sep}config.yml")
+        file = self._get_config_path()
         try:
             with open(file, 'r', encoding='utf-8') as f:
                 loader = yaml.FullLoader(f)
                 loader.name = file
                 return loader.get_single_data()
         except FileNotFoundError:
-            print("No se tiene archivo de configuracion.")
+            print(f"❌ No se encontró archivo de configuración en: {file}")
+            print(f"💡 Asegúrate de que:")
+            print(f"   - La ruta existe, o")
+            print(f"   - La variable CONFIG_PATH está correctamente definida")
             exit()
 
     @property

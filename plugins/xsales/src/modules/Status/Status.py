@@ -59,8 +59,9 @@ class Status:
             return (bajada,parcial,dies,total)
 
         except BaseException as e:
-
             print (f'Se encontro un error : {e}')
+            # Retornar tupla vacía en caso de error
+            return ([], [], [], [])
 
     def validardz(self,listadodz):
 

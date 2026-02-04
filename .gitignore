@@ -19,6 +19,30 @@ env/
 .DS_Store
 .devcontainer
 
+# Configuration (external, environment-specific)
+.env
+.env.local
+.env.*.local
+
+# External config folders (should be managed separately)
+/config-external/
+/configs/
+~/.gdd-config/
+
+# Logs
+logs/
+*.log
+
+# Generated files
+*.xlsx
+*.txt
+REPORTES/
+*.db
+*.sqlite
+dist/
+build/
+*.spec
+
 # Environment variables - CRÍTICO NO VERSIONAR
 .env
 .env.local
