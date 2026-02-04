@@ -31,6 +31,7 @@ Server:
                 (select count(*) from promotiondetail) as PROMOTIOND, (select count(*) from promotiondetailproduct) as PROMOTIONDP, (select count(*) from customerstatus where cusCode like '%199998%') as GENUIO, (select count(*) from customerstatus where cusCode like '%299998%') as GENGYE,
                 (select count(*) from customerstatus where cusCode like '%488888%') as GENCUE, (select count(*) from customerstatus where cusCode like '%588888%') as GENMON;"
 
+<<<<<<< HEAD
         else: " declare @preventa varchar(25), @despacho varchar(25), @customerxss int, @cusdelete int, @customerroute int, @cusst int, @customerstatus int,
                 @customerroute1 int, @product int, @promotion int, @promotiond int, @promotiondp int, @generico int, @horainicio datetime,@horafin datetime
                 select @preventa= (select top 1 convert(varchar,aptTransactionDate,103)  from areaproduct group by aptTransactionDate) select @despacho= (select top 1 convert(varchar,aptServerLastUpdate,103)  from areaproduct  group by aptServerLastUpdate)
@@ -43,6 +44,131 @@ Server:
                   @customerxss as CUSTOMER_XSS, @cusdelete as CUSTOMER_DELETE_0,  @customerroute1 as CUSROUT_TOTAL,@customerroute as CUSROUTE_VISIT_TODAY,@cusst as CUSSTATUS_VISIT_TODAY, @customerstatus as CUSSTATUS_TOTAL, @product as PRODUCT, @promotion as PROMOTION, @promotiond as PROMOTIOND,
                    @promotiondp as PROMOTIONDP, @generico as GENERICO"
       parametros:
+=======
+        else: "DECLARE 
+          @preventa VARCHAR(25),
+          @despacho VARCHAR(25),
+          @customerxss INT,
+          @cusdelete INT,
+          @customerroute INT,
+          @cusst INT,
+          @customerstatus INT,
+          @customerroute1 INT,
+          @product INT,
+          @promotion INT,
+          @promotiond INT,
+          @promotiondp INT,
+          @generico INT,
+          @horainicio DATETIME,
+          @horafin DATETIME;
+          SELECT TOP 1 
+          @preventa = CONVERT(VARCHAR, aptTransactionDate, 103)
+          FROM areaproduct
+          ORDER BY aptTransactionDate DESC;
+
+          SELECT TOP 1 
+              @despacho = CONVERT(VARCHAR, aptServerLastUpdate, 103)
+          FROM areaproduct
+          ORDER BY aptServerLastUpdate DESC;
+
+          SELECT TOP 1 
+              @customerxss = COUNT(*)
+          FROM customer;
+
+          SELECT TOP 1 
+              @cusdelete = COUNT(*)
+          FROM customer
+          WHERE _Deleted = '0';
+
+          SELECT TOP 1 
+              @customerroute = COUNT(DISTINCT cuscode)
+          FROM customerroute
+          WHERE ctrvisittoday = '1'
+          AND rotcode NOT LIKE '%t%';
+
+          SELECT TOP 1 
+              @customerstatus = COUNT(*)
+          FROM customerstatus
+          WHERE cuscode IN (
+              SELECT TOP 100 PERCENT cuscode 
+              FROM customerroute
+          );
+
+          SELECT TOP 1 
+              @cusst = COUNT(*)
+          FROM customerstatus
+          WHERE cuscode IN (
+              SELECT TOP 100 PERCENT cuscode
+              FROM customerroute
+              WHERE ctrVisitToday = '1'
+                AND rotcode NOT LIKE '%t%'
+          );
+
+          SELECT TOP 1 
+              @customerroute1 = COUNT(DISTINCT cuscode)
+          FROM customerroute;
+
+          SELECT TOP 1 
+              @product = COUNT(*)
+          FROM product
+          WHERE _Deleted = '0';
+
+          SELECT TOP 1 
+              @promotion = COUNT(*)
+          FROM promotion;
+
+          SELECT TOP 1 
+              @promotiond = COUNT(*)
+          FROM promotiondetail;
+
+          SELECT TOP 1 
+              @promotiondp = COUNT(*)
+          FROM promotiondetailproduct;
+
+          SELECT TOP 1 
+              @generico = COUNT(*)
+          FROM customer
+          WHERE (
+                cusCode LIKE '%099999999%' 
+                OR cusCode LIKE '%3030000074%'
+                )
+          AND cusCode IN (
+                SELECT TOP 100 PERCENT cusCode 
+                FROM customerstatus
+                );
+
+          SELECT TOP 1 
+              @horainicio = TrnDate
+          FROM [TRANSACTION]
+          WHERE TRNSCRIPTS LIKE '%CALCULATE%'
+          ORDER BY TrnDate DESC;
+
+          SELECT TOP 1 
+              @horafin = trnLastDate
+          FROM [TRANSACTION]
+          WHERE TRNSCRIPTS LIKE '%CALCULATE%'
+          ORDER BY trnLastDate DESC;
+
+          SELECT TOP 1
+              DB_NAME() AS DZ_Regional,
+              @preventa AS Preventa,
+              @despacho AS Despacho,
+              DATEADD(HOUR, -1, @horainicio) AS HoraECUInicioStock,
+              DATEADD(HOUR, -1, @horafin) AS HoraECUFinStock,
+              @customerxss AS CUSTOMER_XSS,
+              @cusdelete AS CUSTOMER_DELETE_0,
+              @customerroute1 AS CUSROUT_TOTAL,
+              @customerroute AS CUSROUTE_VISIT_TODAY,
+              @cusst AS CUSSTATUS_VISIT_TODAY,
+              @customerstatus AS CUSSTATUS_TOTAL,
+              @product AS PRODUCT,
+              @promotion AS PROMOTION,
+              @promotiond AS PROMOTIOND,
+              @promotiondp AS PROMOTIONDP,
+              @generico AS GENERICO;"
+      parametros_usuario: []
+      parametros_sistema:
+>>>>>>> revision
         - NDISTRIBUIDOR
 
     DESC.DIURNOS:
@@ -121,7 +247,8 @@ Server:
           pronaca: "When company.comName = 'Pronaca' Then '202'"
           pronacnor: "When company.comName = 'Pronacnor' Then '303'"
           skandinar: "When company.comName = 'Skandinar' Then '121'"
-      parametros:
+      parametros_usuario: []
+      parametros_sistema:
         - ayer
         - NDISTRIBUIDOR
 
@@ -140,18 +267,35 @@ Server:
             (exvCharValue like'%EXITO%' and exffieldname='x_processMessage' OR exvCharValue like'%-0%' and exffieldname='x_processMessage')) select DB_NAME() as  DZ_Regional, @tr as DMD_TRANSITO, @er as DMD_ERROR, @soap as DMD_ERRSOAP, @exi as DMD_EXISTENTE, @ex as DMD_EXTENDIDAS, @pr as DMD_PROCESADOS,
             @npr as DMD_NOPROCESADOS, @erp as ERP_EXITO, @total as DMD_TOTAL"
 
-      parametros:
+      parametros_usuario:
         - dia
         - mes
         - anio
+      parametros_sistema: []
 
     VALIDAR_CLIENTES:
       sql: "select {{NDISTRIBUIDOR}}"
+<<<<<<< HEAD
       parametros:
+=======
+      parametros_usuario: []
+      parametros_sistema:
+>>>>>>> revision
         - NDISTRIBUIDOR
 
     DESC.NOCTURNOS:
       sql: "select top 1000 cuscode,cusTaxID1,cusName,cusBusinessName from customer where custaxid1 like '%{{valor}}%' "
 
-      parametros:
+      parametros_usuario:
         - valor
+<<<<<<< HEAD
+=======
+      parametros_sistema: []
+    
+    CONSULTARSTATUSRUTAS:
+      sql: >
+            select top 100 cr.rotcode from customerroute cr inner join route r on cr.rotcode = r.rotcode inner join customerstatus cs on cr.cuscode = cs.cuscode inner join customer c on cr.cuscode = c.cuscode where cr.rotcode = '{{ROTCODE}}' and cr.ctrvisittoday = '1' and r.chaCode = 'V01'
+      parametros_usuario:
+        - ROTCODE
+      parametros_sistema: []
+>>>>>>> revision
