@@ -101,7 +101,7 @@ class XSalesPlugin(IPlugin):
             
             # Limpiar submódulo
             module.cleanup()
-            
+
             return result
             
         except KeyboardInterrupt:

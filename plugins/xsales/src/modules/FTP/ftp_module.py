@@ -24,7 +24,8 @@ class FtpModule(XSalesModule):
             name="ftp",
             display_name="FTP - Gestión de Archivos",
             description="Descarga y validación de archivos FTP",
-            version="1.0.0"
+            version="1.0.0",
+            enabled=False
         )
     
     def setup(self, context) -> bool:

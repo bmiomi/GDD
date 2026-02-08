@@ -95,6 +95,8 @@ class ServerModule(XSalesModule):
                 
                 if dato.action == 'configure':
                     navigator.navigate_to("configure_menu")
+                elif dato.action == 'exit':
+                    return {"status": "exit"}
                 elif dato.action == 'query':
                     # Ejecutar consultas
                     self._execute_queries(

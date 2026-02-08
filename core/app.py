@@ -122,7 +122,10 @@ class MyApplication:
                     break
                 
                 # Ejecutar plugin seleccionado
-                self.execute_plugin(selection)
+                result = self.execute_plugin(selection)
+                if isinstance(result, dict) and result.get("status") == "exit":
+                    self.console.print("\n[yellow]→ Saliendo del sistema...[/yellow]")
+                    break
                 
             except KeyboardInterrupt:
                 self.console.print("\n[yellow]→ Operación cancelada por el usuario[/yellow]")
@@ -167,6 +170,8 @@ class MyApplication:
             plugin.teardown()
             
             plugin.status = PluginStatus.LOADED
+
+            return result
             
             return result
             

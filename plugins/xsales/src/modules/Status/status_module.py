@@ -25,7 +25,8 @@ class StatusModule(XSalesModule):
             name="status",
             display_name="Status - Estado de Rutas",
             description="Monitoreo de estado de rutas de distribución",
-            version="1.0.0"
+            version="1.0.0",
+            enabled=False
         )
     
     def setup(self, context) -> bool:

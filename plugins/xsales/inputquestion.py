@@ -92,11 +92,13 @@ def menu_principal(questionary: questionary, config: Config, preferences: Prefer
     while True:
         accion = questionary.select(
             'Server XSales',
-            choices=['Ejecutar consulta', 'Configurar']
+            choices=['Ejecutar consulta', 'Configurar', 'Salir']
         ).ask()
 
         if accion == 'Configurar':
             return Data(action='configure')
+        if accion == 'Salir':
+            return Data(action='exit')
 
         data = preguntass(questionary, config, preferences)
         if data.action == 'back':
