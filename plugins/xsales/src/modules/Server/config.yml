@@ -267,7 +267,6 @@ Server:
               @generico AS GENERICO;"
       parametros_usuario: []
       parametros_sistema:
->>>>>>> revision
         - NDISTRIBUIDOR
 
     DESC.DIURNOS:
