@@ -1,0 +1,6 @@
+excel_directory: ./REPORTES
+generate_excel: false
+log_level: normal
+open_excel_when_done: false
+output_format: table
+show_sql: true

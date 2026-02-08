@@ -22,6 +22,8 @@ class CommonQuestions:
     Cada módulo puede usar estas preguntas base y extenderlas
     con sus propias preguntas específicas.
     """
+
+    BACK_OPTION = "<< Volver"
     
     @staticmethod
     def ask_turno(questionary, choices: List[str]) -> str:
@@ -35,10 +37,14 @@ class CommonQuestions:
         Returns:
             Turno seleccionado
         """
-        return questionary.rawselect(
+        choices_with_back = list(choices) + [CommonQuestions.BACK_OPTION]
+        selected = questionary.rawselect(
             'Selecciona el turno que te toca',
-            choices=choices
+            choices=choices_with_back
         ).ask()
+        if selected == CommonQuestions.BACK_OPTION:
+            return None
+        return selected
     
     @staticmethod
     def ask_proceso(questionary, choices: List[str]) -> str:
@@ -52,13 +58,22 @@ class CommonQuestions:
         Returns:
             Proceso seleccionado
         """
-        return questionary.rawselect(
+        choices_with_back = list(choices) + [CommonQuestions.BACK_OPTION]
+        selected = questionary.rawselect(
             'Seleccione el proceso a realizar',
-            choices=choices
+            choices=choices_with_back
         ).ask()
+        if selected == CommonQuestions.BACK_OPTION:
+            return None
+        return selected
     
     @staticmethod
-    def ask_distribuidores(questionary, choices: List[str], mensaje: str = 'Seleccione distribuidores') -> List[str]:
+    def ask_distribuidores(
+        questionary,
+        choices: List[str],
+        mensaje: str = 'Seleccione distribuidores',
+        validate=None
+    ) -> List[str]:
         """
         Pregunta qué distribuidores procesar.
         
@@ -70,10 +85,17 @@ class CommonQuestions:
         Returns:
             Lista de distribuidores seleccionados
         """
-        return questionary.checkbox(
+        choices_with_back = list(choices) + [CommonQuestions.BACK_OPTION]
+        selected = questionary.checkbox(
             mensaje,
-            choices=choices
+            choices=choices_with_back,
+            validate=validate
         ).ask()
+        if not selected:
+            return selected
+        if CommonQuestions.BACK_OPTION in selected:
+            return None
+        return selected
     
     @staticmethod
     def ask_generar_reporte(questionary, mensaje: str = '¿Desea generar un Excel con la información?') -> bool:

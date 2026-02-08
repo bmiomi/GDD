@@ -17,19 +17,132 @@ Server:
     REVICION_MADRUGADA:
       sql:
         if: " {{NDISTRIBUIDOR}} == 'PRONACA' "
-        then: " select distinct top 1 (select distinct top 1 convert(varchar, aptTransactionDate, 103) from areaproduct where areCode ='D01') as preventaQuito, (select distinct top 1 convert(varchar, aptServerLastUpdate, 103) from areaproduct where areCode ='D01') as DespachoQuito,
-                dateadd (hh, -1, (SELECT max(Trndate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D01%')) as INICIOHoraUIO,  (SELECT max(trnLastDate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D01%') as FINHoraUIO,
-                (select distinct top 1 convert(varchar, aptTransactionDate, 103) from areaproduct where areCode = 'D02') as preventaGYE,  (select distinct top 1 convert(varchar, aptServerLastUpdate, 103) from areaproduct where areCode = 'D02') as DespachoGYE,
-                dateadd (hh, -1, (SELECT max(Trndate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D02%')) as INICIOHORAGYE,  (SELECT max(trnLastDate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D02%') as FINHORAGYE,
-                (select distinct top 1 convert(varchar, aptTransactionDate, 103) from areaproduct where areCode = 'D04') as preventaCuenca,  (select distinct top 1 convert(varchar, aptServerLastUpdate, 103) from areaproduct where areCode = 'D04') as DespachoCuenca,  dateadd (hh, -1,
-                (SELECT max(Trndate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D04%')) as INICIOHORACUENCA,  (SELECT max(trnLastDate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D04%') as FINHORACUENCA,
-                (select distinct top 1 convert(varchar, aptTransactionDate, 103) from areaproduct where areCode = 'D05') as preventaMontecristi,  (select distinct top 1 convert(varchar, aptServerLastUpdate, 103) from areaproduct where areCode = 'D05') as DespachoMontecristi,  dateadd (hh, -1,
-                (SELECT max(Trndate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D05%')) as INICIOHORAMONTEC,  (SELECT max(trnLastDate) FROM [TRANSACTION] WHERE TRNSCRIPTS LIKE '%CALCULATE%' and TRNSCRIPTS like '%D05%') as FINHORAMONTEC,
-                (select count(*) from customer) as CUSTOMER_XSS, (select count(*) from customer where _Deleted = '0') as CUSTOMER_DELETE_0, (select count(distinct cuscode) from customerroute) as CUSROUT_TOTAL,
-                (select count(distinct cuscode) from customerroute where ctrvisittoday = '1' and rotcode not like '%t%') as CUSROUTE_VISIT_TODAY, (select count(*) from customerstatus where cuscode in (select cusCode from customerroute where ctrVisitToday = '1' and rotcode not like '%t%')) as CUSSTATUS_VISIT_TODAY,
-                (select count(*) from customerstatus WHERE CUSCODE IN (SELECT CUSCODE FROM CUSTOMERROUTE)) as CUSSTATUS_TOTAL, (select count(*) from product where _Deleted = '0') as PRODUCT, (select count(*) From CatalogDetail) as CATALOG, (select count(*) from promotion) as PROMOTION,
-                (select count(*) from promotiondetail) as PROMOTIOND, (select count(*) from promotiondetailproduct) as PROMOTIONDP, (select count(*) from customerstatus where cusCode like '%199998%') as GENUIO, (select count(*) from customerstatus where cusCode like '%299998%') as GENGYE,
-                (select count(*) from customerstatus where cusCode like '%488888%') as GENCUE, (select count(*) from customerstatus where cusCode like '%588888%') as GENMON;"
+        then: " SELECT DISTINCT TOP 1
+            (SELECT DISTINCT TOP 1 CONVERT(VARCHAR, aptTransactionDate, 103)
+            FROM areaproduct WHERE areCode = 'D01') AS preventaQuito,
+
+            (SELECT DISTINCT TOP 1 CONVERT(VARCHAR, aptServerLastUpdate, 103)
+            FROM areaproduct WHERE areCode = 'D01') AS DespachoQuito,
+
+            DATEADD(HH, -1,
+                (SELECT TOP 1 Trndate
+                FROM [TRANSACTION]
+                WHERE TRNSCRIPTS LIKE '%CALCULATE%'
+                AND TRNSCRIPTS LIKE '%D01%'
+                ORDER BY Trndate DESC)
+            ) AS INICIOHoraUIO,
+
+            (SELECT TOP 1 trnLastDate
+            FROM [TRANSACTION]
+            WHERE TRNSCRIPTS LIKE '%CALCULATE%'
+            AND TRNSCRIPTS LIKE '%D01%'
+            ORDER BY trnLastDate DESC) AS FINHoraUIO,
+
+            (SELECT DISTINCT TOP 1 CONVERT(VARCHAR, aptTransactionDate, 103)
+            FROM areaproduct WHERE areCode = 'D02') AS preventaGYE,
+
+            (SELECT DISTINCT TOP 1 CONVERT(VARCHAR, aptServerLastUpdate, 103)
+            FROM areaproduct WHERE areCode = 'D02') AS DespachoGYE,
+
+            DATEADD(HH, -1,
+                (SELECT TOP 1 Trndate
+                FROM [TRANSACTION]
+                WHERE TRNSCRIPTS LIKE '%CALCULATE%'
+                AND TRNSCRIPTS LIKE '%D02%'
+                ORDER BY Trndate DESC)
+            ) AS INICIOHORAGYE,
+
+            (SELECT TOP 1 trnLastDate
+            FROM [TRANSACTION]
+            WHERE TRNSCRIPTS LIKE '%CALCULATE%'
+            AND TRNSCRIPTS LIKE '%D02%'
+            ORDER BY trnLastDate DESC) AS FINHORAGYE,
+
+            (SELECT DISTINCT TOP 1 CONVERT(VARCHAR, aptTransactionDate, 103)
+            FROM areaproduct WHERE areCode = 'D04') AS preventaCuenca,
+
+            (SELECT DISTINCT TOP 1 CONVERT(VARCHAR, aptServerLastUpdate, 103)
+            FROM areaproduct WHERE areCode = 'D04') AS DespachoCuenca,
+
+            DATEADD(HH, -1,
+                (SELECT TOP 1 Trndate
+                FROM [TRANSACTION]
+                WHERE TRNSCRIPTS LIKE '%CALCULATE%'
+                AND TRNSCRIPTS LIKE '%D04%'
+                ORDER BY Trndate DESC)
+            ) AS INICIOHORACUENCA,
+
+            (SELECT TOP 1 trnLastDate
+            FROM [TRANSACTION]
+            WHERE TRNSCRIPTS LIKE '%CALCULATE%'
+            AND TRNSCRIPTS LIKE '%D04%'
+            ORDER BY trnLastDate DESC) AS FINHORACUENCA,
+
+            (SELECT DISTINCT TOP 1 CONVERT(VARCHAR, aptTransactionDate, 103)
+            FROM areaproduct WHERE areCode = 'D05') AS preventaMontecristi,
+
+            (SELECT DISTINCT TOP 1 CONVERT(VARCHAR, aptServerLastUpdate, 103)
+            FROM areaproduct WHERE areCode = 'D05') AS DespachoMontecristi,
+
+            DATEADD(HH, -1,
+                (SELECT TOP 1 Trndate
+                FROM [TRANSACTION]
+                WHERE TRNSCRIPTS LIKE '%CALCULATE%'
+                AND TRNSCRIPTS LIKE '%D05%'
+                ORDER BY Trndate DESC)
+            ) AS INICIOHORAMONTEC,
+
+            (SELECT TOP 1 trnLastDate
+            FROM [TRANSACTION]
+            WHERE TRNSCRIPTS LIKE '%CALCULATE%'
+            AND TRNSCRIPTS LIKE '%D05%'
+            ORDER BY trnLastDate DESC) AS FINHORAMONTEC,
+
+            (SELECT TOP 1 COUNT(*) FROM customer) AS CUSTOMER_XSS,
+
+            (SELECT TOP 1 COUNT(*) FROM customer WHERE _Deleted = '0') AS CUSTOMER_DELETE_0,
+
+            (SELECT TOP 1 COUNT(DISTINCT cuscode)
+            FROM customerroute) AS CUSROUT_TOTAL,
+
+            (SELECT TOP 1 COUNT(DISTINCT cuscode)
+            FROM customerroute
+            WHERE ctrvisittoday = '1'
+            AND rotcode NOT LIKE '%t%') AS CUSROUTE_VISIT_TODAY,
+
+            (SELECT TOP 1 COUNT(*)
+            FROM customerstatus
+            WHERE cuscode IN (
+                SELECT TOP 20000 cusCode
+                FROM customerroute
+                WHERE ctrVisitToday = '1'
+                AND rotcode NOT LIKE '%t%'
+            )) AS CUSSTATUS_VISIT_TODAY,
+
+            (SELECT TOP 1 COUNT(*)
+            FROM customerstatus
+            WHERE cuscode IN (
+                SELECT TOP 20000 cusCode
+                FROM customerroute
+            )) AS CUSSTATUS_TOTAL,
+
+            (SELECT TOP 1 COUNT(*) FROM product WHERE _Deleted = '0') AS PRODUCT,
+
+            (SELECT TOP 1 COUNT(*) FROM CatalogDetail) AS CATALOG,
+
+            (SELECT TOP 1 COUNT(*) FROM promotion) AS PROMOTION,
+
+            (SELECT TOP 1 COUNT(*) FROM promotiondetail) AS PROMOTIOND,
+
+            (SELECT TOP 1 COUNT(*) FROM promotiondetailproduct) AS PROMOTIONDP,
+
+            (SELECT TOP 1 COUNT(*) FROM customerstatus WHERE cusCode LIKE '%199998%') AS GENUIO,
+
+            (SELECT TOP 1 COUNT(*) FROM customerstatus WHERE cusCode LIKE '%299998%') AS GENGYE,
+
+            (SELECT TOP 1 COUNT(*) FROM customerstatus WHERE cusCode LIKE '%488888%') AS GENCUE,
+
+            (SELECT TOP 1 COUNT(*) FROM customerstatus WHERE cusCode LIKE '%588888%') AS GENMON;"
 
         else: "DECLARE 
           @preventa VARCHAR(25),
@@ -240,18 +353,15 @@ Server:
     TOTAL_PEDIDOS:
 
       sql: >
-            "declare @dia integer, @mes integer, @anio integer, @tr int, @er int, @soap int, @exi int, @ex int, @pr int, @npr int, @erp int,@total int set @dia={{dia}} ;set @mes={{mes}};set @anio={{anio}}
-            select top(100) @tr= (select count(*) from extendedtablevalue1 where exttablename='demand' and exvpkcode1 in ( select dmdcode from demand where day(dmddate)= @dia and month(dmddate)= @mes and year(dmddate)= @anio and dmdcancelorder=0 )
-            and exvCharValue like'%TRANSITO%' and exffieldname='x_processMessage') select @er= (select count(*) from extendedtablevalue1 where exttablename='demand' and exvpkcode1 in ( select dmdcode from demand where day(dmddate)= @dia and month(dmddate)= @mes and
-            year(dmddate)= @anio and dmdcancelorder=0 ) and exvCharValue like'%ERROR%' and exffieldname='x_processMessage') select @soap= (select count(*) from extendedtablevalue1 where exttablename='demand' and exvpkcode1 in ( select dmdcode from demand where day(dmddate)= @dia and
-            month(dmddate)= @mes and year(dmddate)= @anio and dmdcancelorder=0 ) and exvCharValue like'%soap%' and exffieldname='x_processMessage') select @exi= (select count(*) from extendedtablevalue1 where exttablename='demand' and exvpkcode1 in ( select dmdcode from demand where
-            day(dmddate)= @dia and month(dmddate)= @mes and year(dmddate)= @anio and dmdcancelorder=0 ) and exvCharValue like'%existente%' and exffieldname='x_processMessage') select @ex=(select count(*) dmdcode from demand where day(dmddate)= @dia and month(dmddate)= @mes and year(dmddate)= @anio and
-            dmdcancelorder=0 and dmdcode NOT in (select exvpkcode1 from extendedtablevalue1 where exttablename='demand' and exffieldname='x_processMessage')) select @pr=(select count(*) dmdcode from demand where day(dmddate)= @dia and month(dmddate)= @mes and year(dmddate)= @anio and dmdCancelOrder='0'
-            and dmdprocess='1') select @npr=(select count(*) dmdcode from demand where day(dmddate)= @dia and month(dmddate)= @mes and year(dmddate)= @anio and dmdCancelOrder='0' and dmdprocess='0') select @total=(select count(*) dmdcode from demand where day(dmddate)= @dia and month(dmddate)= @mes and
-            year(dmddate)= @anio and dmdCancelOrder='0') select @erp= (select count(*) from extendedtablevalue1 where exttablename='demand' and exvpkcode1 in ( select dmdcode from demand where day(dmddate)= @dia and month(dmddate)= @mes and year(dmddate)= @anio and dmdcancelorder=0 ) and
-            (exvCharValue like'%EXITO%' and exffieldname='x_processMessage' OR exvCharValue like'%-0%' and exffieldname='x_processMessage')) select DB_NAME() as  DZ_Regional, @tr as DMD_TRANSITO, @er as DMD_ERROR, @soap as DMD_ERRSOAP, @exi as DMD_EXISTENTE, @ex as DMD_EXTENDIDAS, @pr as DMD_PROCESADOS,
-            @npr as DMD_NOPROCESADOS, @erp as ERP_EXITO, @total as DMD_TOTAL"
-
+        select top 100 d.rotcode as Ruta,sum(case when d.dmdCancelOrder='0' and d.doccode='ped' then 1 else 0 end) Pedidos,
+            sum(case when dmdCancelOrder='0' and doccode='dev' then 1 else 0 end) 
+            Devoluciones,sum(case when dmdCancelOrder='0' and doccode='ped' and dmdprocess='1' then 1 else 0 end)  Pedidos_Procesados,
+            sum(case when dmdCancelOrder='0' and doccode='dev' and dmdprocess='1' then 1 else 0 end)  Devoluciones_Procesadas,
+            sum(case when dmdCancelOrder='0' and dmdprocess='0' then 1 else 0 end)  Pedidos_No_Procesados,
+            sum(case when dmdCancelOrder='0' and dmdprocess='0' then 1 else 0 end)  Devoluciones_No_Procesados,g.gnlStatus as Status,
+            g.gnlStatusDate as Fecha,g.gnlPartialStatus as Parcial,g.gnlPartialStatusDate as Parcial_fecha from demand d 
+            INNER JOIN general g on d.rotcode= g.rotcode    and day(d.dmddate)={{dia}} and month(d.dmddate)={{mes}} and year(d.dmddate)={{anio}}  
+            group by d.rotcode, g.gnlStatus,  g.gnlStatusDate, g.gnlPartialStatus, g.gnlPartialStatusDate
       parametros_usuario:
         - dia
         - mes
@@ -259,10 +369,10 @@ Server:
       parametros_sistema: []
 
     VALIDAR_CLIENTES:
-      sql: "select {{NDISTRIBUIDOR}}"
-      parametros_usuario: []
-      parametros_sistema:
-        - NDISTRIBUIDOR
+      sql: "select top 100 _processmessage,cuscode from customerup where cuscode = '{{cuscode}}'"
+      parametros_usuario: 
+        - cuscode
+      parametros_sistema: []
 
     DESC.NOCTURNOS:
       sql: "select top 1000 cuscode,cusTaxID1,cusName,cusBusinessName from customer where custaxid1 like '%{{valor}}%' "
@@ -272,8 +382,7 @@ Server:
       parametros_sistema: []
     
     CONSULTARSTATUSRUTAS:
-      sql: >
-            select top 100 cr.rotcode from customerroute cr inner join route r on cr.rotcode = r.rotcode inner join customerstatus cs on cr.cuscode = cs.cuscode inner join customer c on cr.cuscode = c.cuscode where cr.rotcode = '{{ROTCODE}}' and cr.ctrvisittoday = '1' and r.chaCode = 'V01'
+      sql: "select top 100 cr.rotcode from customerroute cr inner join route r on cr.rotcode = r.rotcode inner join customerstatus cs on cr.cuscode = cs.cuscode inner join customer c on cr.cuscode = c.cuscode where cr.rotcode = '{{ROTCODE}}' and cr.ctrvisittoday = '1' and r.chaCode = 'V01'"
       parametros_usuario:
         - ROTCODE
       parametros_sistema: []
